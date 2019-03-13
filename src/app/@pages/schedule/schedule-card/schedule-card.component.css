@@ -1,0 +1,59 @@
+
+.room {
+  width: 300px;
+  display: inline-block;
+}
+
+.room:not(.header) {
+  margin: 10px 10px 0 10px;
+}
+
+.room:not(.header) {
+  width: calc(300px - 20px);
+  transition: 0.5s all;
+}
+
+.room:not(.header):not(.nodata):hover {
+  cursor: pointer;
+  box-shadow: 0 3px 5px -1px rgba(0, 0, 0, .2), 0 6px 10px 0 rgba(0, 0, 0, .14), 0 1px 18px 0 rgba(0, 0, 0, .12);
+}
+
+.room /deep/ nz-form-label {
+  line-height: normal;
+}
+
+.overflow-text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/deep/ .ant-tooltip {
+  max-width: 500px;
+  min-width: 300px;
+}
+
+/deep/ .ant-tooltip .ant-tooltip-content {
+  background: black;
+}
+
+.tooltip-container {
+  font-size: 18px !important;
+}
+
+.checkButton:not(:disabled):hover, .checkButton.checked {
+  background: green;
+  color: white;
+}
+
+.checkButton {
+  background: white;
+  color: green;
+  border: 1px solid green;
+}
+
+.checkButton:disabled {
+  background: lightgrey;
+  color: white;
+  border: gray;
+}

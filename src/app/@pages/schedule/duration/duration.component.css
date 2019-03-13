@@ -1,0 +1,16 @@
+.list-room-container {
+  max-height: 500px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/deep/ .ant-popover-message-title {
+  font-size: 20px;
+}
+
+/deep/ .ant-popover-buttons .ant-btn-sm {
+  padding: 0 15px;
+  font-size: 14px;
+  border-radius: 4px;
+  height: 32px
+}

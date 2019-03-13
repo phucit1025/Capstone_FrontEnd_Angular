@@ -1,0 +1,47 @@
+<div class="mb-3 d-flex">
+  <button class="mr-auto" (click)="file.click()" nz-button nzType="primary" nzShape="round"><i nz-icon
+                                                                                               type="upload"></i>Import
+    File
+  </button>
+  <ng-container *ngIf="data?.length > 0">
+    <button class="mr-2"  nz-button nzType="default" nzShape="round">
+      Import All
+    </button>
+    <button (click)="clearResult()" nz-button nzType="danger" nzShape="round">
+      Clear List
+    </button>
+  </ng-container>
+</div>
+
+<input #file (change)="handleFile($event)" type="file" class="d-none"
+       accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+<nz-table #table [nzData]="data"
+          nzShowSizeChanger
+          [nzNoResult]="noData"
+          [nzLoading]="state.load">
+  <thead>
+  <tr>
+    <th>No</th>
+    <th>Patient Name</th>
+    <th>Gender</th>
+    <th>Surgery Name</th>
+    <th>Surgery Excepted Date</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let item of table.data">
+    <td>{{item.index + 1}}</td>
+    <td>{{item['Patient Name']}}</td>
+    <td>{{item['Gender']}}</td>
+    <td>{{item['Surgery Name']}}</td>
+    <td>{{item['Expected Date'] && item['Expected Time'] ? item['Expected Date'] + ' ' + item['Expected Time'] : 'N/A'}}</td>
+  </tr>
+  </tbody>
+</nz-table>
+
+<ng-template #noData>
+  <div style="text-align: center;">
+    <i nz-icon type="file-text" theme="outline" style="font-size: 30px; margin-bottom: 10px"></i>
+    <p>No Data</p>
+  </div>
+</ng-template>

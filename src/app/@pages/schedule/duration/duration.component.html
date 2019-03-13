@@ -1,0 +1,52 @@
+<nz-spin [nzSpinning]="state.load" [nzSize]="'large'">
+  <form nz-form [nzLayout]="'inline'">
+    <nz-form-item>
+      <nz-form-label nzFor="startTime">Start Time</nz-form-label>
+      <nz-form-control>
+        <nz-time-picker name="startTime" id="startTime" nzFormat="HH : mm" [ngModel]="date.startDate"
+                        (ngModelChange)="changeDate($event, 's')"
+                        nzPlaceHolder="Time">
+        </nz-time-picker>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzFor="endTime">End Time</nz-form-label>
+      <nz-form-control>
+        <nz-time-picker name="endTime" id="endTime" nzFormat="HH : mm" [ngModel]="date.endDate"
+                        (ngModelChange)="changeDate($event, 'e')"
+                        nzPlaceHolder="Time">
+        </nz-time-picker>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-control class="text-center mt-1">
+      <button nz-button nzType="primary" class="mr-1" [disabled]="checkValid()" (click)="getAvailableRoom(false)">Check
+      </button>
+      <button nz-button nzType="danger" [disabled]="checkValid()" (click)="getAvailableRoom(true)">Force Check
+      </button>
+    </nz-form-control>
+    <!--List-room-->
+    <ng-container *ngIf="state.finish">
+      <h2>List room</h2>
+      <div class="list-room-container">
+        <nz-list *ngIf="roomList?.length > 0 ;else noData" [nzDataSource]="roomList" nzBordered [nzHeader]="''"
+                 [nzFooter]="''" [nzRenderItem]="item">
+          <ng-template #item let-item>
+            <nz-list-item [nzContent]="content"></nz-list-item>
+            <ng-template #content>
+              <div style="display: flex; width: 100%; align-items: center">
+                <div style="margin-right: auto; width: 50%">
+                  <p>{{item.roomName}}</p>
+                </div>
+                <button nz-popconfirm nzTitle="Are You Sure You Want To Change ?" [nzCancelText]="'Cancel'" (nzOnConfirm)="changeSchedule(item)" nz-button nzType="primary">Change</button>
+              </div>
+            </ng-template>
+          </ng-template>
+        </nz-list>
+        <ng-template #noData>
+          <h4 style="padding-left: 2px">No Data</h4>
+        </ng-template>
+      </div>
+    </ng-container>
+
+  </form>
+</nz-spin>
