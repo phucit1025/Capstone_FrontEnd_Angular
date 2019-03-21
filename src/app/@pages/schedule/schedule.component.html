@@ -51,6 +51,16 @@
         </div>
       </div>
     </div>
+    <div class="mt-3 mb-5 d-flex">
+      <span class="mr-auto">
+        <button (click)="isShowEmergency = true" nz-button nzType="primary">
+          Add Emergency Shift
+        </button>
+      </span>
+      <label class="mr-2"><b>Status : </b></label>
+      <nz-tag [nzColor]="'#ffd54f'">Proceeding</nz-tag>
+      <nz-tag [nzColor]="'#ef5350'">Completed</nz-tag>
+    </div>
     <!-- Room Container -->
     <div id="room-container" class="room-container">
       <ng-container *ngFor="let room of rooms | roomPipe: state.searchText">
@@ -91,7 +101,7 @@
     </div>
   </ng-container>
   <!--Modal-->
-  <nz-modal [nzWidth]="'50%'" style="width: 40%" (nzOnCancel)="cancel()" [(nzVisible)]="isVisible"
+  <nz-modal [nzWidth]="'700px'" style="width: 40%" (nzOnCancel)="cancel()" [(nzVisible)]="isVisible"
     [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter">
     <ng-template #modalTitle>
       Change Schedule
@@ -105,6 +115,46 @@
     </ng-template>
     <ng-template #modalFooter>
       <button nz-button nzType="default" (click)="cancel()">Close</button>
+    </ng-template>
+  </nz-modal>
+  <!-- Modal -->
+  <nz-modal [nzWidth]="'400px'" style="width: 40%" (nzOnCancel)="isShowEmergency = false; createEmergencyForm()"
+    [(nzVisible)]="isShowEmergency" [nzTitle]="'Emergency Shift'" [nzContent]="emergencyBody"
+    [nzFooter]="emergencyFooter">
+    <ng-template #emergencyBody>
+      <nz-spin [nzSpinning]="state.create">
+        <form *ngIf="emergencyForm" [formGroup]="emergencyForm">
+          <nz-form-item>
+            <nz-form-label>Start Time</nz-form-label>
+            <nz-form-control>
+              <nz-date-picker [nzDisabledDate]="disabledStartDate" [nzShowTime]="{nzFormat: 'HH:mm'}" nzFormat="dd/MM/yyyy - HH:mm"
+                formControlName="startTime" nzPlaceHolder="Start Time">
+              </nz-date-picker>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label>End Time</nz-form-label>
+            <nz-form-control>
+              <nz-date-picker [nzDisabledDate]="disabledEndDate" [nzShowTime]="{nzFormat: 'HH:mm'}" nzFormat="dd/MM/yyyy - HH:mm"
+                formControlName="endTime" nzPlaceHolder="End Time">
+              </nz-date-picker>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-control>
+              <label nz-checkbox formControlName="isForceAdd">
+                <span>Force Add Emergency</span>
+              </label>
+            </nz-form-control>
+          </nz-form-item>
+        </form>
+      </nz-spin>
+    </ng-template>
+    <ng-template #emergencyFooter>
+      <button [disabled]="state.create" nz-button nzType="default" class="mr-2"
+        (click)="isShowEmergency = false">Close</button>
+      <button [disabled]="state.create || emergencyForm.invalid" nz-button nzType="primary"
+        (click)="createShift()">Create</button>
     </ng-template>
   </nz-modal>
   <!-- Loader -->

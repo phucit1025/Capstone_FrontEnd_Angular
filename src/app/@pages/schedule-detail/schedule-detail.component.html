@@ -214,14 +214,18 @@
 <nz-collapse [nzBordered]="false">
   <nz-collapse-panel [nzHeader]="'Healthcare Reports'" [ngStyle]="customeStyle" nzExpandedIcon="expandedIcon">
     <div class="mb-2">
-      <button nz-button nzType="primary" class="mr-2">Start Surgery Shift</button>
-      <button nz-button nzType="default">Export Surgery Report</button>
+
     </div>
     <ng-template #expandedIcon let-active>
       <i nz-icon type="down" theme="outline" class="ant-collapse-arrow" nzRotate="p.nzActive ? 90 : -90"></i>
     </ng-template>
   </nz-collapse-panel>
 </nz-collapse>
+
+<div class="text-right">
+  <button nz-button nzType="primary" class="mr-2">Start Surgery Shift</button>
+  <button nz-button nzType="default">Export Surgery Report</button>
+</div>
 <!-- Modal Add Supply -->
 <nz-modal nzWidth="800" [(nzVisible)]="state.showAddSupply" nzTitle="Add User Medical Supply"
   [nzContent]="createSupplyBody" [nzFooter]="createSupplyFooter" (nzOnCancel)="state.showAddSupply = false">

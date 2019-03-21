@@ -12,6 +12,21 @@
     text-overflow: ellipsis;
 }
 
+/deep/ .surgery.preoperative .ant-card{
+    background: white;
+    color: black;
+}
+
+/deep/ .surgery.postoperative .ant-card{
+    background: #ef5350;
+    color: white;
+}
+
+/deep/ .surgery.intraoperative .ant-card{
+    background: #ffd54f;
+    color: black;
+}
+
 .surgery:hover{
     box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
 }
@@ -34,4 +49,16 @@
 .checkButton[disabled]{
     background: #f5f5f5;
     color: black
+}
+/deep/ .ant-tooltip-inner{
+    background: black;
+}
+
+.tooltip-cover{
+    font-size: 16px;
+}
+
+
+.tooltip-cover p.label {
+    color: #009ABB;
 }

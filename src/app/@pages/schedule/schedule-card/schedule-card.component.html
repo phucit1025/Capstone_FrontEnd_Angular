@@ -1,46 +1,116 @@
-<div [draggable]="!swapMode" [dragScope]="parentId + ''" [dragData]="data"
-  [class.a]="data.statusName === 'Preoperative'" [class.b]="data.statusName === 'Preoperative'"
-  [class.c]="data.statusName === 'Preoperative'" class="d-inline-block surgery mb-3 ">
-  <nz-card>
-    <div class="d-flex">
+<ng-container *ngIf="data.statusName === 'Preoperative' && !swapMode;else noDrag">
+  <div draggable [dragScope]="parentId + ''" [dragData]="data" [class.preoperative]="data.statusName === 'Preoperative'"
+    [class.intraoperative]="data.statusName === 'Intraoperative'"
+    [class.postoperative]="data.statusName === 'Postoperative'" class="d-inline-block surgery mb-3 ">
+    <nz-card>
+      <div class="d-flex">
+        <p style="width: 100%" class="text-center" [nzTitle]="tooltipTemplate" nzPlacement="topCenter" nz-tooltip>
+          <i class="mr-2" nz-icon type="info-circle" theme="outline"></i>
+          <b>{{data.id}}</b>
+        </p>
+      </div>
+      <div class="d-flex">
+        <p class="label" style="font-weight: bold">Patient :</p>
+        <p class="overflow-text">{{data.patientName}}</p>
+      </div>
+      <div class="d-flex">
+        <p class="label" style="font-weight: bold">Time :</p>
+        <p>{{(data.estimatedStartDateTime | date: 'HH : mm') + ' - ' + (data.estimatedEndDateTime | date: 'HH : mm')}}
+        </p>
+      </div>
+      <div *ngIf="!swapMode" class="row">
+        <div [class.col-4]="data.statusName === 'Preoperative'" [class.col-6]="data.statusName === 'Intraoperative'"
+          [class.col-12]="data.statusName === 'Postoperative'" class="pl-0 pr-1">
+          <button (click)="redirect()" style="width: 100%" nz-button nzType="primary">
+            Detail
+          </button>
+        </div>
+        <div *ngIf="data.statusName === 'Preoperative'" class="col-4 pl-1 pr-1">
+          <button (click)="openModal.emit(data)" style="width: 100%" nz-button nzType="default">
+            Change
+          </button>
+        </div>
+        <div *ngIf="data.statusName !== 'Postoperative'" class="pl-1 pr-0"
+          [class.col-4]="data.statusName === 'Preoperative'" [class.col-6]="data.statusName === 'Intraoperative'">
+          <button [class.btn-second]="data.statusName === 'Preoperative'"
+            [class.btn-third]="data.statusName === 'Intraoperative'" (click)="openModal.emit(data)" style="width: 100%"
+            nz-button nzType="default">
+            {{data.statusName === 'Preoperative' ? 'Begin' : 'Finish'}}
+          </button>
+        </div>
+      </div>
+      <div *ngIf="swapMode">
+        <button [ngClass]="{'checked' : (selected.firstShiftId === data.id || selected.secondShiftId ===data.id)}"
+          [disabled]="canDisabled()" class="checkButton" (click)="chooseNode()" style="width: 100%" nz-button
+          nzType="default">
+          {{(selected.firstShiftId === data.id || selected.secondShiftId === data.id) ? 'Unselect' : 'Select'}}
+        </button>
+      </div>
+    </nz-card>
+  </div>
+</ng-container>
+<ng-template #noDrag>
+  <div [class.preoperative]="data.statusName === 'Preoperative'"
+    [class.intraoperative]="data.statusName === 'Intraoperative'"
+    [class.postoperative]="data.statusName === 'Postoperative'" class="d-inline-block surgery mb-3 ">
+    <nz-card>
+      <div class="d-flex">
+        <p style="width: 100%" class="text-center" [nzTitle]="tooltipTemplate" nzPlacement="topCenter" nz-tooltip>
+          <i class="mr-2" nz-icon type="info-circle" theme="outline"></i>
+          <b>{{data.id}}</b>
+        </p>
+      </div>
+      <div class="d-flex">
+        <p class="label" style="font-weight: bold">Patient :</p>
+        <p class="overflow-text">{{data.patientName}}</p>
+      </div>
+      <div class="d-flex">
+        <p class="label" style="font-weight: bold">Time :</p>
+        <p>{{(data.estimatedStartDateTime | date: 'HH : mm') + ' - ' + (data.estimatedEndDateTime | date: 'HH : mm')}}
+        </p>
+      </div>
+      <div *ngIf="!swapMode" class="row">
+        <div [class.col-4]="data.statusName === 'Preoperative'" [class.col-6]="data.statusName === 'Intraoperative'"
+          [class.col-12]="data.statusName === 'Postoperative'" class="pl-0 pr-1">
+          <button (click)="redirect()" style="width: 100%" nz-button nzType="primary">
+            Detail
+          </button>
+        </div>
+        <div *ngIf="data.statusName === 'Preoperative'" class="col-4 pl-1 pr-1">
+          <button (click)="openModal.emit(data)" style="width: 100%" nz-button nzType="default">
+            Change
+          </button>
+        </div>
+        <div *ngIf="data.statusName !== 'Postoperative'" class="pl-1 pr-0"
+          [class.col-4]="data.statusName === 'Preoperative'" [class.col-6]="data.statusName === 'Intraoperative'">
+          <button [class.btn-second]="data.statusName === 'Preoperative'"
+            [class.btn-third]="data.statusName === 'Intraoperative'" (click)="openModal.emit(data)" style="width: 100%"
+            nz-button nzType="default">
+            {{data.statusName === 'Preoperative' ? 'Begin' : 'Finish'}}
+          </button>
+        </div>
+      </div>
+      <div *ngIf="swapMode">
+        <button [ngClass]="{'checked' : (selected.firstShiftId === data.id || selected.secondShiftId ===data.id)}"
+          [disabled]="canDisabled()" class="checkButton" (click)="chooseNode()" style="width: 100%" nz-button
+          nzType="default">
+          {{(selected.firstShiftId === data.id || selected.secondShiftId === data.id) ? 'Unselect' : 'Select'}}
+        </button>
+      </div>
+    </nz-card>
+  </div>
+</ng-template>
+
+<ng-template #tooltipTemplate>
+  <div class="tooltip-cover">
+    <div class="d-block">
       <p class="label" style="font-weight: bold">Catalog Code :</p>
-      <p class="overflow-text" style="overflow: hidden">{{data.catalogCode}}</p>
+      <p>{{data.catalogCode ? data.catalogCode : 'N/A'}}</p>
     </div>
-    <div class="d-flex">
-      <p class="label" style="font-weight: bold">Patient :</p>
-      <p class="overflow-text">{{data.patientName}}</p>
+    <div class="d-block">
+      <p class="label" style="font-weight: bold">Catalog Name :</p>
+      <p>{{data.catalogName ? data.catalogName : 'N/A'}}
+      </p>
     </div>
-    <div class="d-flex">
-      <p class="label" style="font-weight: bold">Time :</p>
-      <p>{{(data.estimatedStartDateTime | date: 'HH : mm') + ' - ' + (data.estimatedEndDateTime | date: 'HH : mm')}}</p>
-    </div>
-    <div *ngIf="!swapMode" class="row">
-      <div [class.col-4]="data.statusName === 'Preoperative'" [class.col-6]="data.statusName === 'Intraoperative'"
-        [class.col-12]="data.statusName === 'Postoperative'" class="pl-0 pr-1">
-        <button (click)="redirect()" style="width: 100%" nz-button nzType="primary">
-          Detail
-        </button>
-      </div>
-      <div *ngIf="data.statusName === 'Preoperative'" class="col-4 pl-1 pr-1">
-        <button (click)="openModal.emit(data)" style="width: 100%" nz-button nzType="default">
-          Change
-        </button>
-      </div>
-      <div *ngIf="data.statusName !== 'Postoperative'" class="pl-1 pr-0"
-        [class.col-4]="data.statusName === 'Preoperative'" [class.col-6]="data.statusName === 'Intraoperative'">
-        <button [class.btn-second]="data.statusName === 'Preoperative'"
-          [class.btn-third]="data.statusName === 'Intraoperative'" (click)="openModal.emit(data)" style="width: 100%"
-          nz-button nzType="default">
-          {{data.statusName === 'Preoperative' ? 'Begin' : 'Finish'}}
-        </button>
-      </div>
-    </div>
-    <div *ngIf="swapMode">
-      <button [ngClass]="{'checked' : (selected.firstShiftId === data.id || selected.secondShiftId ===data.id)}"
-        [disabled]="canDisabled()" class="checkButton" (click)="chooseNode()" style="width: 100%" nz-button
-        nzType="default">
-        {{(selected.firstShiftId === data.id || selected.secondShiftId === data.id) ? 'Unselect' : 'Select'}}
-      </button>
-    </div>
-  </nz-card>
-</div>
+  </div>
+</ng-template>

@@ -92,3 +92,8 @@
   overflow: auto;
   white-space: normal
 }
+
+/deep/ .white-color .ant-tag-has-color{
+  border: 1px solid black;
+  color: black;
+}

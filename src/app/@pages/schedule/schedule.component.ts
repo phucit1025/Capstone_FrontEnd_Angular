@@ -1,3 +1,4 @@
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { ScheduleService } from '../../page-services/schedule.service';
 import { combineLatest } from 'rxjs';
@@ -19,7 +20,9 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   @ViewChild('moveNodeconfirm') dialog: SwalComponent;
   loadingId: any;
   date: Date;
+  emergencyForm: FormGroup;
   isVisible = false;
+  isShowEmergency = false;
   rooms: any;
   serverTime: any;
   selectedObject: any;
@@ -34,21 +37,62 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     swapMode: false,
     load: false,
     finish: false,
-    reload: false
+    reload: false,
+    create: false
   };
 
-  constructor(private schedule: ScheduleService, private messageService: NzMessageService) {
+  constructor(private schedule: ScheduleService, private messageService: NzMessageService, private fb: FormBuilder) {
   }
 
   ngOnInit() {
-    this.date = new Date('3/19/2019');
+    this.date = new Date();
     this.getSchedule();
+    this.createEmergencyForm();
     this.getServerTime();
   }
 
   ngOnDestroy() {
     if (this.state.interval) {
       clearInterval(this.state.interval);
+    }
+  }
+
+  disabledStartDate = (startValue: Date): boolean => {
+    if (!startValue || !this.emergencyForm.controls['endTime'].value) {
+      return false;
+    }
+    return startValue.getTime() >= this.emergencyForm.controls['endTime'].value.getTime() || startValue.getTime() <= (new Date()).getTime();
+  }
+
+  disabledEndDate = (endValue: Date): boolean => {
+    if (!endValue || !this.emergencyForm.controls['startTime'].value) {
+      return false;
+    }
+    return endValue.getTime() <= this.emergencyForm.controls['startTime'].value.getTime();
+  }
+
+  createEmergencyForm() {
+    this.emergencyForm = this.fb.group({
+      startTime: new FormControl(new Date(), Validators.required),
+      endTime: new FormControl(new Date(), [Validators.required]),
+      isForceAdd: new FormControl(false)
+    });
+  }
+
+  createShift() {
+    if (this.emergencyForm.valid) {
+      this.state.create = true;
+      const value = GLOBAL.parseObject(this.emergencyForm.value);
+      this.schedule.addEmergencyShift(value).subscribe(res => {
+        this.messageService.success('Create Successful!!!');
+        this.state.create = false;
+        this.isShowEmergency = false;
+        this.createEmergencyForm();
+        this.getSchedule(this.date);
+      }, er => {
+        this.state.create = false;
+        this.messageService.error('Create Fail!!!');
+      });
     }
   }
 
@@ -204,7 +248,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     this.showLoader();
     this.schedule.moveRoom(data).subscribe(res => {
       this.removeLoader();
-      this.scheduleForEachRoom(this.rooms, GLOBAL.convertDate(this.date));
+      this.getSchedule(this.date);
       this.setNode(null);
       this.messageService.success('Success Swap');
     }, er => {

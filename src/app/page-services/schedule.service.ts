@@ -118,4 +118,8 @@ export class ScheduleService {
       responseType: 'text'
     });
   }
+
+  addEmergencyShift(data) {
+    return this.http.post(GLOBAL.API + this.name + '/AddEmergencyShift', data);
+  }
 }
