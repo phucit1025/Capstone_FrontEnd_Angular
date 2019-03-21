@@ -1,4 +1,5 @@
-import {Pipe, PipeTransform} from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
+import { filter } from 'rxjs/operators';
 
 @Pipe({
   name: 'roomPipe'
@@ -13,15 +14,24 @@ export class RoomPipe implements PipeTransform {
         if (t.trim()) {
           array.map((el, i) => {
             if (j === 0) {
-              newData[i].surgery = el.surgery.filter(sg => sg.id.toString().includes(t.trim()));
+              el.slotRooms.forEach((slot, k) => {
+                newData[i].slotRooms[k].surgeries = slot.surgeries.filter(sg => sg.id.toString().includes(t.trim()));
+              });
             } else {
-              const result = el.surgery.filter(sg => sg.id.toString().includes(t.trim()));
-              newData[i].surgery = newData[i].surgery.concat(result).unique();
+              if (t !== idList[0]) {
+                el.slotRooms.forEach((slot, k) => {
+                  const result = slot.surgeries.filter(sg => sg.id.toString().includes(t.trim()));
+                  newData[i].slotRooms[k].surgeries = newData[i].slotRooms[k].surgeries.concat(result).unique();
+                });
+              }
             }
           });
         }
       });
-      const finalSearch = newData.filter(el => el.surgery.length > 0);
+      const finalSearch = newData.map(room => {
+         room.slotRooms = room.slotRooms.filter(slot => slot.surgeries.length > 0);
+         return room;
+      }).filter(room => room.slotRooms.length > 0);
       return finalSearch.length > 0 ? finalSearch : [-1];
     }
     return array;

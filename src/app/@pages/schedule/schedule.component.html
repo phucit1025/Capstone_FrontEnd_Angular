@@ -1,61 +1,88 @@
 <div class="pos-relative" style="padding: 10px">
-  <nz-form-item>
-    <nz-form-label style="text-align: left" [nzSpan]="1" nzFor="date">
-      <b style="font-size: 1.2em">Date</b>
-    </nz-form-label>
-    <nz-form-control [nzSpan]="14">
-      <nz-date-picker name="date" id="date"
-                      nzFormat="dd-MM-yyyy"
-                      [ngModel]="date" (ngModelChange)="changeDate($event)"></nz-date-picker>
-    </nz-form-control>
-  </nz-form-item>
+  <div class="row">
+    <div class="col-6">
+      <nz-form-item>
+        <nz-form-label style="text-align: left" nzFor="date">
+          <b style="font-size: 1.2em">Date</b>
+        </nz-form-label>
+        <nz-form-control>
+          <nz-date-picker name="date" id="date" nzFormat="dd-MM-yyyy" [ngModel]="date"
+            (ngModelChange)="changeDate($event)">
+          </nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div class="col-6">
+      <nz-form-item>
+        <nz-form-label style="text-align: left">
+          <b style="font-size: 1.2em">Time</b>
+        </nz-form-label>
+        <nz-form-control>
+          <h1><b style="color: #009ABB">{{serverTime | date: 'HH : mm : ss'}}</b></h1>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
   <!--loading-->
   <div *ngIf="state.load" class="container" style="text-align: center">
     <nz-spin class="isLoad" [nzSize]="'large'"></nz-spin>
   </div>
+
   <ng-container *ngIf="!state.load && state.finish">
-    <div nz-row class="w-full">
+    <div nz-row class="w-full mb-2">
       <div nz-col nzSpan="12">
         <h2>List rooms available</h2>
       </div>
       <div nz-col nzSpan="12" class="pr-2">
         <div class="d-flex">
           <nz-input-group class="mr-2" [nzSuffix]="suffixIconSearch">
-            <input [(ngModel)]="state.searchText" type="text" nz-input
-                   placeholder="Search by Id1, Id2, ...">
+            <input [(ngModel)]="state.searchText" type="text" nz-input placeholder="Search by Id1, Id2, ...">
           </nz-input-group>
           <ng-template #suffixIconSearch>
             <i nz-icon type="search"></i>
           </ng-template>
           <button *ngIf="!state.swapMode" (click)="state.swapMode = true" nz-button nzType="primary">Enable Swap
           </button>
-          <button (click)="swapShift()" class="mr-2" *ngIf="state.swapMode"
-                  [disabled]="!selected.firstShiftId  || !selected.secondShiftId" nz-button
-                  nzType="primary">Swap
+          <button nz-popconfirm nzTitle="Are You Sure You Want To Swap ?" [nzCancelText]="'Cancel'"
+            (nzOnConfirm)="swapShift()" *ngIf="state.swapMode"
+            [disabled]="!selected.firstShiftId  || !selected.secondShiftId" nz-button nzType="primary" class="mr-2">Swap
           </button>
           <button *ngIf="state.swapMode" (click)="disabled()" nz-button nzType="default">Disable Swap</button>
         </div>
       </div>
     </div>
-    <div class="room-container">
+    <!-- Room Container -->
+    <div id="room-container" class="room-container">
       <ng-container *ngFor="let room of rooms | roomPipe: state.searchText">
         <div *ngIf="room !== -1" class="date">
-          <nz-card class="room header">
-            {{room.name}}
-          </nz-card>
-          <ng-container *ngIf="room?.surgery?.length > 0; else noData">
-            <div class="room-detail-container" [id]="room.id" droppable [dropScope]="getScope(room)" (onDrop)="dropNode($event)">
-              <app-schedule-card *ngFor="let block of room.surgery" [data]="block" [parentId]="room.id"
-                                 [(swapMode)]="state.swapMode"
-                                 [(selected)]="selected" (clickCard)="openModal($event)"
-                                 (openModal)="openModal($event)"></app-schedule-card>
+          <!-- Room header -->
+          <div class="room-name">
+            <div class="rotate">
+              {{room.name}}
             </div>
-          </ng-container>
-          <ng-template #noData>
-            <nz-card class="room nodata">
-              <b>No record</b>
-            </nz-card>
-          </ng-template>
+          </div>
+          <!-- Room-slot -->
+          <div class="slot-group-container">
+            <div class="slot" *ngFor="let slot of room.slotRooms">
+              <div class="slot-name">
+                {{slot.name}}
+              </div>
+              <div [id]="slot.id" class="slot-container p-3" droppable [dropScope]="getScope(slot)"
+                (onDrop)="dropNode($event)">
+                <ng-container *ngIf="slot.surgeries?.length > 0; else noData">
+                  <!-- Room Surgery -->
+                  <app-schedule-card *ngFor="let surgery of slot.surgeries" [data]="surgery" [parentId]="slot.id"
+                    [(swapMode)]="state.swapMode" (openModal)="openModal($event)" [(selected)]="selected">
+                  </app-schedule-card>
+                </ng-container>
+                <ng-template #noData>
+                  <nz-card class="surgery nodata text-center">
+                    <b>No record</b>
+                  </nz-card>
+                </ng-template>
+              </div>
+            </div>
+          </div>
         </div>
         <div *ngIf="room === -1" class="noMatch">
           <h4>No Match</h4>
@@ -64,14 +91,8 @@
     </div>
   </ng-container>
   <!--Modal-->
-  <nz-modal
-    [nzWidth]="'50%'"
-    style="width: 40%"
-    (nzOnCancel)="cancel()"
-    [(nzVisible)]="isVisible"
-    [nzTitle]="modalTitle"
-    [nzContent]="modalContent"
-    [nzFooter]="modalFooter">
+  <nz-modal [nzWidth]="'50%'" style="width: 40%" (nzOnCancel)="cancel()" [(nzVisible)]="isVisible"
+    [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter">
     <ng-template #modalTitle>
       Change Schedule
     </ng-template>
@@ -86,7 +107,16 @@
       <button nz-button nzType="default" (click)="cancel()">Close</button>
     </ng-template>
   </nz-modal>
-
-  <div *ngIf="loadingId" class="backdrop pos-absolute top-0 left-0 right-0 bottom-0" style="background: rgba(0,0,0,.5); z-index: 1000">
+  <!-- Loader -->
+  <div *ngIf="loadingId" class="backdrop pos-absolute top-0 left-0 right-0 bottom-0"
+    style="background: rgba(0,0,0,.5); z-index: 1000">
   </div>
 </div>
+<!-- Swal -->
+<swal #moveNodeconfirm title="Swap Shift ?" [showCancelButton]="false" [showConfirmButton]="false"
+  [showCloseButton]="true" (cancel)="setNode(null)">
+  <div *swalPartial class="text-center pt-3">
+    <button (click)="moveToRoom(false)" nz-button nzType="primary" class="mr-2">Swap</button>
+    <button (click)="moveToRoom(true)" nz-button nzType="danger">Force Swap</button>
+  </div>
+</swal>

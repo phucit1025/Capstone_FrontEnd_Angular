@@ -8,7 +8,10 @@ const routes: Routes = [{
   pathMatch: 'full'
 }, {
   path: 'login',
-  component: LoginComponent
+  component: LoginComponent,
+  data: {
+    title: 'Login'
+  }
 }, {
   path: '**',
   redirectTo: 'login',

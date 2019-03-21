@@ -1,0 +1,43 @@
+<h2 class="mb-3">Pending Requests for Medical Supply</h2>
+<nz-table #rowSelectionTable
+          nzBordered
+          [nzShowPagination]="true"
+          [nzShowSizeChanger]="true"
+          [nzLoading]="state.load"
+          [nzData]="listData"
+          [nzNoResult]="noData">
+  <thead>
+  <tr>
+    <th [nzDisabled]="listData.length === 0" nzShowCheckbox [(nzChecked)]="isAllCheck"
+        (nzCheckedChange)="checkAll($event)"
+        [nzIndeterminate]="isAllCheck"></th>
+    <th>Patient Name</th>
+    <th>Surgery Name</th>
+    <th>Day Created</th>
+    <th>Supply</th>
+    <th>View Detail</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let data of rowSelectionTable.data">
+    <td nzShowCheckbox [(nzChecked)]="mapOfCheckedId[data.id]" (nzCheckedChange)="checkItem()"></td>
+    <td>{{data.patientName}}</td>
+    <td>{{data.surgeryName}}</td>
+    <td>{{data.createdDate}}</td>
+    <td>{{data.surgeryName}}</td>
+    <td class="text-center">
+      <button nz-button nzType="primary"><i nz-icon type="info-circle"></i></button>
+    </td>
+  </tr>
+  </tbody>
+</nz-table>
+<div class="text-right mt-4" *ngIf="listData?.length > 0">
+  <button nz-button nzType="primary" [disabled]="!isActive()" (click)="confirm()">Confirm</button>
+</div>
+
+<ng-template #noData>
+  <div style="text-align: center;">
+    <i nz-icon type="file-text" theme="outline" style="font-size: 30px; margin-bottom: 10px"></i>
+    <p>No Data</p>
+  </div>
+</ng-template>

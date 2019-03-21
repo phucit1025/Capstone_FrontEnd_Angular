@@ -1,6 +1,8 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {NzMessageService} from 'ng-zorro-antd';
-import * as XLSX from 'node_modules/xlsx';
+import {GLOBAL} from '../../global';
+import {ImportService} from '../../page-services/import.service';
+import {combineLatest} from 'rxjs';
 
 @Component({
   selector: 'app-import-file',
@@ -12,55 +14,128 @@ export class ImportFileComponent implements OnInit {
   state = {
     load: false
   };
-  data: any;
+  data = [];
+  medicals = [];
+  mapOfCheckedId: { [key: string]: boolean } = {};
+  isAllCheck = false;
 
-  constructor(private message: NzMessageService) {
+  constructor(private message: NzMessageService, private importSV: ImportService) {
   }
 
   ngOnInit() {
   }
 
-  handleFile(e) {
+  async handleFile(e) {
+    this.state.load = true;
     const file = e.target.files[0];
     if (file) {
-      this.state.load = true;
-      const reader = new FileReader();
-      reader.onload = (event: any) => {
-        const text = (event.target.result).trim();
-        try {
-          const data = XLSX.read(text, {
-            type: 'binary'
-          });
-          this.data = this.toJson(data)[0].map((el, i) => {
-            el.index = i;
-            return el;
-          });
-          this.state.load = false;
-          this.message.success('File parse successfully');
-        } catch (e) {
-          this.state.load = false;
-          this.message.error('File input is not valid');
-        }
-      };
-      reader.readAsBinaryString(file);
+      const data = await GLOBAL.readFileExcel(file);
+      if (data && data.length > 1) {
+        this.medicals = data[1];
+        this.data = data[0].map((patient: any, index: number) => {
+          patient.index = index;
+          patient.gender = patient.gender === 'F' ? 0 : 1;
+          patient.patientID = patient.patientId;
+          patient.priority = patient.priorityNumber;
+          patient.surgeryShiftID = patient.surgeryShiftId;
+          patient.surgeryCatalogID = patient.surgeryCode;
+          patient.yearOfBirth = patient.patientDob;
+          patient.expectedSurgeryDuration = patient.surgeryWeight;
+          patient.detailMedical = data[1].filter(item => patient.surgeryShiftCode === item.surgeryShiftCode);
+          patient.proposedStartDateTime =
+            (patient.expectedDate && patient.expectedTime)
+              ? new Date(patient.expectedDate + ' ' + patient.expectedTime.split('-')[0])
+              : '';
+          patient.proposedEndDateTime =
+            (patient.expectedDate && patient.expectedTime)
+              ? new Date(patient.expectedDate + ' ' + patient.expectedTime.split('-')[1])
+              : '';
+          return patient;
+        });
+        this.message.success('File parse successfully');
+        this.state.load = false;
+        return;
+      }
     }
+    this.state.load = false;
+    this.message.error('File input is not valid');
   }
 
-  toJson(workbook) {
-    const result = [];
-    workbook.SheetNames.forEach(function (sheetName) {
-      const roa = (XLSX.utils as any).sheet_to_row_object_array(workbook.Sheets[sheetName]);
-      if (roa.length > 0) {
-        result.push(roa);
-      }
+  reRenderIndex(array) {
+    return array.map((item, index) => {
+      item.index = index;
+      return item;
     });
-    return result;
+  }
+
+  checkAll(value: boolean): void {
+    this.data.forEach(item => this.mapOfCheckedId[item.index] = value);
+    this.checkItem();
+  }
+
+  checkItem() {
+    this.isAllCheck = this.data.every(item => this.mapOfCheckedId[item.index]);
+  }
+
+  getCheckedItem() {
+    return this.data.filter(item => this.mapOfCheckedId[item.index] === true);
+  }
+
+  getUnCheckedItem() {
+    return this.data.filter(item => !(this.mapOfCheckedId[item.index] === true));
   }
 
   clearResult() {
     if (this.file) {
       this.file.nativeElement.value = null;
     }
+    this.isAllCheck = false;
+    this.medicals = [];
     this.data = [];
+    this.mapOfCheckedId = {};
+  }
+
+  importList() {
+    const profiles = GLOBAL.copyObject(this.getCheckedItem()).map(el => {
+      delete el.detailMedical;
+      delete el.medicalRecord;
+      delete el.doctorName;
+      delete el.patientId;
+      delete el.index;
+      delete el.priority;
+      delete el.surgeryShiftId;
+      delete el.surgeryCode;
+      delete el.patientDob;
+      return el;
+    });
+    const medicals = GLOBAL.copyObject(this.medicals).map(medical => {
+      return {
+        medicalSupplyId: medical.code,
+        surgeryShiftCode: medical.surgeryShiftCode,
+        quantity: medical.quantity
+      };
+    });
+    if (profiles && medicals) {
+      this.state.load = true;
+      const apiList = combineLatest(
+        this.importSV.importShift(profiles),
+        this.importSV.importShiftMedicalSupply(medicals)
+      );
+      apiList.subscribe(el => {
+        this.message.success('Import Successful');
+        this.state.load = false;
+        if (this.isAllCheck) {
+          this.clearResult();
+        } else {
+          this.data = this.reRenderIndex(this.getUnCheckedItem());
+          this.mapOfCheckedId = {};
+        }
+      }, er => {
+        this.message.error('Import Fail!!! Please try again');
+        this.state.load = false;
+      });
+    } else {
+      this.message.error('Data is not valid');
+    }
   }
 }

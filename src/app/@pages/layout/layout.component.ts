@@ -1,6 +1,9 @@
 import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {AuthService} from '../../page-services/auth.service';
 import {UserService} from '../../page-services/user.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Title} from '@angular/platform-browser';
+import 'rxjs/add/operator/mergeMap';
 
 @Component({
   selector: 'app-layout',
@@ -12,12 +15,20 @@ export class LayoutComponent implements OnInit, OnDestroy {
     {
       icon: 'file-excel',
       name: 'Import File',
-      link: '/pages/import-file'
+      link: '/pages/import-file',
+      roles: ['HospitalStaff']
+    },
+    {
+      icon: 'file-search',
+      name: 'Confirm Medical',
+      link: '/pages/confirm-medical',
+      roles: ['MedicalSupplier']
     },
     {
       icon: 'calendar',
       name: 'Schedule',
-      link: '/pages/schedule'
+      link: '/pages/schedule',
+      roles: ['ChiefNurse']
     }
   ];
   isCollapsed = false;
@@ -28,7 +39,8 @@ export class LayoutComponent implements OnInit, OnDestroy {
   };
   @ViewChild('trigger') customTrigger: TemplateRef<void>;
 
-  constructor(private auth: AuthService, private userSV: UserService) {
+  constructor(private auth: AuthService, private userSV: UserService,
+              private router: Router, private activedRoute: ActivatedRoute) {
   }
 
   ngOnInit() {

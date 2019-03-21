@@ -1,41 +1,44 @@
 <div class="mb-3 d-flex">
-  <button class="mr-auto" (click)="file.click()" nz-button nzType="primary" nzShape="round"><i nz-icon
-                                                                                               type="upload"></i>Import
+  <button class="mr-auto" [disabled]="state.load" (click)="file.click()" nz-button nzType="primary" nzShape="round"><i
+      nz-icon type="upload"></i>Import
     File
   </button>
   <ng-container *ngIf="data?.length > 0">
-    <button class="mr-2"  nz-button nzType="default" nzShape="round">
+    <button [disabled]="state.load" (click)="importList()" class="mr-2" nz-button nzType="default" nzShape="round">
       Import All
     </button>
-    <button (click)="clearResult()" nz-button nzType="danger" nzShape="round">
+    <button [disabled]="state.load" (click)="clearResult()" nz-button nzType="danger" nzShape="round">
       Clear List
     </button>
   </ng-container>
 </div>
 
 <input #file (change)="handleFile($event)" type="file" class="d-none"
-       accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-<nz-table #table [nzData]="data"
-          nzShowSizeChanger
-          [nzNoResult]="noData"
-          [nzLoading]="state.load">
+  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+<nz-table #table [nzData]="data" nzShowSizeChanger [nzShowPagination]="false" nzBordered [nzFrontPagination]="false"
+  [nzNoResult]="noData" [nzLoading]="state.load">
   <thead>
-  <tr>
-    <th>No</th>
-    <th>Patient Name</th>
-    <th>Gender</th>
-    <th>Surgery Name</th>
-    <th>Surgery Excepted Date</th>
-  </tr>
+    <tr>
+      <th [nzDisabled]="data.length === 0" nzShowCheckbox [(nzChecked)]="isAllCheck"
+        (nzCheckedChange)="checkAll($event)" [nzIndeterminate]="isAllCheck"></th>
+      <th>No</th>
+      <th>Patient Name</th>
+      <th>Gender</th>
+      <th>Surgery Name</th>
+      <th>Excepted Date</th>
+      <th>Duration</th>
+    </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let item of table.data">
-    <td>{{item.index + 1}}</td>
-    <td>{{item['Patient Name']}}</td>
-    <td>{{item['Gender']}}</td>
-    <td>{{item['Surgery Name']}}</td>
-    <td>{{item['Expected Date'] && item['Expected Time'] ? item['Expected Date'] + ' ' + item['Expected Time'] : 'N/A'}}</td>
-  </tr>
+    <tr *ngFor="let item of table.data">
+      <td nzShowCheckbox [(nzChecked)]="mapOfCheckedId[item.index]" (nzCheckedChange)="checkItem()"></td>
+      <td>{{item.index + 1}}</td>
+      <td>{{item.patientName}}</td>
+      <td>{{item.gender}}</td>
+      <td>{{item.surgeryName}}</td>
+      <td>{{item.proposedStartDateTime ? item.proposedStartDateTime : 'N/A'}}</td>
+      <td>{{item.proposedEndDateTime ? item.proposedEndDateTime : 'N/A'}}</td>
+    </tr>
   </tbody>
 </nz-table>
 

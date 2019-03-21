@@ -2,40 +2,45 @@
   <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="triggerTemplate" [nzWidth]="250">
     <div style="cursor: pointer" routerLink="/" class="logo">
       <img src="assets/logo.png" class="mr-1" alt="">
-      <span [hidden]="isCollapsed">eBSMS</span>
+      <span style="color: #09425A" [hidden]="isCollapsed">EBSMS</span>
     </div>
     <ul [nzTheme]="'dark'" nz-menu [nzMode]="'inline'" style="height:100%; overflow-y: auto; overflow-x: hidden">
-      <li *ngFor="let item of menu" nz-menu-item [routerLink]="item.link">
+      <ng-container *ngFor="let item of menu">
+        <li *ngIf="user.data && item.roles.indexOf(user.data.role) !== -1"
+            [routerLinkActive]="'ant-menu-item-selected'"
+            [routerLinkActiveOptions]="{exact: true}" nz-menu-item
+            [routerLink]="item.link">
           <span title>
             <i nz-icon [type]="item.icon"></i>
             {{item.name}}
           </span>
-      </li>
+        </li>
+      </ng-container>
     </ul>
   </nz-sider>
   <nz-layout style="overflow: hidden">
-      <nz-header class="navbar-layout">
-        <div style="height: 100%" class="d-flex align-items-center">
-          <i class="trigger" nz-icon [type]="isCollapsed?'menu-unfold':'menu-fold'"
-             (click)="isCollapsed=!isCollapsed"></i>
-          <div class="mr-auto"></div>
-          <nz-dropdown *ngIf="user?.data" class="user-dropdown">
-            <a nz-dropdown class="d-flex justify-content-center align-items-center">
-              <nz-avatar [nzSize]="'small'" nzIcon="user"></nz-avatar>
-              <span class="pr-1 pl-1">{{user.data.name}} </span>
-              <i nz-icon type="down"></i>
-            </a>
-            <ul nz-menu nzSelectable>
-              <li (click)="logout()" nz-menu-item>
-                <a><i nz-icon type="logout" theme="outline"></i> Logout</a>
-              </li>
-            </ul>
-          </nz-dropdown>
-          `
-        </div>
-      </nz-header>
+    <nz-header class="navbar-layout">
+      <div style="height: 100%" class="d-flex align-items-center">
+        <i class="trigger" nz-icon [type]="isCollapsed?'menu-unfold':'menu-fold'"
+           (click)="isCollapsed=!isCollapsed"></i>
+        <div class="mr-auto"></div>
+        <nz-dropdown *ngIf="user?.data" class="user-dropdown">
+          <a nz-dropdown class="d-flex justify-content-center align-items-center">
+            <nz-avatar [nzSize]="'small'" nzIcon="user"></nz-avatar>
+            <span class="pr-1 pl-1">{{user.data.name}} </span>
+            <i nz-icon type="down"></i>
+          </a>
+          <ul nz-menu nzSelectable>
+            <li (click)="logout()" nz-menu-item>
+              <a><i nz-icon type="logout" theme="outline"></i> Logout</a>
+            </li>
+          </ul>
+        </nz-dropdown>
+        `
+      </div>
+    </nz-header>
     <nz-content style="margin: 16px; overflow: auto">
-      <div style="padding:24px; background: #fff; min-height: 360px;">
+      <div style="padding:24px; background: #fff; min-height: 100%;">
         <router-outlet></router-outlet>
       </div>
     </nz-content>

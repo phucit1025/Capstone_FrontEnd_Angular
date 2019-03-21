@@ -3,25 +3,70 @@ import {Routes, RouterModule} from '@angular/router';
 import {ScheduleComponent} from './schedule/schedule.component';
 import {LayoutComponent} from './layout/layout.component';
 import {ImportFileComponent} from './import-file/import-file.component';
+import {ScheduleDetailComponent} from './schedule-detail/schedule-detail.component';
+import {ErrorsComponent} from './errors/errors.component';
+import {AuthGuardService} from '../page-services/auth-guard.service';
+import {ConfirmMedicalComponent} from './confirm-medical/confirm-medical.component';
 
 const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
+    data: {
+      title: 'EBSMS'
+    },
+    canActivate: [AuthGuardService],
+    canActivateChild: [AuthGuardService],
     children: [
       {
         path: 'import-file',
-        component: ImportFileComponent
+        component: ImportFileComponent,
+        data: {
+          roles: ['HospitalStaff'],
+          title: 'Import File'
+        },
+      },
+      {
+        path: 'confirm-medical',
+        component: ConfirmMedicalComponent,
+        data: {
+          roles: ['MedicalSupplier'],
+          title: 'Confirm Medical Supply Request'
+        },
       },
       {
         path: 'schedule',
-        component: ScheduleComponent
+        component: ScheduleComponent,
+        data: {
+          roles: ['ChiefNurse'],
+          title: 'Schedule'
+        }
+      },
+      {
+        path: 'schedule-detail/:id',
+        component: ScheduleDetailComponent,
+        data: {
+          roles: ['ChiefNurse'],
+          title: 'Schedule'
+        },
+      },
+      {
+        path: 'error',
+        component: ErrorsComponent,
+        data: {
+          roles: [],
+          title: 'Error'
+        },
       },
     ]
   },
   {
+    path: 'error',
+    component: ErrorsComponent
+  },
+  {
     path: '**',
-    redirectTo: '',
+    redirectTo: 'error',
     pathMatch: 'full'
   }
 ];

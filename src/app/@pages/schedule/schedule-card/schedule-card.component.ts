@@ -1,11 +1,12 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-schedule-card',
   templateUrl: './schedule-card.component.html',
   styleUrls: ['./schedule-card.component.css']
 })
-export class ScheduleCardComponent implements OnInit {
+export class ScheduleCardComponent implements OnInit, AfterViewInit {
   @Input() data;
   @Input() swapMode;
   @Input() selected;
@@ -16,7 +17,13 @@ export class ScheduleCardComponent implements OnInit {
   @Output() clickCard = new EventEmitter();
   @Output() openModal = new EventEmitter();
 
-  constructor() {
+  contentDiv: any;
+
+  constructor(private router: Router) {
+  }
+
+  ngAfterViewInit(): void {
+    this.contentDiv = document.getElementById('room-container');
   }
 
   ngOnInit() {
@@ -42,6 +49,13 @@ export class ScheduleCardComponent implements OnInit {
   }
 
   canDisabled() {
-    return (this.selected.firstShiftId && this.selected.secondShiftId && this.data.id !== this.selected.firstShiftId && this.data.id !== this.selected.secondShiftId);
+    return (this.selected.firstShiftId
+      && this.selected.secondShiftId
+      && this.data.id !== this.selected.firstShiftId
+      && this.data.id !== this.selected.secondShiftId);
+  }
+
+  redirect() {
+    this.router.navigate(['pages/schedule-detail', this.data.id]);
   }
 }

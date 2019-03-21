@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 
@@ -7,7 +8,7 @@ import {BehaviorSubject} from 'rxjs';
 export class UserService {
   private user: BehaviorSubject<User>;
 
-  constructor() {
+  constructor(private http: HttpClient) {
     this.user = new BehaviorSubject<User>(null);
   }
 

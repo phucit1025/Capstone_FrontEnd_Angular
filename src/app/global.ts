@@ -1,4 +1,5 @@
 import * as moment from 'moment';
+import * as XLSX from 'xlsx';
 
 export const GLOBAL = Object.freeze({
   API: 'http://45.119.212.145:5520/api/',
@@ -41,6 +42,9 @@ export const GLOBAL = Object.freeze({
     }
     return finalData;
   },
+  copyObject: function (data) {
+    return JSON.parse(JSON.stringify(data));
+  },
   parseArray: function (bigArray) {
     const finalData = Object.assign([], bigArray);
     for (let i = 0; i < bigArray.length; i++) {
@@ -50,4 +54,53 @@ export const GLOBAL = Object.freeze({
     }
     return finalData;
   },
+  parseExcelObject: function (data) {
+    for (const key in data) {
+      if (data.hasOwnProperty(key)) {
+        const newKey = key.split(' ').reduce((string, el, i) => {
+          el = el.toLowerCase().trim();
+          if (i === 0) {
+            return string += el;
+          } else {
+            el = el.charAt(0).toUpperCase() + el.slice(1);
+            return string + el;
+          }
+        }, '');
+        data[newKey] = data[key];
+        delete data[key];
+      }
+    }
+    return data;
+  },
+  excelToJson(workbook) {
+    const result = [];
+    workbook.SheetNames.forEach(function (sheetName) {
+      const roa = (XLSX.utils as any).sheet_to_row_object_array(workbook.Sheets[sheetName]);
+      if (roa.length > 0) {
+        result.push(roa);
+      }
+    });
+    return result;
+  },
+  readFileExcel: async function (file) {
+    return new Promise<any>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (event: any) => {
+        const text = (event.target.result).trim();
+        try {
+          const data = XLSX.read(text, {
+            type: 'binary'
+          });
+          resolve(this.excelToJson(data).map(el => {
+            return el.map(e => {
+              return this.parseExcelObject(e);
+            });
+          }));
+        } catch (e) {
+          reject(null);
+        }
+      };
+      reader.readAsBinaryString(file);
+    });
+  }
 });

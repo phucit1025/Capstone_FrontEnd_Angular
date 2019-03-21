@@ -91,7 +91,7 @@ iframe {
   font-family: OpenSans-Regular;
   font-size: 15px;
   line-height: 1.4;
-  color: #4272d7;
+  color: #09425A;
 }
 
 .hov1:hover {
@@ -204,7 +204,7 @@ input.input100 {
   position: absolute;
   width: 0;
   height: 1px;
-  background-color: #4272d7;
+  background-color: #009ABB;
 }
 
 .focus-input100-1::before {
@@ -224,7 +224,7 @@ input.input100 {
   position: absolute;
   width: 1px;
   height: 0;
-  background-color: #4272d7;
+  background-color: #009ABB;
 }
 
 .focus-input100-1::after {
@@ -302,7 +302,7 @@ input.input100 {
   padding: 0 20px;
   width: 100%;
   height: 60px;
-  background-color: #4272d7;
+  background-color: #009ABB;
 
   font-family: OpenSans-Regular;
   font-size: 14px;
@@ -317,10 +317,8 @@ input.input100 {
 }
 
 .login100-form-btn:not(:disabled):hover {
-	background-color: #333333;
+	background-color: #09425A;
 }
-
-
 
 .login100-form-btn:disabled {
 	background: gray;
