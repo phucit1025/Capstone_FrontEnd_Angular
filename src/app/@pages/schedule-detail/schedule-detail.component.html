@@ -454,11 +454,6 @@
       </button>
     </div>
   </ng-template>
-<<<<<<< HEAD
-  </ng-template>
-
-      [nzLoading]="state.loadChangeStatus">{{data?.statusName === 'Preoperative' ? 'Save' : 'Complete'}}</button>
-=======
 </nz-modal>
 
 <nz-modal [(nzVisible)]="state.showStatusModal" [nzTitle]="startTitle" [nzContent]="startContent"
@@ -500,5 +495,4 @@
     <button [disabled]="state.loadChangeStatus || !selected.selectedTime" nz-button nzType="primary" (click)="startShift()"
       [nzLoading]="state.loadChangeStatus">{{data?.statusName === 'Preoperative' ? 'Save' : 'Complete'}}</button>
   </ng-template>
->>>>>>> 37019906e03ab11d5bb63605bacbf8bb96f283a2
 </nz-modal>

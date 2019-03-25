@@ -312,7 +312,6 @@ export class ScheduleDetailComponent implements OnInit {
       this.state.loadAssignNurse = false;
     });
   }
-<<<<<<< HEAD
   getHealthcare(id) {
     this.state.loadHealthcare = true;
     this.schedule.getHealthcareReport(id).subscribe((hc: any) => {
@@ -320,7 +319,6 @@ export class ScheduleDetailComponent implements OnInit {
       this.state.loadHealthcare = false;
       this.createNewFormTreatment();
     }, er => this.state.loadHealthcare = false);
-=======
 
   openStartShift() {
     switch (this.data.statusName) {
@@ -391,5 +389,5 @@ export class ScheduleDetailComponent implements OnInit {
     }
 
   }
->>>>>>> 37019906e03ab11d5bb63605bacbf8bb96f283a2
+}
 }
