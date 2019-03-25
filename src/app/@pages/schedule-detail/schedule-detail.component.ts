@@ -4,6 +4,7 @@ import { FormBuilder, FormControl, Validators, FormArray } from '@angular/forms'
 import { Component, OnInit } from '@angular/core';
 import { ScheduleService } from '../../page-services/schedule.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-schedule-detail',
@@ -11,6 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./schedule-detail.component.css']
 })
 export class ScheduleDetailComponent implements OnInit {
+  id: number;
   detailSchedule: any;
   data: any;
   mapOfExpandData: { [key: string]: boolean } = {};
@@ -20,6 +22,11 @@ export class ScheduleDetailComponent implements OnInit {
     'margin-bottom': '24px',
     'border': '0px'
   };
+  selected = {
+    selectedTime: null,
+    selectedBed: null,
+    selectedRoom: null
+  };
   state = {
     load: true,
     loadGetSupply: false,
@@ -28,6 +35,7 @@ export class ScheduleDetailComponent implements OnInit {
     loadAssignNurse: false,
     loadGetNurse: false,
     loadAllSupply: false,
+    loadChangeStatus: false,
     loadAllDrug: false,
     loadAllNurse: false,
     loadAddSupply: false,
@@ -37,7 +45,8 @@ export class ScheduleDetailComponent implements OnInit {
     treatmentMode: null as 'Edit' | 'Create',
     showAddSupply: false,
     showTreatmentReport: false,
-    showAssignNurse: false
+    showAssignNurse: false,
+    showStatusModal: false
   };
   surgeryDetail = {
     surgeryProcedure: '',
@@ -60,6 +69,7 @@ export class ScheduleDetailComponent implements OnInit {
   constructor(private message: NzMessageService, private schedule: ScheduleService,
     private router: Router, private route: ActivatedRoute, private fb: FormBuilder) {
     route.params.subscribe(params => {
+      this.id = params.id;
       this.getDetail(params.id);
     });
   }
@@ -139,7 +149,7 @@ export class ScheduleDetailComponent implements OnInit {
   getEkipMember(id) {
     this.schedule.getEkipMember(id).subscribe(res => {
       this.data.ekipMember = res;
-    }, er => {});
+    }, er => { });
   }
 
   getDetail(id) {
@@ -150,6 +160,7 @@ export class ScheduleDetailComponent implements OnInit {
       this.detailSchedule = res;
       this.state.load = false;
       this.data = res;
+      console.log(res);
       this.getSupply(res.id);
       this.getEkipMember(res.id);
       this.getTreatment(res.id);
@@ -270,5 +281,75 @@ export class ScheduleDetailComponent implements OnInit {
       this.message.error('Assign Fail!!!');
       this.state.loadAssignNurse = false;
     });
+  }
+
+  openStartShift() {
+    switch (this.data.statusName) {
+      case 'Preoperative':
+        this.state.showStatusModal = true;
+        this.selected.selectedTime = new Date(this.data.startTime);
+        break;
+      case 'Intraoperative':
+        this.state.showStatusModal = true;
+        this.selected.selectedTime = new Date(this.data.endTime);
+        this.selected.selectedRoom = null;
+        this.selected.selectedBed = null;
+        break;
+      case 'Postoperative': break;
+    }
+  }
+
+  startShift() {
+    switch (this.data.statusName) {
+      case 'Preoperative':
+        const Pdate = moment(this.data.startTime).format('YYYY-MM-DD');
+        const Ptime = moment(this.selected.selectedTime).format('HH:mm');
+        this.state.loadChangeStatus = true;
+        this.schedule.setIntraoperativeStatus({
+          shiftId: this.data.id,
+          time: Pdate + ' ' + Ptime
+        }).subscribe(sc => {
+          this.message.success('Change Successful');
+          this.state.showStatusModal = false;
+          this.selected.selectedTime = null;
+          this.state.loadChangeStatus = false;
+          this.getDetail(this.id);
+        }, er => {
+          this.message.error('Change Fail');
+          this.state.loadChangeStatus = false;
+        })
+        break;
+      case 'Intraoperative':
+        const date = moment(this.data.endTime).format('YYYY-MM-DD');
+        const time = moment(this.selected.selectedTime).format('HH:mm');
+        const bedPost = this.selected.selectedBed;
+        const roomPost = this.selected.selectedRoom;
+        const data = {
+          actualEndDateTime: date + ' ' + time,
+          shiftId: this.data.id
+        } as any;
+        if (bedPost) {
+          data.bedPost = bedPost;
+        }
+        if (roomPost) {
+          data.roomPost = roomPost;
+        }
+        this.state.loadChangeStatus = true;
+        this.schedule.setPostoperativeStatus(GLOBAL.parseUrlString(data)).subscribe(sc => {
+          this.message.success('Change Successful');
+          this.state.showStatusModal = false;
+          this.selected.selectedBed = null;
+          this.selected.selectedRoom = null;
+          this.selected.selectedTime = null;
+          this.state.loadChangeStatus = false;
+          this.getDetail(this.id);
+        }, er => {
+          this.message.error('Change Fail');
+          this.state.loadChangeStatus = false;
+        })
+        break;
+      case 'Postoperative': break;
+    }
+
   }
 }
