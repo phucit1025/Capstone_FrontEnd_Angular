@@ -8,7 +8,7 @@
 
 .room-container .date {
   display: flex;
-  background: #F0F2F5;
+  background: #53B79F;
   padding-bottom: 10px;
 }
 
@@ -54,7 +54,8 @@
 
 .slot-group-container{
   max-width: calc(100% - 70px - 10px);
-  height: 400px;
+  height: 390px;
+  padding: 10px 0;
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap

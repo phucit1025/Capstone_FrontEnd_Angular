@@ -1,5 +1,7 @@
+import { ScheduleService } from './../../../page-services/schedule.service';
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { NzMessageService } from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-schedule-card',
@@ -16,10 +18,11 @@ export class ScheduleCardComponent implements OnInit, AfterViewInit {
   @Output() selectedChange = new EventEmitter();
   @Output() clickCard = new EventEmitter();
   @Output() openModal = new EventEmitter();
+  @Output() statusChange = new EventEmitter();
 
   contentDiv: any;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private schedule: ScheduleService, private message: NzMessageService) {
   }
 
   ngAfterViewInit(): void {
@@ -53,6 +56,10 @@ export class ScheduleCardComponent implements OnInit, AfterViewInit {
       && this.selected.secondShiftId
       && this.data.id !== this.selected.firstShiftId
       && this.data.id !== this.selected.secondShiftId);
+  }
+
+  changeStatus() {
+    this.statusChange.emit(this.data);
   }
 
   redirect() {

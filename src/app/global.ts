@@ -102,5 +102,16 @@ export const GLOBAL = Object.freeze({
       };
       reader.readAsBinaryString(file);
     });
-  }
+  },
+   parseUrlString: function (data: any) {
+    let str = '?';
+    for (const key in data) {
+        if (data.hasOwnProperty(key)) {
+            if (data[key] !== null && data[key] !== '' && data[key] !== undefined) {
+                str += key + '=' + data[key] + '&';
+            }
+        }
+    }
+    return str.replace(/([&?])$/g, '');
+}
 });

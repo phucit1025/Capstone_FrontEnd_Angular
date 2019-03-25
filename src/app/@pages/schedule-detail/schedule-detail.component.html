@@ -1,4 +1,4 @@
-<h1 style="color: #009ABB">Information of Surgery Shift</h1>
+<h1 style="color: white">Information of Surgery Shift</h1>
 <nz-spin [nzSpinning]="state.load">
   <div class="row personInfo mb-4">
     <div class="col-md-6 col-12 d-flex">
@@ -248,8 +248,21 @@
   </nz-collapse-panel>
 </nz-collapse>
 
-<div class="text-right">
-  <button nz-button nzType="primary" class="mr-2">Start Surgery Shift</button>
+<div *ngIf="data" class="text-right">
+  <ng-container [ngSwitch]="data.statusName">
+    <ng-container *ngSwitchCase="'Postoperative'">
+      <button (click)="openStartShift()" nz-button nzType="primary" class="mr-2">Finish Surgery Shift</button>
+    </ng-container>
+    <ng-container *ngSwitchCase="'Intraoperative'">
+      <button (click)="openStartShift()" nz-button nzType="primary" class="mr-2">Complete Surgery Shift</button>
+    </ng-container>
+    <ng-container *ngSwitchCase="'Preoperative'">
+      <button (click)="openStartShift()" nz-button nzType="primary" class="mr-2">Start Surgery Shift</button>
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+    </ng-container>
+  </ng-container>
+
   <button nz-button nzType="default">Export Surgery Report</button>
 </div>
 <!-- Modal Add Supply -->
@@ -257,13 +270,12 @@
   [nzContent]="createSupplyBody" [nzFooter]="createSupplyFooter" (nzOnCancel)="state.showAddSupply = false">
   <ng-template #createSupplyBody>
     <nz-spin [nzSpinning]="state.loadAddSupply">
-      <button nz-button nzType="primary" class="mb-2" (click)="addFormSupply()">Add more</button>
       <form nz-form [nzLayout]="'inline'" [formGroup]="surgeryDetail.supplyForm">
         <div formArrayName="listSupply"
           *ngFor="let item of surgeryDetail.supplyForm.get('listSupply').controls; let i = index;">
           <div [formGroupName]="i">
             <nz-form-item>
-              <nz-form-label>Supply</nz-form-label>
+              <nz-form-label>Name</nz-form-label>
               <nz-form-control>
                 <nz-select style="width: 300px" formControlName="medicalSupplyId" nzShowSearch nzAllowClear
                   nzPlaceHolder="Select a supply">
@@ -288,6 +300,11 @@
           </div>
         </div>
       </form>
+      <div class="text-right">
+        <button nz-button nzType="primary" class="mb-2" (click)="addFormSupply()">
+          <i nz-icon type="plus" theme="outline"></i>
+        </button>
+      </div>
     </nz-spin>
   </ng-template>
   <ng-template #createSupplyFooter>
@@ -318,9 +335,6 @@
               <textarea formControlName="progressiveDisease" rows="4" nz-input></textarea>
             </nz-form-control>
           </nz-form-item>
-        </div>
-        <div class="col-12 mb-2">
-          <button nz-button nzType="primary" class="mb-2" (click)="addFormDrugs()">Add more</button>
         </div>
         <div class="col-12 row" formArrayName="treatmentReportDrugs"
           *ngFor="let item of treatmentDetail.treatmentForm.get('treatmentReportDrugs').controls; let i = index;">
@@ -395,6 +409,11 @@
           </div>
         </div>
       </form>
+      <div class="col-12 mb-2 text-right">
+        <button nz-button nzType="primary" class="mb-2" (click)="addFormDrugs()">
+          <i nz-icon type="plus" theme="outline"></i>
+        </button>
+      </div>
     </nz-spin>
   </ng-template>
   <ng-template #treatmentFooter>
@@ -435,7 +454,51 @@
       </button>
     </div>
   </ng-template>
+<<<<<<< HEAD
   </ng-template>
 
       [nzLoading]="state.loadChangeStatus">{{data?.statusName === 'Preoperative' ? 'Save' : 'Complete'}}</button>
+=======
+</nz-modal>
+
+<nz-modal [(nzVisible)]="state.showStatusModal" [nzTitle]="startTitle" [nzContent]="startContent"
+  [nzFooter]="startFooter" (nzOnCancel)="state.showStatusModal = false">
+  <ng-template #startTitle>
+    Change Intraoperative Status
+  </ng-template>
+
+  <ng-template #startContent>
+    <p><b>Surgery Shift:</b> {{data?.id}} </p>
+    <p><b>Estimated Start Datetime:</b> {{data?.startTime | date: 'dd/MM/yyyy - HH:mm'}} </p>
+    <p><b>Estimated End Datetime:</b> {{data?.endTime | date: 'dd/MM/yyyy - HH:mm'}}</p>
+    <label class="mr-2">
+      <b>Actual {{data?.statusName === 'Preoperative' ? 'Start' : 'End'}} Time:</b>
+    </label>
+    <nz-time-picker [nzFormat]="'HH:mm'" [(ngModel)]="selected.selectedTime"></nz-time-picker>
+    <div *ngIf="data?.statusName === 'Intraoperative'" class="row">
+      <div class="col-6">
+        <nz-form-item>
+          <nz-form-label><b>Room</b></nz-form-label>
+          <nz-form-control>
+            <input nz-input [(ngModel)]="selected.selectedRoom">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div class="col-6">
+        <nz-form-item>
+          <nz-form-label><b>Bed</b></nz-form-label>
+          <nz-form-control>
+            <input nz-input [(ngModel)]="selected.selectedBed">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #startFooter>
+    <button nz-button nzType="default" (click)="state.showStatusModal = false">Cancel</button>
+    <button [disabled]="state.loadChangeStatus || !selected.selectedTime" nz-button nzType="primary" (click)="startShift()"
+      [nzLoading]="state.loadChangeStatus">{{data?.statusName === 'Preoperative' ? 'Save' : 'Complete'}}</button>
+  </ng-template>
+>>>>>>> 37019906e03ab11d5bb63605bacbf8bb96f283a2
 </nz-modal>

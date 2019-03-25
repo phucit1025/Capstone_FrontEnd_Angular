@@ -20,7 +20,7 @@
       </div>
       <div *ngIf="!swapMode" class="row">
         <div [class.col-4]="data.statusName === 'Preoperative'" [class.col-6]="data.statusName === 'Intraoperative'"
-          [class.col-12]="data.statusName === 'Postoperative'" class="pl-0 pr-1">
+          [class.col-12]="data.statusName === 'Postoperative' || data.statusName === 'Finished'" class="pl-0 pr-1">
           <button (click)="redirect()" style="width: 100%" nz-button nzType="primary">
             Detail
           </button>
@@ -30,10 +30,10 @@
             Change
           </button>
         </div>
-        <div *ngIf="data.statusName !== 'Postoperative'" class="pl-1 pr-0"
+        <div *ngIf="data.statusName !== 'Postoperative' && data.statusName !== 'Finished'" class="pl-1 pr-0"
           [class.col-4]="data.statusName === 'Preoperative'" [class.col-6]="data.statusName === 'Intraoperative'">
-          <button [class.btn-second]="data.statusName === 'Preoperative'"
-            [class.btn-third]="data.statusName === 'Intraoperative'" (click)="openModal.emit(data)" style="width: 100%"
+          <button [class.ant-btn-primary]="data.statusName === 'Preoperative'"
+            [class.btn-third]="data.statusName === 'Intraoperative'" (click)="changeStatus()" style="width: 100%"
             nz-button nzType="default">
             {{data.statusName === 'Preoperative' ? 'Begin' : 'Finish'}}
           </button>
@@ -71,7 +71,7 @@
       </div>
       <div *ngIf="!swapMode" class="row">
         <div [class.col-4]="data.statusName === 'Preoperative'" [class.col-6]="data.statusName === 'Intraoperative'"
-          [class.col-12]="data.statusName === 'Postoperative'" class="pl-0 pr-1">
+          [class.col-12]="data.statusName === 'Postoperative' || data.statusName === 'Finished'" class="pl-0 pr-1">
           <button (click)="redirect()" style="width: 100%" nz-button nzType="primary">
             Detail
           </button>
@@ -81,10 +81,10 @@
             Change
           </button>
         </div>
-        <div *ngIf="data.statusName !== 'Postoperative'" class="pl-1 pr-0"
+        <div *ngIf="data.statusName !== 'Postoperative' && data.statusName !== 'Finished'" class="pl-1 pr-0"
           [class.col-4]="data.statusName === 'Preoperative'" [class.col-6]="data.statusName === 'Intraoperative'">
-          <button [class.btn-second]="data.statusName === 'Preoperative'"
-            [class.btn-third]="data.statusName === 'Intraoperative'" (click)="openModal.emit(data)" style="width: 100%"
+          <button [class.ant-btn-primary]="data.statusName === 'Preoperative'"
+            [class.btn-third]="data.statusName === 'Intraoperative'" (click)="changeStatus()" style="width: 100%"
             nz-button nzType="default">
             {{data.statusName === 'Preoperative' ? 'Begin' : 'Finish'}}
           </button>
