@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {GLOBAL} from '../global';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { GLOBAL } from '../global';
 
 @Injectable({
   providedIn: 'root'
@@ -18,5 +18,9 @@ export class ConfirmMedicalService {
 
   confirmMedicalRequest(data) {
     return this.http.post(GLOBAL.API + this.name + '/ConfirmMedicalRequest', data);
+  }
+
+  makeScheduleList() {
+    return this.http.get(GLOBAL.API + 'Schedule/MakeScheduleList');
   }
 }

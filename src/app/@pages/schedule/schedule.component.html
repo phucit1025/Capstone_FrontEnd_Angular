@@ -18,7 +18,7 @@
           <b style="font-size: 1.2em">Time</b>
         </nz-form-label>
         <nz-form-control>
-          <h1><b style="color: #009ABB">{{serverTime | date: 'HH : mm : ss'}}</b></h1>
+          <h1><b style="color: white">{{serverTime | date: 'HH : mm : ss'}}</b></h1>
         </nz-form-control>
       </nz-form-item>
     </div>
@@ -82,7 +82,8 @@
                 <ng-container *ngIf="slot.surgeries?.length > 0; else noData">
                   <!-- Room Surgery -->
                   <app-schedule-card *ngFor="let surgery of slot.surgeries" [data]="surgery" [parentId]="slot.id"
-                    [(swapMode)]="state.swapMode" (openModal)="openModal($event)" [(selected)]="selected">
+                    [(swapMode)]="state.swapMode" (statusChange)="openStartShift($event)"
+                    (openModal)="openModal($event)" [(selected)]="selected">
                   </app-schedule-card>
                 </ng-container>
                 <ng-template #noData>
@@ -127,16 +128,16 @@
           <nz-form-item>
             <nz-form-label>Start Time</nz-form-label>
             <nz-form-control>
-              <nz-date-picker [nzDisabledDate]="disabledStartDate" [nzShowTime]="{nzFormat: 'HH:mm'}" nzFormat="dd/MM/yyyy - HH:mm"
-                formControlName="startTime" nzPlaceHolder="Start Time">
+              <nz-date-picker [nzDisabledDate]="disabledStartDate" [nzShowTime]="{nzFormat: 'HH:mm'}"
+                nzFormat="dd/MM/yyyy - HH:mm" formControlName="startTime" nzPlaceHolder="Start Time">
               </nz-date-picker>
             </nz-form-control>
           </nz-form-item>
           <nz-form-item>
             <nz-form-label>End Time</nz-form-label>
             <nz-form-control>
-              <nz-date-picker [nzDisabledDate]="disabledEndDate" [nzShowTime]="{nzFormat: 'HH:mm'}" nzFormat="dd/MM/yyyy - HH:mm"
-                formControlName="endTime" nzPlaceHolder="End Time">
+              <nz-date-picker [nzDisabledDate]="disabledEndDate" [nzShowTime]="{nzFormat: 'HH:mm'}"
+                nzFormat="dd/MM/yyyy - HH:mm" formControlName="endTime" nzPlaceHolder="End Time">
               </nz-date-picker>
             </nz-form-control>
           </nz-form-item>
@@ -170,3 +171,44 @@
     <button (click)="moveToRoom(true)" nz-button nzType="danger">Force Swap</button>
   </div>
 </swal>
+
+<nz-modal [(nzVisible)]="isShowStartModal" [nzTitle]="startTitle" [nzContent]="startContent" [nzFooter]="startFooter"
+  (nzOnCancel)="startItem = null; isShowStartModal = false">
+  <ng-template #startTitle>
+    Change Intraoperative Status
+  </ng-template>
+
+  <ng-template #startContent>
+    <p><b>Surgery Shift:</b> {{selectedObject?.id}} </p>
+    <p><b>Estimated Start Datetime:</b> {{selectedObject?.estimatedStartDateTime | date: 'dd/MM/yyyy - HH:mm'}} </p>
+    <p><b>Estimated End Datetime:</b> {{selectedObject?.estimatedEndDateTime | date: 'dd/MM/yyyy - HH:mm'}}</p>
+    <label class="mr-2">
+      <b>Actual {{selectedObject?.statusName === 'Preoperative' ? 'Start' : 'End'}} Time:</b>
+    </label>
+    <nz-time-picker [nzFormat]="'HH:mm'" [(ngModel)]="selectedTime"></nz-time-picker>
+    <div *ngIf="selectedObject?.statusName === 'Intraoperative'" class="row">
+      <div class="col-6">
+        <nz-form-item>
+          <nz-form-label><b>Room</b></nz-form-label>
+          <nz-form-control>
+            <input nz-input [(ngModel)]="selectedRoom">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div class="col-6">
+        <nz-form-item>
+          <nz-form-label><b>Bed</b></nz-form-label>
+          <nz-form-control>
+            <input nz-input [(ngModel)]="selectedBed">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #startFooter>
+    <button nz-button nzType="default" (click)="startItem = null; isShowStartModal = false">Cancel</button>
+    <button [disabled]="state.loadStart || !selectedTime" nz-button nzType="primary" (click)="startShift()"
+      [nzLoading]="state.loadStart">{{selectedObject?.statusName === 'Preoperative' ? 'Save' : 'Complete'}}</button>
+  </ng-template>
+</nz-modal>

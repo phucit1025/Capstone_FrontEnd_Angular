@@ -12,7 +12,8 @@ export class ConfirmMedicalComponent implements OnInit {
   mapOfCheckedId: { [key: string]: boolean } = {};
   isAllCheck = false;
   state = {
-    load: false
+    load: false,
+    isShow: false,
   };
   pageIndex = 0;
 
@@ -65,6 +66,8 @@ export class ConfirmMedicalComponent implements OnInit {
           this.mapOfCheckedId = {};
           this.state.load = false;
           this.message.success('Confirm Success');
+          this.confirmMedical.makeScheduleList().subscribe(mRes => {
+          });
         }, er => {
           this.state.load = false;
           this.message.error('Confirm Fail!!!');

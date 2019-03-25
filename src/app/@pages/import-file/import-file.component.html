@@ -27,6 +27,7 @@
       <th>Surgery Name</th>
       <th>Excepted Date</th>
       <th>Duration</th>
+      <th>Detail</th>
     </tr>
   </thead>
   <tbody>
@@ -38,6 +39,10 @@
       <td>{{item.surgeryName}}</td>
       <td>{{item.proposedStartDateTime ? item.proposedStartDateTime : 'N/A'}}</td>
       <td>{{item.proposedEndDateTime ? item.proposedEndDateTime : 'N/A'}}</td>
+      <td>
+        <button (click)="showModal(item)" nz-button nzType="default" nzShape="circle"><i nz-icon
+            type="info"></i></button>
+      </td>
     </tr>
   </tbody>
 </nz-table>
@@ -48,3 +53,31 @@
     <p>No Data</p>
   </div>
 </ng-template>
+
+<nz-modal [(nzVisible)]="state.isVisible" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter"
+  (nzOnCancel)="state.isVisible = false">
+  <ng-template #modalTitle>
+    Detail
+  </ng-template>
+
+  <ng-template #modalContent>
+    <nz-table [nzShowPagination]="false" [nzFrontPagination]="false" *ngIf="selectedObject" #basicTable [nzData]="selectedObject">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Quantity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of basicTable.data">
+          <td>{{data.name}}</td>
+          <td>{{data.quantity}}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="state.isVisible = false">Cancel</button>
+  </ng-template>
+</nz-modal>

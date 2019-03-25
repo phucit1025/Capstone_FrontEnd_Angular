@@ -122,4 +122,21 @@ export class ScheduleService {
   addEmergencyShift(data) {
     return this.http.post(GLOBAL.API + this.name + '/AddEmergencyShift', data);
   }
+
+  changeShiftStatus(data) {
+    return this.http.post(GLOBAL.API + this.name + 'ChangeShiftStatus', data);
+  }
+
+  setIntraoperativeStatus(data) {
+    return this.http.post(GLOBAL.API +
+      `Status/SetIntraoperativeStatus?shiftId=${data.shiftId}&actualStartDateTime=${data.time}`, {});
+  }
+
+  setPostoperativeStatus(url) {
+    return this.http.post(GLOBAL.API + 'Status/SetPostoperativeStatus' + url, {});
+  }
+
+  setFinishedStatus(url) {
+    return this.http.post(GLOBAL.API + 'Status/SetFinishedStatus' + url, {});
+  }
 }

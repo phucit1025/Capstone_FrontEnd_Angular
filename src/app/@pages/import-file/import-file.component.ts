@@ -1,8 +1,8 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {NzMessageService} from 'ng-zorro-antd';
-import {GLOBAL} from '../../global';
-import {ImportService} from '../../page-services/import.service';
-import {combineLatest} from 'rxjs';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { NzMessageService } from 'ng-zorro-antd';
+import { GLOBAL } from '../../global';
+import { ImportService } from '../../page-services/import.service';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-import-file',
@@ -12,17 +12,26 @@ import {combineLatest} from 'rxjs';
 export class ImportFileComponent implements OnInit {
   @ViewChild('file') file: ElementRef;
   state = {
-    load: false
+    load: false,
+    isVisible: false
   };
   data = [];
   medicals = [];
   mapOfCheckedId: { [key: string]: boolean } = {};
   isAllCheck = false;
+  selectedObject = null;
+
 
   constructor(private message: NzMessageService, private importSV: ImportService) {
   }
 
   ngOnInit() {
+  }
+
+  showModal(item) {
+    this.selectedObject = item.detailMedical;
+    this.state.isVisible = true;
+    console.log(this.selectedObject);
   }
 
   async handleFile(e) {
