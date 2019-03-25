@@ -25,6 +25,7 @@ export class ScheduleDetailComponent implements OnInit {
     loadGetSupply: false,
     loadEditSurgery: false,
     loadTreatment: false,
+    loadHealthcare: false,
     loadAssignNurse: false,
     loadGetNurse: false,
     loadAllSupply: false,
@@ -50,6 +51,9 @@ export class ScheduleDetailComponent implements OnInit {
     nurseData: null,
     treatmentForm: null,
     assignForm: null,
+  };
+  healthcareDetail = {
+    healthcareReport: []
   };
   common = {
     drugs: [],
@@ -82,6 +86,31 @@ export class ScheduleDetailComponent implements OnInit {
       progressiveDisease: new FormControl(''),
       shiftId: new FormControl(this.data.id),
       treatmentReportDrugs: this.fb.array([this.createFormDrugs()])
+    });
+  }
+
+  createEditFormTreatment(data) {
+    console.log(data);
+    this.treatmentDetail.treatmentForm = this.fb.group({
+      progressiveDisease: new FormControl(data.progressiveDisease),
+      shiftId: new FormControl(this.data.id),
+      treatmentReportDrugs: this.fb.array([this.patchFormDrugArray(data.treatmentReportDrugs)])
+    });
+    this.state.showTreatmentReport = true; 
+  }
+
+  patchFormDrugArray(data) {
+    let ctrl = <FormArray>this.treatmentDetail.treatmentForm.controls.treatmentReportDrugs;
+    return data.map(x => {
+      return this.fb.group({
+        id: new FormControl(x.id, Validators.required),
+        drugId: new FormControl(x.drugId, Validators.required),
+        morningQuantity: new FormControl(x.morningQuantity, [Validators.required, Validators.min(0)]),
+        afternoonQuantity: new FormControl(x.afternoonQuantity, [Validators.required, Validators.min(0)]),
+        eveningQuantity: new FormControl(x.eveningQuantity, [Validators.required, Validators.min(0)]),
+        nightQuantity: new FormControl(x.nightQuantity, [Validators.required, Validators.min(0)]),
+        unit: new FormControl(x.unit, Validators.required),
+      });
     });
   }
 
@@ -153,6 +182,7 @@ export class ScheduleDetailComponent implements OnInit {
       this.getSupply(res.id);
       this.getEkipMember(res.id);
       this.getTreatment(res.id);
+      this.getHealthcare(res.id);
       this.getNurseByShiftId(res.id);
       this.surgeryDetail.surgeryProcedure = res.procedure;
       this.surgeryDetail.containData = res.procedure;
@@ -271,4 +301,11 @@ export class ScheduleDetailComponent implements OnInit {
       this.state.loadAssignNurse = false;
     });
   }
+  getHealthcare(id) {
+    this.state.loadHealthcare = true;
+    this.schedule.getHealthcareReport(id).subscribe((hc: any) => {
+      this.healthcareDetail.healthcareReport = hc;
+      this.state.loadHealthcare = false;
+      this.createNewFormTreatment();
+    }, er => this.state.loadHealthcare = false);
 }
