@@ -144,6 +144,9 @@
       <button (click)="state.showTreatmentReport = true" class="mr-2" nz-button nzType="primary">New Treatment
         Report</button>
       <button (click)="state.showAssignNurse = true" nz-button nzType="default">Assign Nurse</button>
+      <ng-container *ngIf="!state.assignedForNurse && treatmentDetail.treatmentReport.length > 0">
+        <nz-alert class="mt-3" nzType="warning" nzMessage="No nurse has been assigned" nzShowIcon></nz-alert>
+      </ng-container>
     </div>
     <nz-table #treatmentTable [nzData]="treatmentDetail.treatmentReport" [nzLoading]="state.loadTreatment"
       [nzFrontPagination]="false" [nzShowPagination]="false">
@@ -231,8 +234,8 @@
           <tr>
             <td>{{i + 1}}</td>
             <td>{{data.dateCreated}}</td>
-            <div *ngIf="data.woundCondition > 0; else elseBlock"><td><nz-tag [nzColor]="'green'">Good</nz-tag></td></div>
-            <ng-template #elseBlock><td><nz-tag [nzColor]="'red'">Bad</nz-tag></td></ng-template>
+            <ng-container *ngIf="data.woundCondition === 1; else elseBlock"><td><nz-tag [nzColor]="'green'">Good</nz-tag> </td></ng-container>
+            <ng-template #elseBlock><td><nz-tag [nzColor]="'red'">Bad</nz-tag> </td></ng-template>
             
             <td>{{data.eventContent}}</td>
             <td>{{data.careContent}}</td>
@@ -263,7 +266,7 @@
     </ng-container>
   </ng-container>
 
-  <button nz-button nzType="default">Export Surgery Report</button>
+  <button nz-button nzType="default" (click)="exportSurgery()">Export Surgery Report</button>
 </div>
 <!-- Modal Add Supply -->
 <nz-modal nzWidth="800" [(nzVisible)]="state.showAddSupply" nzTitle="Add User Medical Supply"

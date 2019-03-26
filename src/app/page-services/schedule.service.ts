@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { GLOBAL } from '../global';
 
 @Injectable({
@@ -154,5 +154,27 @@ export class ScheduleService {
 
   getHealthcareReport(id){
     return this.http.get(GLOBAL.API + 'PostOp/GetHealthCareReportBySurgeryShiftId?surgeryShiftId=' + id);
+  }
+
+  exportSurgery(id){
+    let headers = new HttpHeaders();
+    headers = headers.set('Accept', 'application/pdf');
+    return this.http.get(GLOBAL.API + 'PostOp/CreateSurgeryPdf?id=' + id,{ headers: headers, responseType: 'blob' })
+    .subscribe((response) => this.downloadFile(response));
+  }
+
+
+  /**
+  * Method is use to download file.
+  * @param data - Array Buffer data
+  * @param type - type of the document.
+  */
+  downloadFile(data: any) {
+    var blob = new Blob([data], { type: "application/pdf" } );
+    var url = window.URL.createObjectURL(blob);
+    var pwa = window.open(url);
+    if (!pwa || pwa.closed || typeof pwa.closed == 'undefined') {
+        alert( 'Please disable your Pop-up blocker and try again.');
+    }
   }
 }
