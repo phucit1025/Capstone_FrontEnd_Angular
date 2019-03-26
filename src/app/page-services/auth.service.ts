@@ -67,7 +67,6 @@ export class AuthService {
           this.setStatus = true;
           this.setToken(token.token);
           return {
-            role: token.role,
             success: true
           };
         }

@@ -6,7 +6,7 @@ import {Router} from '@angular/router';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
   form: FormGroup;
@@ -36,18 +36,7 @@ export class LoginComponent implements OnInit {
       this.auth.login(this.form.value).subscribe(res => {
         this.state.load = false;
         if (res.success) {
-          let page = '';
-          switch (res.role) {
-            case 'MedicalSupplier':
-              page = 'confirm-medical';
-              break;
-            case 'HospitalStaff':
-              page = 'import-file';
-              break;
-            default:
-              page = 'schedule';
-          }
-          this.router.navigate([`/pages/${page}`]);
+          this.router.navigate(['/pages']);
         } else {
           this.state.errorMessage = 'Invalid token';
         }

@@ -305,13 +305,12 @@ export class ScheduleComponent implements OnInit, OnDestroy {
           shiftId: this.selectedObject.id,
           time: Pdate + ' ' + Ptime
         }).subscribe(sc => {
-          this.schedule.refreshSurgeryShift(this.selectedObject.id).subscribe();
           this.messageService.success('Change Successful');
           this.isShowStartModal = false;
           this.getSchedule();
         }, er => {
           this.messageService.error('Change Fail');
-        });
+        })
         break;
       case 'Intraoperative':
         const date = moment(this.date).format('YYYY-MM-DD');
@@ -329,7 +328,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
           data.roomPost = roomPost;
         }
         this.schedule.setPostoperativeStatus(GLOBAL.parseUrlString(data)).subscribe(sc => {
-          this.schedule.refreshSurgeryShift(this.selectedObject.id).subscribe();
           this.messageService.success('Change Successful');
           this.isShowStartModal = false;
           this.selectedObject = null;
@@ -337,7 +335,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
           this.getSchedule();
         }, er => {
           this.messageService.error('Change Fail');
-        });
+        })
         break;
       case 'Postoperative': break;
     }
