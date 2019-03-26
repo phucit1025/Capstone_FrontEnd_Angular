@@ -27,6 +27,7 @@ export class AuthGuardService implements CanActivate, CanActivateChild {
       return false;
     }
     const data = route.data;
+    console.log(data && data.roles && data.roles.length > 0 && this.userData);
     if (data && data.roles && data.roles.length > 0 && this.userData) {
       if (data.roles.indexOf(this.userData.role) === -1) {
         this.router.navigate(['pages']);

@@ -15,32 +15,12 @@ export class RoomPipe implements PipeTransform {
           array.map((el, i) => {
             if (j === 0) {
               el.slotRooms.forEach((slot, k) => {
-                if (newData[i]) {
-                  newData[i].slotRooms[k].surgeries = slot.surgeries.filter(sg => {
-                    const sgArr = [];
-                    if (sg) {
-                      // tslint:disable-next-line:forin
-                      for (const kudo in sg) {
-                        sgArr.push(sg[kudo]);
-                      }
-                    }
-                    return sgArr.join(',').toLowerCase().includes(t.trim().toLowerCase());
-                  });
-                }
+                newData[i].slotRooms[k].surgeries = slot.surgeries.filter(sg => sg.id.toString().includes(t.trim()));
               });
             } else {
               if (t !== idList[0]) {
                 el.slotRooms.forEach((slot, k) => {
-                  const result = slot.surgeries.filter(sg => {
-                    const sgArr = [];
-                    if (sg) {
-                      // tslint:disable-next-line:forin
-                      for (const kudo in sg) {
-                        sgArr.push(sg[kudo]);
-                      }
-                    }
-                    return sgArr.join(',').toLowerCase().includes(t.trim().toLowerCase());
-                  });
+                  const result = slot.surgeries.filter(sg => sg.id.toString().includes(t.trim()));
                   newData[i].slotRooms[k].surgeries = newData[i].slotRooms[k].surgeries.concat(result).unique();
                 });
               }
