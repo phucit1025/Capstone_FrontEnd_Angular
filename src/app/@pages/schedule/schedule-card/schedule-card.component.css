@@ -22,7 +22,7 @@
     color: white;
 }
 
-/deep/ .surgery.intraopserative .ant-card{
+/deep/ .surgery.intraoperative .ant-card{
     background: #ffd54f;
     color: black;
 }
@@ -32,17 +32,17 @@
 }
 
 .btn-second{
-    background: #009abb;
+    background: #b96d12;
     color: white
 }
 
 .btn-third{
-    background: #009abb;
+    background: #08982A;
     color: white
 }
 
 .checkButton{
-    background: #009abb;
+    background: #08982A;
     color: white
 }
 

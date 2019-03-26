@@ -32,7 +32,6 @@ export class ScheduleDetailComponent implements OnInit {
     loadGetSupply: false,
     loadEditSurgery: false,
     loadTreatment: false,
-    loadHealthcare: false,
     loadAssignNurse: false,
     loadGetNurse: false,
     loadAllSupply: false,
@@ -60,9 +59,6 @@ export class ScheduleDetailComponent implements OnInit {
     nurseData: null,
     treatmentForm: null,
     assignForm: null,
-  };
-  healthcareDetail = {
-    healthcareReport: []
   };
   common = {
     drugs: [],
@@ -96,44 +92,6 @@ export class ScheduleDetailComponent implements OnInit {
       progressiveDisease: new FormControl(''),
       shiftId: new FormControl(this.data.id),
       treatmentReportDrugs: this.fb.array([this.createFormDrugs()])
-    });
-    this.state.treatmentMode = 'Create';
-  }
-
-  createEditFormTreatment(data) {
-    console.log(data);
-    this.treatmentDetail.treatmentForm = this.fb.group({
-      id:  new FormControl(data.id),
-      progressiveDisease: new FormControl(data.progressiveDisease),
-      shiftId: new FormControl(this.id),
-      treatmentReportDrugs: this.fb.array([]),
-      deleteTreatmentReportId: this.fb.array([]),
-    });
-    this.patchFormDrugArray(data.treatmentReportDrugs);
-    this.state.showTreatmentReport = true; 
-    this.state.treatmentMode = 'Edit';
-  }
-
-  pushDeleteTreatmentReportId(id){
-    console.log(id);
-    if (this.state.treatmentMode === 'Edit') {
-      let ctrl = this.treatmentDetail.treatmentForm.controls.deleteTreatmentReportId;
-      ctrl.push(new FormControl(id));
-    }
-  }
-
-  patchFormDrugArray(data) {
-    let ctrl = this.treatmentDetail.treatmentForm.controls.treatmentReportDrugs;
-    return data.map(x => {
-      ctrl.push(this.fb.group({
-        id: new FormControl(x.id, Validators.required),
-        drugId: new FormControl(x.drugId, Validators.required),
-        morningQuantity: new FormControl(x.morningQuantity, [Validators.required, Validators.min(0)]),
-        afternoonQuantity: new FormControl(x.afternoonQuantity, [Validators.required, Validators.min(0)]),
-        eveningQuantity: new FormControl(x.eveningQuantity, [Validators.required, Validators.min(0)]),
-        nightQuantity: new FormControl(x.nightQuantity, [Validators.required, Validators.min(0)]),
-        unit: new FormControl(x.unit, Validators.required),
-      }))
     });
   }
 
@@ -206,7 +164,6 @@ export class ScheduleDetailComponent implements OnInit {
       this.getSupply(res.id);
       this.getEkipMember(res.id);
       this.getTreatment(res.id);
-      this.getHealthcare(res.id);
       this.getNurseByShiftId(res.id);
       this.surgeryDetail.surgeryProcedure = res.procedure;
       this.surgeryDetail.containData = res.procedure;
@@ -302,30 +259,16 @@ export class ScheduleDetailComponent implements OnInit {
   saveTreatment() {
     this.state.loadAddTreatment = true;
     const data = this.treatmentDetail.treatmentForm.value;
-    if (this.state.treatmentMode === 'Create') {
-      this.schedule.createTreatmentReport(data).subscribe(res => {
-        this.message.success('Create Successful');
-        this.state.showTreatmentReport = false;
-        this.state.loadAddTreatment = false;
-        this.createNewFormTreatment();
-        this.getTreatment(this.id);
-      }, er => {
-        this.message.error('Create Fail!!!');
-        this.state.loadAddTreatment = false;
-      });
-    } else if (this.state.treatmentMode === 'Edit') {
-      console.log(data);
-      this.schedule.editTreatmentReport(data).subscribe(res => {
-        this.message.success('Edit Successful');
-        this.state.showTreatmentReport = false;
-        this.state.loadAddTreatment = false;
-        this.createNewFormTreatment();
-        this.getTreatment(this.id);
-      }, er => {
-        this.message.error('Edit Fail!!!');
-        this.state.loadAddTreatment = false;
-      }); 
-    }
+    this.schedule.createTreatmentReport(data).subscribe(res => {
+      this.message.success('Create Successful');
+      this.state.showTreatmentReport = false;
+      this.state.loadAddTreatment = false;
+      this.createNewFormTreatment();
+      this.getTreatment(this.data.id);
+    }, er => {
+      this.message.error('Create Fail!!!');
+      this.state.loadAddTreatment = false;
+    });
   }
 
   changeNurse() {
@@ -338,14 +281,6 @@ export class ScheduleDetailComponent implements OnInit {
       this.message.error('Assign Fail!!!');
       this.state.loadAssignNurse = false;
     });
-  }
-  getHealthcare(id) {
-    this.state.loadHealthcare = true;
-    this.schedule.getHealthcareReport(id).subscribe((hc: any) => {
-      this.healthcareDetail.healthcareReport = hc;
-      this.state.loadHealthcare = false;
-      this.createNewFormTreatment();
-    }, er => this.state.loadHealthcare = false);
   }
 
   openStartShift() {
@@ -416,18 +351,5 @@ export class ScheduleDetailComponent implements OnInit {
       case 'Postoperative': break;
     }
 
-  }
-
-  deleteTreatment(id){
-    this.state.loadAddTreatment = true;
-    this.schedule.deleteTreatmentReport(id).subscribe(() => {
-      this.state.showTreatmentReport = false;
-      this.state.loadAddTreatment = false;
-      this.message.success('Delete Successful');
-      this.getTreatment(this.id);
-    }, er => {
-      this.message.error('Delete Fail');
-       this.state.loadAddTreatment = false;
-    });
   }
 }

@@ -8,8 +8,6 @@ import {AuthService} from './page-services/auth.service';
 import {AuthGuardService} from './page-services/auth-guard.service';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 
-// import { MDBBootstrapModule } from 'angular-bootstrap-md';
-
 @NgModule({
   declarations: [
     AppComponent,

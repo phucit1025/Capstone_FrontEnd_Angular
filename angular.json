@@ -13,8 +13,7 @@
           "spec": false
         },
         "@schematics/angular:component": {
-          "spec": false,
-          "styleext": "scss"
+          "spec": false
         },
         "@schematics/angular:directive": {
           "spec": false
@@ -63,10 +62,7 @@
               "node_modules/angular-bootstrap-md/scss/mdb-free.scss",
               "src/styles.scss"
             ],
-            "scripts": [
-              "node_modules/chart.js/dist/Chart.js",
-              "node_modules/hammerjs/hammer.min.js"
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {
