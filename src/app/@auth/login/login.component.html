@@ -1,39 +1,23 @@
-<div class="limiter">
-  <div class="container-login100">
-    <div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-50">
-      <form [formGroup]="form" (submit)="submit()" class="login100-form validate-form">
-        <span class="login100-form-title p-b-33">
-          <img style="width: 64px; height: 64px" src="assets/logo.png" alt="">
-          <h4 class="logo-name">EBSMS</h4>
-        </span>
-
-        <div class="wrap-input100 validate-input" data-validate="Username is required">
-          <input class="input100" type="text" autocomplete="off" formControlName="username" placeholder="Username">
-          <span class="focus-input100-1"></span>
-          <span class="focus-input100-2"></span>
+<div class="login-dark">
+    <form [formGroup]="form" (submit)="submit()" id="frmLogin">
+        <div class="div-logo">
+            <div class="illustration"></div>
+            <span class="title">Surgery Management System</span>
         </div>
-
-        <div class="wrap-input100 rs1 validate-input" data-validate="Password is required">
-          <input class="input100" type="password" autocomplete="new-password" formControlName="password"
-                 placeholder="Password">
-          <span class="focus-input100-1"></span>
-          <span class="focus-input100-2"></span>
+        <div class="form-group" data-validate="Username is required">
+            <input class="form-control" formControlName="username" type="text" placeholder="Username">
         </div>
-
+        <div class="form-group" data-validate="Password is required">
+            <input class="form-control" formControlName="password" type="password" placeholder="Password">
+        </div>
         <div class="text-danger p-1">
-          {{state.errorMessage}}
+            {{state.errorMessage}}
         </div>
-
-        <div class="container-login100-form-btn m-t-20">
-          <button [disabled]="form.invalid || state.load" type="submit" class="login100-form-btn">
-            <i *ngIf="state.load" nz-icon type="loading" theme="outline"></i>
-            <span class="p-2">
-              Sign In
-            </span>
-          </button>
+        <div class="form-group" style="padding-right: 10px">
+            <button [disabled]="form.invalid || state.load" class="btn btn-primary" type="submit">
+                <i *ngIf="state.load" nz-icon type="loading" theme="outline"></i>
+                <span>Login</span>
+            </button>
         </div>
-
-      </form>
-    </div>
-  </div>
+    </form>
 </div>
