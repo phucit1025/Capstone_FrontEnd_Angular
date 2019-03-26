@@ -1,4 +1,4 @@
-<h1 style="color: #10867A; text-align: center; font-weight: bold; margin-bottom: 60px;">Information of Surgery Shift</h1>
+<h1 style="color: white">Information of Surgery Shift</h1>
 <nz-spin [nzSpinning]="state.load">
   <div class="row personInfo mb-4">
     <div class="col-md-6 col-12 d-flex">
@@ -67,7 +67,7 @@
 <nz-divider></nz-divider>
 
 <nz-collapse [nzBordered]="false">
-  <nz-collapse-panel class="primary-table collapse-header-text" [nzHeader]="'Surgery Information Detail'" [ngStyle]="customeStyle"
+  <nz-collapse-panel class="primary-table" [nzHeader]="'Surgery Information Detail'" [ngStyle]="customeStyle"
     nzExpandedIcon="expandedIcon">
     <h4>Performed Ekip: </h4>
     <ng-container *ngIf="data?.ekipMember?.length > 0; else noDoctor">
@@ -138,7 +138,7 @@
 </nz-collapse>
 
 <nz-collapse [nzBordered]="false">
-  <nz-collapse-panel class="primary-table collapse-header-text" [nzHeader]="'Treatment Reports'" [ngStyle]="customeStyle"
+  <nz-collapse-panel class="primary-table" [nzHeader]="'Treatment Reports'" [ngStyle]="customeStyle"
     nzExpandedIcon="expandedIcon">
     <div class="mb-3">
       <button (click)="state.showTreatmentReport = true" class="mr-2" nz-button nzType="primary">New Treatment
@@ -212,15 +212,7 @@
 </nz-collapse>
 
 <nz-collapse [nzBordered]="false">
-<<<<<<< HEAD
-<<<<<<< HEAD
-  <nz-collapse-panel [nzHeader]="'Healthcare Reports'" class="collapse-header-text" [ngStyle]="customeStyle" nzExpandedIcon="expandedIcon">
-=======
-  <nz-collapse-panel class="primary-table" [nzHeader]="'Healthcare Reports'" [ngStyle]="customeStyle" nzExpandedIcon="expandedIcon">
->>>>>>> 7b00951532085034a6ed1d9c0c036a07b0f4c310
-=======
   <nz-collapse-panel [nzHeader]="'Healthcare Reports'" [ngStyle]="customeStyle" nzExpandedIcon="expandedIcon">
->>>>>>> 487f1e41198ccc92ec24a66406ae8b8bdfeb7012
     <div class="mb-2">
 
     </div>
@@ -232,6 +224,9 @@
 
 <div *ngIf="data" class="text-right">
   <ng-container [ngSwitch]="data.statusName">
+    <ng-container *ngSwitchCase="'Postoperative'">
+      <button (click)="openStartShift()" nz-button nzType="primary" class="mr-2">Finish Surgery Shift</button>
+    </ng-container>
     <ng-container *ngSwitchCase="'Intraoperative'">
       <button (click)="openStartShift()" nz-button nzType="primary" class="mr-2">Complete Surgery Shift</button>
     </ng-container>

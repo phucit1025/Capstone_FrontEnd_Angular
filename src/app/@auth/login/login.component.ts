@@ -5,13 +5,8 @@ import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
-<<<<<<< HEAD
   templateUrl: './login.component1.html',
   styleUrls: ['./login.component1.css']
-=======
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
->>>>>>> 487f1e41198ccc92ec24a66406ae8b8bdfeb7012
 })
 export class LoginComponent implements OnInit {
   form: FormGroup;
