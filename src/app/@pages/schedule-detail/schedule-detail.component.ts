@@ -97,6 +97,7 @@ export class ScheduleDetailComponent implements OnInit {
       shiftId: new FormControl(this.data.id),
       treatmentReportDrugs: this.fb.array([this.createFormDrugs()])
     });
+    this.state.treatmentMode = 'Create';
   }
 
   createEditFormTreatment(data) {
@@ -415,5 +416,18 @@ export class ScheduleDetailComponent implements OnInit {
       case 'Postoperative': break;
     }
 
+  }
+
+  deleteTreatment(id){
+    this.state.loadAddTreatment = true;
+    this.schedule.deleteTreatmentReport(id).subscribe(() => {
+      this.state.showTreatmentReport = false;
+      this.state.loadAddTreatment = false;
+      this.message.success('Delete Successful');
+      this.getTreatment(this.id);
+    }, er => {
+      this.message.error('Delete Fail');
+       this.state.loadAddTreatment = false;
+    });
   }
 }

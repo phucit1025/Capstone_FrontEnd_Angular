@@ -145,7 +145,11 @@ export class ScheduleService {
   }
 
   editTreatmentReport(data) {
-    return this.http.post(GLOBAL.API + 'PostOp/EditTreatmenReport', data);
+    return this.http.post(GLOBAL.API + 'PostOp/EditTreatmentReport', data);
+  }
+
+  deleteTreatmentReport(id) {
+    return this.http.get(GLOBAL.API + 'PostOp/SoftDeleteTreatmentReport?id=' + id);
   }
 
 }
