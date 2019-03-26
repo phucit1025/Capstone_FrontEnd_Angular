@@ -139,4 +139,8 @@ export class ScheduleService {
   setFinishedStatus(url) {
     return this.http.post(GLOBAL.API + 'Status/SetFinishedStatus' + url, {});
   }
+
+  getHealthcareReport(id){
+    return this.http.get(GLOBAL.API + 'PostOp/GetHealthCareReportBySurgeryShiftId?surgeryShiftId=' + id);
+  }
 }
