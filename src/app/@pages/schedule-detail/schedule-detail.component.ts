@@ -319,6 +319,7 @@ export class ScheduleDetailComponent implements OnInit {
       this.state.loadHealthcare = false;
       this.createNewFormTreatment();
     }, er => this.state.loadHealthcare = false);
+  }
 
   openStartShift() {
     switch (this.data.statusName) {
