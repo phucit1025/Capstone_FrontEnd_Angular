@@ -1,4 +1,4 @@
-<div class="pos-relative" style="padding: 10px">
+<div class="pos-relative">
   <div class="row">
     <div class="col-6">
       <nz-form-item>
@@ -18,7 +18,7 @@
           <b style="font-size: 1.2em">Time</b>
         </nz-form-label>
         <nz-form-control>
-          <h1><b style="color: white">{{serverTime | date: 'HH : mm : ss'}}</b></h1>
+          <h1><b style="color: black">{{serverTime | date: 'HH : mm : ss'}}</b></h1>
         </nz-form-control>
       </nz-form-item>
     </div>
@@ -53,7 +53,7 @@
     </div>
     <div class="mt-3 mb-5 d-flex">
       <span class="mr-auto">
-        <button (click)="isShowEmergency = true" nz-button nzType="primary">
+        <button (click)="isShowEmergency = true" class="btn btn-primary">
           Add Emergency Shift
         </button>
       </span>
@@ -73,10 +73,10 @@
           </div>
           <!-- Room-slot -->
           <div class="slot-group-container">
-            <div class="slot" *ngFor="let slot of room.slotRooms">
-              <div class="slot-name">
+            <div class="slot example z-depth-2" *ngFor="let slot of room.slotRooms">
+              <!-- <div class="slot-name">
                 {{slot.name}}
-              </div>
+              </div> -->
               <div [id]="slot.id" class="slot-container p-3" droppable [dropScope]="getScope(slot)"
                 (onDrop)="dropNode($event)">
                 <ng-container *ngIf="slot.surgeries?.length > 0; else noData">

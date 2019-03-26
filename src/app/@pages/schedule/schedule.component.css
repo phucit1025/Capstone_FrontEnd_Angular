@@ -1,15 +1,15 @@
 .room-container {
   max-width: 100%;
-  max-height: calc(100vh - 200px);
-  overflow-x: hidden;
+  /* max-height: calc(100vh - 200px); */
+  /* overflow-x: hidden; */
   overflow-y: auto;
   white-space: nowrap
 }
 
 .room-container .date {
   display: flex;
-  background: #53B79F;
-  padding-bottom: 10px;
+  margin-bottom: 10px;
+  background: #e8f5e9
 }
 
 .room.nodata {
@@ -24,7 +24,7 @@
   overflow-x: auto;
   display: inline-block;
   white-space: nowrap;
-  padding-bottom: 10px;
+  /* padding-bottom: 10px; */
 }
 
 /deep/ .ant-tabs-nav .ant-tabs-tab-active {
@@ -41,24 +41,24 @@
   font-size: 20px;
 }
 
-.room-name{
+.room-name {
   height: 400px;
   width: 70px;
   color: white;
   padding: 0 5px;
-  background: #09425A;
+  background: #128475;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .slot-group-container{
+  padding: 10px 0 10px 0;
   max-width: calc(100% - 70px - 10px);
-  height: 390px;
-  padding: 10px 0;
+  /* height: 100%; */
   overflow-x: auto;
   overflow-y: hidden;
-  white-space: nowrap
+  white-space: nowrap;
 }
 
 
@@ -71,7 +71,7 @@
 
 .slot{
   width: 300px;
-  height: 400px;
+  height: 380px;
   display: inline-block;
   background: white;
   margin-left: 10px;
@@ -81,7 +81,7 @@
 .slot-name{
   width: 100%;
   height: 30px;
-  background: #009ABB;
+  background: #128475;
   color: white;
   display: flex;
   justify-content: center;

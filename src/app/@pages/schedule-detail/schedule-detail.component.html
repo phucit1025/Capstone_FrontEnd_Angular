@@ -1,4 +1,4 @@
-<h1 style="color: white">Information of Surgery Shift</h1>
+<h1 style="color: #10867A; text-align: center; font-weight: bold; margin-bottom: 60px;">Information of Surgery Shift</h1>
 <nz-spin [nzSpinning]="state.load">
   <div class="row personInfo mb-4">
     <div class="col-md-6 col-12 d-flex">
@@ -67,7 +67,7 @@
 <nz-divider></nz-divider>
 
 <nz-collapse [nzBordered]="false">
-  <nz-collapse-panel class="primary-table" [nzHeader]="'Surgery Information Detail'" [ngStyle]="customeStyle"
+  <nz-collapse-panel class="primary-table collapse-header-text" [nzHeader]="'Surgery Information Detail'" [ngStyle]="customeStyle"
     nzExpandedIcon="expandedIcon">
     <h4>Performed Ekip: </h4>
     <ng-container *ngIf="data?.ekipMember?.length > 0; else noDoctor">
@@ -138,7 +138,7 @@
 </nz-collapse>
 
 <nz-collapse [nzBordered]="false">
-  <nz-collapse-panel class="primary-table" [nzHeader]="'Treatment Reports'" [ngStyle]="customeStyle"
+  <nz-collapse-panel class="primary-table collapse-header-text" [nzHeader]="'Treatment Reports'" [ngStyle]="customeStyle"
     nzExpandedIcon="expandedIcon">
     <div class="mb-3">
       <button (click)="state.showTreatmentReport = true" class="mr-2" nz-button nzType="primary">New Treatment
@@ -212,7 +212,7 @@
 </nz-collapse>
 
 <nz-collapse [nzBordered]="false">
-  <nz-collapse-panel [nzHeader]="'Healthcare Reports'" [ngStyle]="customeStyle" nzExpandedIcon="expandedIcon">
+  <nz-collapse-panel [nzHeader]="'Healthcare Reports'" class="collapse-header-text" [ngStyle]="customeStyle" nzExpandedIcon="expandedIcon">
     <div class="mb-2">
 
     </div>

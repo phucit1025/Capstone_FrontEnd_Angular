@@ -4,7 +4,7 @@
       <img src="assets/logo.png" class="mr-1" alt="">
       <span style="color: #09425A" [hidden]="isCollapsed">EBSMS</span>
     </div>
-    <ul [nzTheme]="'dark'" nz-menu [nzMode]="'inline'" style="height:100%; overflow-y: auto; overflow-x: hidden">
+    <ul class="navbar-background" nz-menu [nzMode]="'inline'" style="height:100%; overflow-y: auto; overflow-x: hidden">
       <ng-container *ngFor="let item of menu">
         <li *ngIf="user.data && item.roles.indexOf(user.data.role) !== -1" [routerLinkActive]="'ant-menu-item-selected'"
           [routerLinkActiveOptions]="{exact: true}" nz-menu-item [routerLink]="item.link">
@@ -16,8 +16,8 @@
       </ng-container>
     </ul>
   </nz-sider>
-  <nz-layout style="overflow: hidden">
-    <nz-header class="navbar-layout">
+  <nz-layout style="overflow: hidden" style="background: #c8e6c9">
+    <nz-header class="navbar-layout header-gradient">
       <div style="height: 100%" class="d-flex align-items-center">
         <i class="trigger" nz-icon [type]="isCollapsed?'menu-unfold':'menu-fold'"
           (click)="isCollapsed=!isCollapsed"></i>
@@ -34,17 +34,20 @@
             </li>
           </ul>
         </nz-dropdown>
-        `
       </div>
     </nz-header>
-    <nz-content style="margin: 16px; overflow: auto">
-      <div style="padding:24px; background: #53b79f; min-height: 100%;">
+    <nz-content style="margin: 30px" class="background-layout-content example z-depth-3">
+      <div style="padding:30px">
         <router-outlet></router-outlet>
       </div>
     </nz-content>
-    <nz-footer class="footer d-flex align-items-center" style="padding: 10px">
-      <img width="50" height="50" src="assets/logo.png" class="mr-1" alt="">
-      <h3><span style="color: #09425A" >EBSMS</span></h3>
+    <nz-footer style="background: #009688">
+      <span style="color: #004d40; font-weight: bold" >
+        Surgery Management System (eBSMS) - 
+        Made with <i class="fas fa-heart"></i> & 
+        <i class="fas fa-coffee"></i> 
+        by Surgery Project Team: Tung, Vĩnh, Phúc, Linh
+      </span>
     </nz-footer>
   </nz-layout>
 </nz-layout>
