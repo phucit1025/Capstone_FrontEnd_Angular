@@ -224,9 +224,6 @@
 
 <div *ngIf="data" class="text-right">
   <ng-container [ngSwitch]="data.statusName">
-    <ng-container *ngSwitchCase="'Postoperative'">
-      <button (click)="openStartShift()" nz-button nzType="primary" class="mr-2">Finish Surgery Shift</button>
-    </ng-container>
     <ng-container *ngSwitchCase="'Intraoperative'">
       <button (click)="openStartShift()" nz-button nzType="primary" class="mr-2">Complete Surgery Shift</button>
     </ng-container>
