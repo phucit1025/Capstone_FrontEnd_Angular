@@ -428,7 +428,6 @@ export class ScheduleDetailComponent implements OnInit {
     this.schedule.getHealthcareReport(id).subscribe((hc: any) => {
       this.healthcareDetail.healthcareReport = hc;
       this.state.loadHealthcare = false;
-      this.createNewFormTreatment();
     }, er => this.state.loadHealthcare = false);
   }
 }
