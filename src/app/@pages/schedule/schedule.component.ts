@@ -44,8 +44,10 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     loadStart: false,
     finish: false,
     reload: false,
-    create: false
+    create: false,
+    loadSlotRoom: false
   };
+  slotRooms: any
 
   constructor(private schedule: ScheduleService, private messageService: NzMessageService, private fb: FormBuilder) {
   }
@@ -61,6 +63,20 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     if (this.state.interval) {
       clearInterval(this.state.interval);
     }
+  }
+
+  loadSlotRoom() {
+    this.state.loadSlotRoom = true;
+    const arraySlot = [];
+    this.schedule.getSlotRooms().subscribe((rooms: any) => {
+      rooms.forEach(room => {
+        room.slotRooms.forEach(slot => {
+          arraySlot.push(slot);
+        });
+      });
+      this.slotRooms = arraySlot;
+      this.state.loadSlotRoom = false;
+    }, er => this.state.loadSlotRoom = false);
   }
 
   disabledStartDate = (startValue: Date): boolean => {
@@ -81,7 +97,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     this.emergencyForm = this.fb.group({
       startTime: new FormControl(new Date(), Validators.required),
       endTime: new FormControl(new Date(), [Validators.required]),
-      isForceAdd: new FormControl(false)
+      isForceAdd: new FormControl(false),
+      slotRoomId: new FormControl()
     });
   }
 
