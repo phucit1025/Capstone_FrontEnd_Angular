@@ -143,4 +143,9 @@ export class ScheduleService {
   getHealthcareReport(id){
     return this.http.get(GLOBAL.API + 'PostOp/GetHealthCareReportBySurgeryShiftId?surgeryShiftId=' + id);
   }
+
+  editTreatmentReport(data) {
+    return this.http.post(GLOBAL.API + 'PostOp/EditTreatmenReport', data);
+  }
+
 }

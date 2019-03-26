@@ -356,7 +356,7 @@
                 <nz-form-label>Unit</nz-form-label>
                 <nz-form-control>
                   <input readonly nz-input
-                    value="{{treatmentDetail.treatmentForm.get('treatmentReportDrugs').controls[i].controls['unit'].value}}"
+                    value="{{item.controls['unit'].value}}"
                     width="100">
                 </nz-form-control>
               </nz-form-item>
@@ -401,7 +401,7 @@
               <nz-form-item>
                 <nz-form-label>&nbsp;</nz-form-label>
                 <nz-form-control>
-                  <button (click)="deleteFormDrugs(i)" nz-button nzType="danger" nzShape="round"><i nz-icon
+                  <button (click)="deleteFormDrugs(i);  pushDeleteTreatmentReportId(item.controls['id'].value)" nz-button nzType="danger" nzShape="round"><i nz-icon
                       type="close"></i></button>
                 </nz-form-control>
               </nz-form-item>
