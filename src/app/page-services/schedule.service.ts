@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { GLOBAL } from '../global';
+import * as FileSaver from 'file-saver';
 
 @Injectable({
   providedIn: 'root'
@@ -171,10 +172,6 @@ export class ScheduleService {
   */
   downloadFile(data: any) {
     var blob = new Blob([data], { type: "application/pdf" } );
-    var url = window.URL.createObjectURL(blob);
-    var pwa = window.open(url);
-    if (!pwa || pwa.closed || typeof pwa.closed == 'undefined') {
-        alert( 'Please disable your Pop-up blocker and try again.');
-    }
+    FileSaver.saveAs(blob, "SurgeryExport");
   }
 }
