@@ -48,6 +48,7 @@ export class ScheduleDetailComponent implements OnInit {
     showAssignNurse: false,
     showStatusModal: false,
     loadHealthcare: false,
+    assignedForNurse: false,
   };
   surgeryDetail = {
     surgeryProcedure: '',
@@ -124,6 +125,7 @@ export class ScheduleDetailComponent implements OnInit {
     this.schedule.getNurseByShiftId(id).subscribe((nurse: any) => {
       this.treatmentDetail.nurseData = nurse.id;
       this.state.loadGetNurse = false;
+      this.state.assignedForNurse = true;
     }, er => this.state.loadGetNurse = false);
   }
 
@@ -297,6 +299,7 @@ export class ScheduleDetailComponent implements OnInit {
       this.message.success('Assign Successful');
       this.state.loadAssignNurse = false;
       this.state.showAssignNurse = false;
+      this.state.assignedForNurse = true;
     }, er => {
       this.message.error('Assign Fail!!!');
       this.state.loadAssignNurse = false;
@@ -429,5 +432,9 @@ export class ScheduleDetailComponent implements OnInit {
       this.healthcareDetail.healthcareReport = hc;
       this.state.loadHealthcare = false;
     }, er => this.state.loadHealthcare = false);
+  }
+
+  exportSurgery(){
+    this.schedule.exportSurgery(this.data.id);
   }
 }
