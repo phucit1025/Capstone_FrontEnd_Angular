@@ -143,4 +143,16 @@ export class ScheduleService {
   refreshSurgeryShift(id) {
     return this.http.post(GLOBAL.API + this.name + `/RefreshSurgeryShift?shiftId=${id}`, {});
   }
+
+  deleteTreatmentReport(id) {
+    return this.http.get(GLOBAL.API + 'PostOp/SoftDeleteTreatmentReport?id=' + id);
+  }
+
+  editTreatmentReport(data) {
+    return this.http.post(GLOBAL.API + 'PostOp/EditTreatmentReport', data);
+  }
+
+  getHealthcareReport(id){
+    return this.http.get(GLOBAL.API + 'PostOp/GetHealthCareReportBySurgeryShiftId?surgeryShiftId=' + id);
+  }
 }
