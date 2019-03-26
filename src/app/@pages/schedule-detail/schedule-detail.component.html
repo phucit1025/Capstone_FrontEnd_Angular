@@ -310,12 +310,50 @@
             </nz-form-control>
           </nz-form-item>
         </div>
+        <div class="col-12 row">
+          <div class="col-12 row">
+            <div class="col-5">
+              <nz-form-item class="mb-0">
+                <nz-form-label>Drug Name</nz-form-label>
+              </nz-form-item>
+            </div>
+            <div class="col-2">
+              <nz-form-item class="mb-0">
+                <nz-form-label>Unit</nz-form-label>
+              </nz-form-item>
+            </div>
+            <div class="col-1">
+              <nz-form-item class="mb-0">
+                <nz-form-label>Morning</nz-form-label>
+              </nz-form-item>
+            </div>
+            <div class="col-1">
+              <nz-form-item class="mb-0">
+                <nz-form-label>Noon</nz-form-label>
+              </nz-form-item>
+            </div>
+            <div class="col-1">
+              <nz-form-item class="mb-0">
+                <nz-form-label>Evening</nz-form-label>
+              </nz-form-item>
+            </div>
+            <div class="col-1">
+              <nz-form-item class="mb-0">
+                <nz-form-label>Night</nz-form-label>
+              </nz-form-item>
+            </div>
+            <div class="col-1">
+              <nz-form-item class="mb-0">
+                <nz-form-label>&nbsp;</nz-form-label>
+              </nz-form-item>
+            </div>
+          </div>
+        </div>
         <div class="col-12 row" formArrayName="treatmentReportDrugs"
           *ngFor="let item of treatmentDetail.treatmentForm.get('treatmentReportDrugs').controls; let i = index;">
           <div [formGroupName]="i" class="col-12 row">
             <div class="col-5">
-              <nz-form-item>
-                <nz-form-label>Drug Name</nz-form-label>
+              <nz-form-item class="mb-1">
                 <nz-form-control>
                   <nz-select formControlName="drugId" (ngModelChange)="setUnit($event, i)" style="width: 100%"
                     nzShowSearch nzAllowClear nzPlaceHolder="Select a supply">
@@ -326,8 +364,7 @@
               </nz-form-item>
             </div>
             <div class="col-2">
-              <nz-form-item>
-                <nz-form-label>Unit</nz-form-label>
+              <nz-form-item class="mb-1">
                 <nz-form-control>
                   <input readonly nz-input
                     value="{{treatmentDetail.treatmentForm.get('treatmentReportDrugs').controls[i].controls['unit'].value}}"
@@ -336,8 +373,7 @@
               </nz-form-item>
             </div>
             <div class="col-1">
-              <nz-form-item>
-                <nz-form-label>Morning</nz-form-label>
+              <nz-form-item class="mb-1">
                 <nz-form-control>
                   <nz-input-number formControlName="morningQuantity" style="width: 100%" [nzMin]="0" [nzStep]="1">
                   </nz-input-number>
@@ -345,8 +381,7 @@
               </nz-form-item>
             </div>
             <div class="col-1">
-              <nz-form-item>
-                <nz-form-label>Noon</nz-form-label>
+              <nz-form-item class="mb-1">
                 <nz-form-control>
                   <nz-input-number formControlName="afternoonQuantity" style="width: 100%" [nzMin]="0" [nzStep]="1">
                   </nz-input-number>
@@ -354,8 +389,7 @@
               </nz-form-item>
             </div>
             <div class="col-1">
-              <nz-form-item>
-                <nz-form-label>Evening</nz-form-label>
+              <nz-form-item class="mb-1">
                 <nz-form-control>
                   <nz-input-number formControlName="eveningQuantity" style="width: 100%" [nzMin]="0" [nzStep]="1">
                   </nz-input-number>
@@ -363,8 +397,7 @@
               </nz-form-item>
             </div>
             <div class="col-1">
-              <nz-form-item>
-                <nz-form-label>Night</nz-form-label>
+              <nz-form-item class="mb-1">
                 <nz-form-control>
                   <nz-input-number formControlName="nightQuantity" style="width: 100%" [nzMin]="0" [nzStep]="1">
                   </nz-input-number>
@@ -372,8 +405,7 @@
               </nz-form-item>
             </div>
             <div class="col-1">
-              <nz-form-item>
-                <nz-form-label>&nbsp;</nz-form-label>
+              <nz-form-item class="mb-1">
                 <nz-form-control>
                   <button (click)="deleteFormDrugs(i)" nz-button nzType="danger" nzShape="round"><i nz-icon
                       type="close"></i></button>

@@ -35,7 +35,7 @@
       <td nzShowCheckbox [(nzChecked)]="mapOfCheckedId[item.index]" (nzCheckedChange)="checkItem()"></td>
       <td>{{item.index + 1}}</td>
       <td>{{item.patientName}}</td>
-      <td>{{item.gender}}</td>
+      <td>{{item.gender === 1 ? 'M' : 'F'}}</td>
       <td>{{item.surgeryName}}</td>
       <td>{{item.proposedStartDateTime ? item.proposedStartDateTime : 'N/A'}}</td>
       <td>{{item.proposedEndDateTime ? item.proposedEndDateTime : 'N/A'}}</td>
@@ -55,26 +55,63 @@
 </ng-template>
 
 <nz-modal [(nzVisible)]="state.isVisible" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter"
-  (nzOnCancel)="state.isVisible = false">
+  (nzOnCancel)="state.isVisible = false" [nzWidth]="'80vw'">
   <ng-template #modalTitle>
     Detail
   </ng-template>
 
   <ng-template #modalContent>
-    <nz-table [nzShowPagination]="false" [nzFrontPagination]="false" *ngIf="selectedObject" #basicTable [nzData]="selectedObject">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Quantity</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let data of basicTable.data">
-          <td>{{data.name}}</td>
-          <td>{{data.quantity}}</td>
-        </tr>
-      </tbody>
-    </nz-table>
+    <nz-card class="mb-4" nzType="inner" nzTitle="Patient Information" *ngIf="selectedObject">
+      <div class="row">
+        <div class="col-3">
+          <p><span class="font-weight-bold">Patient Id:</span> {{selectedObject.patientId}}</p>
+        </div>
+        <div class="col-6">
+          <p><span class="font-weight-bold">Patient:</span> {{selectedObject.patientName}}</p>
+        </div>
+        <div class="col">
+          <p><span class="font-weight-bold">Gender:</span> {{selectedObject.gender === 1 ? 'M' : 'F'}}</p>
+        </div>
+        <div class="col">
+          <p><span class="font-weight-bold">Age:</span> {{curYear - selectedObject.patientDob}}</p>
+        </div>
+      </div>
+    </nz-card>
+    <nz-card class="mb-4" nzType="inner" nzTitle="Surgery Information" *ngIf="selectedObject">
+      <div class="row">
+        <div class="col-6">
+          <p><span class="font-weight-bold">Surgery Name:</span> {{selectedObject.surgeryName}}</p>
+        </div>
+        <div class="col-6">
+          <p><span class="font-weight-bold">Surgery Weight:</span> {{selectedObject.surgeryWeight}}</p>
+        </div>
+        <div class="col-6">
+          <p><span class="font-weight-bold">Doctor:</span> {{selectedObject.doctorName}}</p>
+        </div>
+      </div>
+    </nz-card>
+    <nz-card class="mb-4" nzType="inner" nzTitle="Medical Supplies" *ngIf="selectedObject">
+      <div class="row">
+        <div class="col mt-2">
+          <nz-table [nzShowPagination]="false" [nzFrontPagination]="false" *ngIf="selectedObject" #basicTable [nzData]="selectedObject.detailMedical">
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>Name</th>
+                <th>Quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of basicTable.data; let i = index">
+                <td>{{i + 1}}</td>
+                <td>{{data.name}}</td>
+                <td>{{data.quantity}}</td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
+      </div>
+    </nz-card>
   </ng-template>
 
   <ng-template #modalFooter>

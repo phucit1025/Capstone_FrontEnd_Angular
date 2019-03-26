@@ -139,4 +139,8 @@ export class ScheduleService {
   setFinishedStatus(url) {
     return this.http.post(GLOBAL.API + 'Status/SetFinishedStatus' + url, {});
   }
+
+  refreshSurgeryShift(id) {
+    return this.http.post(GLOBAL.API + this.name + `/RefreshSurgeryShift?shiftId=${id}`, {});
+  }
 }
