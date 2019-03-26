@@ -15,6 +15,7 @@ export class ImportFileComponent implements OnInit {
     load: false,
     isVisible: false
   };
+  curYear = new Date().getFullYear();
   data = [];
   medicals = [];
   mapOfCheckedId: { [key: string]: boolean } = {};
@@ -29,9 +30,8 @@ export class ImportFileComponent implements OnInit {
   }
 
   showModal(item) {
-    this.selectedObject = item.detailMedical;
+    this.selectedObject = item;
     this.state.isVisible = true;
-    console.log(this.selectedObject);
   }
 
   async handleFile(e) {
@@ -41,8 +41,9 @@ export class ImportFileComponent implements OnInit {
       const data = await GLOBAL.readFileExcel(file);
       if (data && data.length > 1) {
         this.medicals = data[1];
-        this.data = data[0].map((patient: any, index: number) => {
-          patient.index = index;
+        const len = this.data.length;
+        this.data = this.data.concat(data[0].map((patient: any, index: number) => {
+          patient.index = len + index;
           patient.gender = patient.gender === 'F' ? 0 : 1;
           patient.patientID = patient.patientId;
           patient.priority = patient.priorityNumber;
@@ -60,7 +61,7 @@ export class ImportFileComponent implements OnInit {
               ? new Date(patient.expectedDate + ' ' + patient.expectedTime.split('-')[1])
               : '';
           return patient;
-        });
+        }));
         this.message.success('File parse successfully');
         this.state.load = false;
         return;

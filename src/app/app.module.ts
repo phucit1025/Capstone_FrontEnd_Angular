@@ -7,8 +7,6 @@ import {AppRouting} from './app.routing';
 import {AuthService} from './page-services/auth.service';
 import {AuthGuardService} from './page-services/auth-guard.service';
 
-// import { MDBBootstrapModule } from 'angular-bootstrap-md';
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -17,8 +15,7 @@ import {AuthGuardService} from './page-services/auth-guard.service';
     BrowserModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    AppRouting
-    // MDBBootstrapModule.forRoot()
+    AppRouting,
   ],
   providers: [AuthService, AuthGuardService],
   bootstrap: [AppComponent]

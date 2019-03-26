@@ -140,16 +140,7 @@ export class ScheduleService {
     return this.http.post(GLOBAL.API + 'Status/SetFinishedStatus' + url, {});
   }
 
-  getHealthcareReport(id){
-    return this.http.get(GLOBAL.API + 'PostOp/GetHealthCareReportBySurgeryShiftId?surgeryShiftId=' + id);
+  refreshSurgeryShift(id) {
+    return this.http.post(GLOBAL.API + this.name + `/RefreshSurgeryShift?shiftId=${id}`, {});
   }
-
-  editTreatmentReport(data) {
-    return this.http.post(GLOBAL.API + 'PostOp/EditTreatmentReport', data);
-  }
-
-  deleteTreatmentReport(id) {
-    return this.http.get(GLOBAL.API + 'PostOp/SoftDeleteTreatmentReport?id=' + id);
-  }
-
 }
