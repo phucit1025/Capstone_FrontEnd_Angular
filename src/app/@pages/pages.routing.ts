@@ -19,6 +19,11 @@ const routes: Routes = [
     canActivateChild: [AuthGuardService],
     children: [
       {
+        path: '',
+        redirectTo: 'error',
+        pathMatch: 'full'
+      },
+      {
         path: 'import-file',
         component: ImportFileComponent,
         data: {

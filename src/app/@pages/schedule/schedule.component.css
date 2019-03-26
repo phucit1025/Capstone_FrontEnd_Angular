@@ -1,6 +1,5 @@
 .room-container {
   max-width: 100%;
-  max-height: calc(100vh - 200px);
   overflow-x: hidden;
   overflow-y: auto;
   white-space: nowrap
@@ -67,6 +66,10 @@
   font-size: 15px;
   font-weight: bold;
   text-transform: uppercase;
+}
+.rotate .quantity {
+  font-size: 14px;
+  font-weight: normal;
 }
 
 .slot{
