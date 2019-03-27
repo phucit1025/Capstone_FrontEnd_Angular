@@ -21,7 +21,7 @@
     "@angular/router": "~7.1.0",
     "@fortawesome/fontawesome-free": "~5.8.1",
     "@toverux/ngx-sweetalert2": "^4.0.0",
-    "angular-bootstrap-md": "~7.4.3",
+    "angular-bootstrap-md": "^7.4.3",
     "angular2-jwt": "^0.2.3",
     "bootstrap": "^4.3.1",
     "core-js": "^2.5.4",

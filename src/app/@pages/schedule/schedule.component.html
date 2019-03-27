@@ -58,8 +58,8 @@
         </button>
       </span>
       <label class="mr-2"><b>Status : </b></label>
-      <nz-tag [nzColor]="'#ffd54f'">Proceeding</nz-tag>
-      <nz-tag [nzColor]="'#ef5350'">Completed</nz-tag>
+      <nz-tag [nzColor]="'#a5d6a7'">Proceeding</nz-tag>
+      <nz-tag [nzColor]="'#9e9e9e'">Completed</nz-tag>
     </div>
     <!-- Room Container -->
     <div id="room-container" class="room-container">
@@ -141,6 +141,13 @@
                 nzFormat="dd/MM/yyyy - HH:mm" formControlName="endTime" nzPlaceHolder="End Time">
               </nz-date-picker>
             </nz-form-control>
+          </nz-form-item>         
+          <nz-form-item>
+            <nz-form-control>
+              <label nz-checkbox formControlName="isForceAdd">
+                <span>Force Add Emergency</span>
+              </label>
+            </nz-form-control>
           </nz-form-item>
           <nz-form-item>
             <nz-form-label>Slot Room</nz-form-label>
@@ -149,13 +156,6 @@
                 <nz-option *ngFor="let item of slotRooms" [nzLabel]="item.name"
                 [nzValue]="item.id"></nz-option>
               </nz-select>
-            </nz-form-control>
-          </nz-form-item>
-          <nz-form-item>
-            <nz-form-control>
-              <label nz-checkbox formControlName="isForceAdd">
-                <span>Force Add Emergency</span>
-              </label>
             </nz-form-control>
           </nz-form-item>
         </form>

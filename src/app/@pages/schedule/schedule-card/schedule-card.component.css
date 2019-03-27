@@ -18,12 +18,12 @@
 }
 
 /deep/ .surgery.postoperative .ant-card{
-    background: #ef5350;
-    color: white;
+    background: #9e9e9e;
+    color: black;
 }
 
 /deep/ .surgery.intraoperative .ant-card{
-    background: #ffd54f;
+    background: #a5d6a7;
     color: black;
 }
 

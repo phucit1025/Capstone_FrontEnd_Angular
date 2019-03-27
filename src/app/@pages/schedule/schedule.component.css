@@ -1,11 +1,7 @@
 .room-container {
   max-width: 100%;
-<<<<<<< HEAD
   /* max-height: calc(100vh - 200px); */
   /* overflow-x: hidden; */
-=======
-  overflow-x: hidden;
->>>>>>> 487f1e41198ccc92ec24a66406ae8b8bdfeb7012
   overflow-y: auto;
   white-space: nowrap
 }
