@@ -38,7 +38,7 @@
             <b style="font-size: 1.2em">Schedule by date</b>
           </nz-form-label>
           <nz-form-control>
-            <nz-date-picker name="date" id="date" nzFormat="dd-MM-yyyy" [ngModel]="date"
+            <nz-date-picker name="date" id="date" nzFormat="dd-MM-yyyy" [ngModel]="date" nzAllowClear='false'
               (ngModelChange)="changeDate($event)">
             </nz-date-picker>
           </nz-form-control>
@@ -138,44 +138,56 @@
     </ng-template>
   </nz-modal>
   <!-- Modal -->
-  <nz-modal [nzWidth]="'400px'" style="width: 40%;" (nzOnCancel)="isShowEmergency = false; createEmergencyForm()"
+  <nz-modal [nzWidth]="'500px'" style="width: 40%;" (nzOnCancel)="isShowEmergency = false; createEmergencyForm()"
     [(nzVisible)]="isShowEmergency" [nzTitle]="'Emergency Shift'" [nzContent]="emergencyBody"
     [nzFooter]="emergencyFooter">
     <ng-template #emergencyBody>
       <nz-spin [nzSpinning]="state.create">
         <form *ngIf="emergencyForm" [formGroup]="emergencyForm">
-          <nz-form-item>
-            <nz-form-label>Start Time</nz-form-label>
-            <nz-form-control>
-              <nz-date-picker [nzDisabledDate]="disabledStartDate" [nzShowTime]="{nzFormat: 'HH:mm'}"
-                nzFormat="dd/MM/yyyy - HH:mm" formControlName="startTime" nzPlaceHolder="Start Time">
-              </nz-date-picker>
-            </nz-form-control>
-          </nz-form-item>
-          <nz-form-item>
-            <nz-form-label>End Time</nz-form-label>
-            <nz-form-control>
-              <nz-date-picker [nzDisabledDate]="disabledEndDate" [nzShowTime]="{nzFormat: 'HH:mm'}"
-                nzFormat="dd/MM/yyyy - HH:mm" formControlName="endTime" nzPlaceHolder="End Time">
-              </nz-date-picker>
-            </nz-form-control>
-          </nz-form-item>         
-          <nz-form-item>
-            <nz-form-control>
-              <label nz-checkbox formControlName="isForceAdd">
-                <span>Force Add Emergency</span>
-              </label>
-            </nz-form-control>
-          </nz-form-item>
-          <nz-form-item>
-            <nz-form-label>Slot Room</nz-form-label>
-            <nz-form-control>
-              <nz-select style="width: 100%;" formControlName="slotRoomId" nzAllowClear nzPlaceHolder="Choose a slot room">
-                <nz-option *ngFor="let item of slotRooms" [nzLabel]="item.name"
-                [nzValue]="item.id"></nz-option>
-              </nz-select>
-            </nz-form-control>
-          </nz-form-item>
+          <div nz-row nzType="flex" nzJustify="space-between">
+            <div>
+              <nz-form-item>
+                <nz-form-label>Start Time</nz-form-label>
+                <nz-form-control>
+                  <nz-date-picker [nzDisabledDate]="disabledStartDate" [nzShowTime]="{nzFormat: 'HH:mm'}"
+                    nzFormat="dd/MM/yyyy - HH:mm" formControlName="startTime" nzPlaceHolder="Start Time">
+                  </nz-date-picker>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <div>
+              <nz-form-item>
+                <nz-form-label>End Time</nz-form-label>
+                <nz-form-control>
+                  <nz-date-picker [nzDisabledDate]="disabledEndDate" [nzShowTime]="{nzFormat: 'HH:mm'}"
+                    nzFormat="dd/MM/yyyy - HH:mm" formControlName="endTime" nzPlaceHolder="End Time">
+                  </nz-date-picker>
+                </nz-form-control>
+              </nz-form-item>  
+            </div>
+          </div>
+          <div nz-row>
+            <div nz-col nzSpan="12">
+              <nz-form-item>
+                <nz-form-control>
+                  <label nz-checkbox formControlName="isForceAdd">
+                    <span>Force Add Emergency</span>
+                  </label>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <div nz-col nzSpan="12">
+              <nz-form-item>
+                <nz-form-control>
+                  <label>Slot Room</label>
+                  <nz-select formControlName="slotRoomId" nzAllowClear nzPlaceHolder="Choose a slot room">
+                    <nz-option *ngFor="let item of slotRooms" [nzLabel]="item.name"
+                    [nzValue]="item.id"></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
         </form>
       </nz-spin>
     </ng-template>
