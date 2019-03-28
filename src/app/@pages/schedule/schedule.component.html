@@ -63,7 +63,7 @@
     </div>
     <!-- Room Container -->
     <div id="room-container" class="room-container">
-      <ng-container *ngFor="let room of rooms | roomPipe: state.searchText">
+      <ng-container *ngFor="let room of rooms | roomPipe: state.searchText; let i = count">
         <div *ngIf="room !== -1" class="date">
           <!-- Room header -->
           <div class="room-name">
@@ -190,12 +190,16 @@
 
   <ng-template #startContent>
     <p><b>Surgery Shift:</b> {{selectedObject?.id}} </p>
-    <p><b>Estimated Start Datetime:</b> {{selectedObject?.estimatedStartDateTime | date: 'dd/MM/yyyy - HH:mm'}} </p>
-    <p><b>Estimated End Datetime:</b> {{selectedObject?.estimatedEndDateTime | date: 'dd/MM/yyyy - HH:mm'}}</p>
+    <p><b>Actual Start Time:</b> {{selectedObject?.actualStartDateTime | date: 'dd/MM/yyyy - HH:mm'}} </p>
     <label class="mr-2">
       <b>Actual {{selectedObject?.statusName === 'Preoperative' ? 'Start' : 'End'}} Time:</b>
     </label>
-    <nz-time-picker [nzFormat]="'HH:mm'" [(ngModel)]="selectedTime"></nz-time-picker>
+    <nz-time-picker [nzFormat]="'HH:mm'" [(ngModel)]="selectedTime" (ngModelChange)="checkActualEndTime()"></nz-time-picker>
+    <span
+      style="color: red; padding-left: 10px;"
+      *ngIf="actualEndTimeError">
+      Invalid time
+    </span>
     <div *ngIf="selectedObject?.statusName === 'Intraoperative'" class="row">
       <div class="col-6">
         <nz-form-item>

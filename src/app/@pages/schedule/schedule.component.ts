@@ -47,8 +47,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     create: false,
     loadSlotRoom: false
   };
-  slotRooms: any
-
+  slotRooms: any;
+  actualEndTimeError = false;
   constructor(private schedule: ScheduleService, private messageService: NzMessageService, private fb: FormBuilder) {
   }
 
@@ -295,6 +295,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   openStartShift(data) {
     console.log(data);
+    this.actualEndTimeError = false;
     switch (data.statusName) {
       case 'Preoperative':
         this.selectedObject = data;
@@ -310,54 +311,64 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         break;
       case 'Postoperative': break;
     }
+    this.checkActualEndTime();
   }
 
   startShift() {
-    switch (this.selectedObject.statusName) {
-      case 'Preoperative':
-        const Pdate = moment(this.date).format('YYYY-MM-DD');
-        const Ptime = moment(this.selectedTime).format('HH:mm');
-
-        this.schedule.setIntraoperativeStatus({
-          shiftId: this.selectedObject.id,
-          time: Pdate + ' ' + Ptime
-        }).subscribe(sc => {
-          this.schedule.refreshSurgeryShift(this.selectedObject.id).subscribe();
-          this.messageService.success('Change Successful');
-          this.isShowStartModal = false;
-          this.getSchedule();
-        }, er => {
-          this.messageService.error('Change Fail');
-        });
-        break;
-      case 'Intraoperative':
-        const date = moment(this.date).format('YYYY-MM-DD');
-        const time = moment(this.selectedTime).format('HH:mm');
-        const bedPost = this.selectedBed;
-        const roomPost = this.selectedRoom;
-        const data = {
-          actualEndDateTime: date + ' ' + time,
-          shiftId: this.selectedObject.id
-        } as any;
-        if (bedPost) {
-          data.bedPost = bedPost;
-        }
-        if (roomPost) {
-          data.roomPost = roomPost;
-        }
-        this.schedule.setPostoperativeStatus(GLOBAL.parseUrlString(data)).subscribe(sc => {
-          this.schedule.refreshSurgeryShift(this.selectedObject.id).subscribe();
-          this.messageService.success('Change Successful');
-          this.isShowStartModal = false;
-          this.selectedObject = null;
-          this.selectedTime = null;
-          this.getSchedule();
-        }, er => {
-          this.messageService.error('Change Fail');
-        });
-        break;
-      case 'Postoperative': break;
+    if (!this.actualEndTimeError) {
+      switch (this.selectedObject.statusName) {
+        case 'Preoperative':
+          const Pdate = moment(this.date).format('YYYY-MM-DD');
+          const Ptime = moment(this.selectedTime).format('HH:mm');
+  
+          this.schedule.setIntraoperativeStatus({
+            shiftId: this.selectedObject.id,
+            time: Pdate + ' ' + Ptime
+          }).subscribe(sc => {
+            this.schedule.refreshSurgeryShift(this.selectedObject.id).subscribe();
+            this.messageService.success('Change Successful');
+            this.isShowStartModal = false;
+            this.getSchedule();
+          }, er => {
+            this.messageService.error('Change Fail');
+          });
+          break;
+        case 'Intraoperative':
+          const date = moment(this.date).format('YYYY-MM-DD');
+          const time = moment(this.selectedTime).format('HH:mm');
+          const bedPost = this.selectedBed;
+          const roomPost = this.selectedRoom;
+          const data = {
+            actualEndDateTime: date + ' ' + time,
+            shiftId: this.selectedObject.id
+          } as any;
+          if (bedPost) {
+            data.bedPost = bedPost;
+          }
+          if (roomPost) {
+            data.roomPost = roomPost;
+          }
+          this.schedule.setPostoperativeStatus(GLOBAL.parseUrlString(data)).subscribe(sc => {
+            this.schedule.refreshSurgeryShift(this.selectedObject.id).subscribe();
+            this.messageService.success('Change Successful');
+            this.isShowStartModal = false;
+            this.selectedObject = null;
+            this.selectedTime = null;
+            this.getSchedule();
+          }, er => {
+            this.messageService.error('Change Fail');
+          });
+          break;
+        case 'Postoperative': break;
+      }
     }
 
+  }
+
+  checkActualEndTime() {
+    const selectedDate = new Date(this.selectedTime);
+    const serverDate = new Date(this.serverTime);
+    this.actualEndTimeError = (serverDate.getHours() * 60 + serverDate.getMinutes())
+    - (selectedDate.getHours() * 60 + selectedDate.getMinutes()) > 0;
   }
 }
