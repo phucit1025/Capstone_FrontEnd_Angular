@@ -66,7 +66,8 @@
       </div>
       <div class="d-flex">
         <p class="label" style="font-weight: bold">Time :</p>
-        <p>{{(data.estimatedStartDateTime | date: 'HH : mm') + ' - ' + (data.estimatedEndDateTime | date: 'HH : mm')}}
+        <p>{{((data.actualStartDateTime ? data.actualStartDateTime : data.estimatedStartDateTime) | date: 'HH : mm') 
+          + ' - ' + ((data.actualEndDateTime ? data.actualEndDateTime  : data.estimatedEndDateTime) | date: 'HH : mm')}}
         </p>
       </div>
       <div *ngIf="!swapMode" class="row">
@@ -90,7 +91,7 @@
           </button>
         </div>
       </div>
-      <div *ngIf="swapMode">
+      <div *ngIf="swapMode && data.statusName === 'Preoperative'">
         <button [ngClass]="{'checked' : (selected.firstShiftId === data.id || selected.secondShiftId ===data.id)}"
           [disabled]="canDisabled()" class="checkButton" (click)="chooseNode()" style="width: 100%" nz-button
           nzType="default">

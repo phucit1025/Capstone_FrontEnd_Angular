@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { GLOBAL } from '../global';
+import * as FileSaver from 'file-saver';
 
 @Injectable({
   providedIn: 'root'
@@ -142,5 +143,35 @@ export class ScheduleService {
 
   refreshSurgeryShift(id) {
     return this.http.post(GLOBAL.API + this.name + `/RefreshSurgeryShift?shiftId=${id}`, {});
+  }
+
+  deleteTreatmentReport(id) {
+    return this.http.get(GLOBAL.API + 'PostOp/SoftDeleteTreatmentReport?id=' + id);
+  }
+
+  editTreatmentReport(data) {
+    return this.http.post(GLOBAL.API + 'PostOp/EditTreatmentReport', data);
+  }
+
+  getHealthcareReport(id){
+    return this.http.get(GLOBAL.API + 'PostOp/GetHealthCareReportBySurgeryShiftId?surgeryShiftId=' + id);
+  }
+
+  exportSurgery(id){
+    let headers = new HttpHeaders();
+    headers = headers.set('Accept', 'application/pdf');
+    return this.http.get(GLOBAL.API + 'PostOp/CreateSurgeryPdf?id=' + id,{ headers: headers, responseType: 'blob' })
+    .subscribe((response) => this.downloadFile(response));
+  }
+
+
+  /**
+  * Method is use to download file.
+  * @param data - Array Buffer data
+  * @param type - type of the document.
+  */
+  downloadFile(data: any) {
+    var blob = new Blob([data], { type: "application/pdf" } );
+    FileSaver.saveAs(blob, "SurgeryExport");
   }
 }

@@ -14,7 +14,7 @@
     <th>Patient Name</th>
     <th>Surgery Name</th>
     <th>Day Created</th>
-    <th>Supply</th>
+    <!-- <th>Medical Supply</th> -->
     <th>View Detail</th>
   </tr>
   </thead>
@@ -23,8 +23,8 @@
     <td nzShowCheckbox [(nzChecked)]="mapOfCheckedId[data.id]" (nzCheckedChange)="checkItem()"></td>
     <td>{{data.patientName}}</td>
     <td>{{data.surgeryName}}</td>
-    <td>{{data.createdDate}}</td>
-    <td>{{data.surgeryName}}</td>
+    <td>{{data.createdDate | date: 'dd/MM/yyyy'}}</td>
+    <!-- <td>N/A</td> -->
     <td class="text-center">
       <button nz-button nzType="primary" (click)="state.isShow = true"><i nz-icon type="info-circle"></i></button>
     </td>

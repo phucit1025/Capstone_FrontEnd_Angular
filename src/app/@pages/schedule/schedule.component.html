@@ -1,4 +1,4 @@
-<div class="pos-relative" style="padding: 10px">
+<div class="pos-relative">
   <div class="row">
     <div class="col-6">
       <nz-form-item>
@@ -18,7 +18,7 @@
           <b style="font-size: 1.2em">Time</b>
         </nz-form-label>
         <nz-form-control>
-          <h1><b style="color: white">{{serverTime | date: 'HH : mm : ss'}}</b></h1>
+          <h1><b style="color: black">{{serverTime | date: 'HH : mm : ss'}}</b></h1>
         </nz-form-control>
       </nz-form-item>
     </div>
@@ -53,17 +53,17 @@
     </div>
     <div class="mt-3 mb-5 d-flex">
       <span class="mr-auto">
-        <button (click)="isShowEmergency = true" nz-button nzType="primary">
+        <button (click)="isShowEmergency = true; loadSlotRoom()" class="btn btn-primary">
           Add Emergency Shift
         </button>
       </span>
       <label class="mr-2"><b>Status : </b></label>
-      <nz-tag [nzColor]="'#ffd54f'">Proceeding</nz-tag>
-      <nz-tag [nzColor]="'#ef5350'">Completed</nz-tag>
+      <nz-tag [nzColor]="'#a5d6a7'">Proceeding</nz-tag>
+      <nz-tag [nzColor]="'#9e9e9e'">Completed</nz-tag>
     </div>
     <!-- Room Container -->
     <div id="room-container" class="room-container">
-      <ng-container *ngFor="let room of rooms | roomPipe: state.searchText">
+      <ng-container *ngFor="let room of rooms | roomPipe: state.searchText; let i = count">
         <div *ngIf="room !== -1" class="date">
           <!-- Room header -->
           <div class="room-name">
@@ -74,10 +74,10 @@
           </div>
           <!-- Room-slot -->
           <div class="slot-group-container">
-            <div class="slot" *ngFor="let slot of room.slotRooms">
-              <div class="slot-name">
+            <div class="slot example z-depth-2" *ngFor="let slot of room.slotRooms">
+              <!-- <div class="slot-name">
                 {{slot.name}}
-              </div>
+              </div> -->
               <div [id]="slot.id" class="slot-container p-3" droppable [dropScope]="getScope(slot)"
                 (onDrop)="dropNode($event)">
                 <ng-container *ngIf="slot.surgeries?.length > 0; else noData">
@@ -120,7 +120,7 @@
     </ng-template>
   </nz-modal>
   <!-- Modal -->
-  <nz-modal [nzWidth]="'400px'" style="width: 40%" (nzOnCancel)="isShowEmergency = false; createEmergencyForm()"
+  <nz-modal [nzWidth]="'400px'" style="width: 40%;" (nzOnCancel)="isShowEmergency = false; createEmergencyForm()"
     [(nzVisible)]="isShowEmergency" [nzTitle]="'Emergency Shift'" [nzContent]="emergencyBody"
     [nzFooter]="emergencyFooter">
     <ng-template #emergencyBody>
@@ -141,7 +141,7 @@
                 nzFormat="dd/MM/yyyy - HH:mm" formControlName="endTime" nzPlaceHolder="End Time">
               </nz-date-picker>
             </nz-form-control>
-          </nz-form-item>
+          </nz-form-item>         
           <nz-form-item>
             <nz-form-control>
               <label nz-checkbox formControlName="isForceAdd">
@@ -149,12 +149,21 @@
               </label>
             </nz-form-control>
           </nz-form-item>
+          <nz-form-item>
+            <nz-form-label>Slot Room</nz-form-label>
+            <nz-form-control>
+              <nz-select style="width: 100%;" formControlName="slotRoomId" nzAllowClear nzPlaceHolder="Choose a slot room">
+                <nz-option *ngFor="let item of slotRooms" [nzLabel]="item.name"
+                [nzValue]="item.id"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
         </form>
       </nz-spin>
     </ng-template>
     <ng-template #emergencyFooter>
       <button [disabled]="state.create" nz-button nzType="default" class="mr-2"
-        (click)="isShowEmergency = false">Close</button>
+        (click)="isShowEmergency = false; createEmergencyForm();">Close</button>
       <button [disabled]="state.create || emergencyForm.invalid" nz-button nzType="primary"
         (click)="createShift()">Create</button>
     </ng-template>
@@ -181,12 +190,16 @@
 
   <ng-template #startContent>
     <p><b>Surgery Shift:</b> {{selectedObject?.id}} </p>
-    <p><b>Estimated Start Datetime:</b> {{selectedObject?.estimatedStartDateTime | date: 'dd/MM/yyyy - HH:mm'}} </p>
-    <p><b>Estimated End Datetime:</b> {{selectedObject?.estimatedEndDateTime | date: 'dd/MM/yyyy - HH:mm'}}</p>
+    <p><b>Actual Start Time:</b> {{selectedObject?.actualStartDateTime | date: 'dd/MM/yyyy - HH:mm'}} </p>
     <label class="mr-2">
       <b>Actual {{selectedObject?.statusName === 'Preoperative' ? 'Start' : 'End'}} Time:</b>
     </label>
-    <nz-time-picker [nzFormat]="'HH:mm'" [(ngModel)]="selectedTime"></nz-time-picker>
+    <nz-time-picker [nzFormat]="'HH:mm'" [(ngModel)]="selectedTime" (ngModelChange)="checkActualEndTime()"></nz-time-picker>
+    <span
+      style="color: red; padding-left: 10px;"
+      *ngIf="actualEndTimeError">
+      Invalid time
+    </span>
     <div *ngIf="selectedObject?.statusName === 'Intraoperative'" class="row">
       <div class="col-6">
         <nz-form-item>
