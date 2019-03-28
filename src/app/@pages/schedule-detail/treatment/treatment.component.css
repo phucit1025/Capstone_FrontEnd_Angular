@@ -1,0 +1,33 @@
+.label, .label + p{
+    font-size: 16px;
+}
+
+.label{
+    min-width: 220px;
+}
+
+.primary-table th{
+    background: #09425A;
+    color: white
+}
+
+.primary-table td{
+    background: white;
+}
+
+.sug-area[disabled]{
+    border: 2px solid transparent;
+    background: white;
+    color: #09425A
+}
+
+.sug-area{
+    min-height: 108px;
+    border: 2px solid #09425A;
+    color: black;
+}
+.collapse-header-text {
+    font-weight: bold;
+    color: #00C994 !important;
+    font-size: 18px;
+}
