@@ -165,6 +165,13 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     result.subscribe(res => {
       room.slotRooms.forEach((slot, index) => {
         slot['surgeries'] = res[index];
+        var shiftId;
+        for (let i = 0; i < slot['surgeries'].length; i++) {
+          shiftId = slot['surgeries'][i].id;
+          this.schedule.checkStatusPreviousSurgeryShift(shiftId).subscribe((result: any) => {
+            slot['surgeries'][i]['isStart'] = result;
+          });
+        }
       });
       this.state.load = false;
       this.state.finish = true;
@@ -294,7 +301,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   openStartShift(data) {
-    console.log(data);
     switch (data.statusName) {
       case 'Preoperative':
         this.selectedObject = data;
@@ -322,7 +328,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
           shiftId: this.selectedObject.id,
           time: Pdate + ' ' + Ptime
         }).subscribe(sc => {
-          this.schedule.refreshSurgeryShift(this.selectedObject.id).subscribe();
           this.messageService.success('Change Successful');
           this.isShowStartModal = false;
           this.getSchedule();
@@ -346,18 +351,18 @@ export class ScheduleComponent implements OnInit, OnDestroy {
           data.roomPost = roomPost;
         }
         this.schedule.setPostoperativeStatus(GLOBAL.parseUrlString(data)).subscribe(sc => {
-          this.schedule.refreshSurgeryShift(this.selectedObject.id).subscribe();
+          this.schedule.refreshSurgeryShift(this.selectedObject.id).subscribe(sc => {
+            this.getSchedule();
+          });
           this.messageService.success('Change Successful');
           this.isShowStartModal = false;
           this.selectedObject = null;
           this.selectedTime = null;
-          this.getSchedule();
         }, er => {
           this.messageService.error('Change Fail');
         });
         break;
       case 'Postoperative': break;
     }
-
   }
 }

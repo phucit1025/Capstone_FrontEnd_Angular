@@ -22,6 +22,9 @@
         <i class="trigger" nz-icon [type]="isCollapsed?'menu-unfold':'menu-fold'"
           (click)="isCollapsed=!isCollapsed"></i>
         <div class="mr-auto"></div>
+        <nz-badge [nzCount]="5" style="margin-right: 20px">
+          <a class="head-example"><i nz-icon type="bell" style="size: 30px"></i></a>
+        </nz-badge>
         <nz-dropdown *ngIf="user?.data" class="user-dropdown">
           <a nz-dropdown class="d-flex justify-content-center align-items-center">
             <nz-avatar [nzSize]="'small'" nzIcon="user"></nz-avatar>

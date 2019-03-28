@@ -6,7 +6,7 @@
       <div class="d-flex">
         <p style="width: 100%" class="text-center" [nzTitle]="tooltipTemplate" nzPlacement="topCenter" nz-tooltip>
           <i class="mr-2" nz-icon type="info-circle" theme="outline"></i>
-          <b>{{data.id}}</b>
+          <b>{{data.id}} {{data.id.isStart}}</b>
         </p>
       </div>
       <div class="d-flex">
@@ -30,7 +30,7 @@
             Change
           </button>
         </div>
-        <div *ngIf="data.statusName !== 'Postoperative' && data.statusName !== 'Finished'" class="pl-1 pr-0"
+        <div *ngIf="data.isStart == true && data.statusName !== 'Postoperative' && data.statusName !== 'Finished'" class="pl-1 pr-0"
           [class.col-4]="data.statusName === 'Preoperative'" [class.col-6]="data.statusName === 'Intraoperative'">
           <button [class.ant-btn-primary]="data.statusName === 'Preoperative'"
             [class.btn-third]="data.statusName === 'Intraoperative'" (click)="changeStatus()" style="width: 100%"
@@ -40,7 +40,7 @@
         </div>
       </div>
       <div *ngIf="swapMode">
-        <button [ngClass]="{'checked' : (selected.firstShiftId === data.id || selected.secondShiftId ===data.id)}"
+        <button [ngClass]="{'checked' : (selected.firstShiftId === data.id || selected.secondShiftId === data.id)}"
           [disabled]="canDisabled()" class="checkButton" (click)="chooseNode()" style="width: 100%" nz-button
           nzType="default">
           {{(selected.firstShiftId === data.id || selected.secondShiftId === data.id) ? 'Unselect' : 'Select'}}
@@ -104,14 +104,13 @@
 
 <ng-template #tooltipTemplate>
   <div class="tooltip-cover">
-    <div class="d-block">
+    <!-- <div class="d-block">
       <p class="label" style="font-weight: bold">Catalog Code :</p>
       <p>{{data.catalogCode ? data.catalogCode : 'N/A'}}</p>
-    </div>
+    </div> -->
     <div class="d-block">
-      <p class="label" style="font-weight: bold">Catalog Name :</p>
-      <p>{{data.catalogName ? data.catalogName : 'N/A'}}
-      </p>
+      <p class="label" style="font-weight: bold">Surgery Name :</p>
+      <p>{{data.catalogName ? data.catalogName : 'N/A'}}</p>
     </div>
   </div>
 </ng-template>
