@@ -47,24 +47,23 @@ export class TreatmentComponent implements OnInit {
 
   ngOnInit() {
   }
+
+  trackByFn(index, item){
+    return item ? item.id : undefined;
+  }
   
   nzFilterOption = () => true;
 
   searchDrug(value: string): void {
     this.schedule.searchDrug(value)
       .subscribe(data => {
-        const listOfOption: Array<{  id: number; name: string; unit: string }> = [];
         console.log(data);
-        data.forEach(item => {
-          listOfOption.push({
+        this.common.drugs = data.map(item => ({
             id: item.id,
             name: item.name,
             unit: item.unit,
-          });
-        });
-        console.log(listOfOption);
-        this.common.drugs = listOfOption;
-      });
+        }));
+      }, er => console.log(er));
   }
 
   loadAllNurse() {

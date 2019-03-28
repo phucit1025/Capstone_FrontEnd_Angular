@@ -205,12 +205,12 @@
             <nz-form-item>
               <nz-form-label>Name</nz-form-label>
               <nz-form-control>
-                <!-- <nz-select style="width: 300px" formControlName="medicalSupplyId" nzShowSearch nzAllowClear
-                  nzPlaceHolder="Select a supply">
-                  <nz-option *ngFor="let item of common.supplies" [nzLabel]="item.medicalSupplyName"
+                <nz-select style="width: 300px" formControlName="medicalSupplyId" nzShowSearch  nzServerSearch [nzFilterOption]="nzFilterOption"
+                  nzPlaceHolder="Select a supply" (nzOnSearch)="searchSupply($event)">
+                  <nz-option *ngFor="let item of common.supplies; trackBy:trackByFnSupply" [nzLabel]="item.medicalSupplyName"
                     [nzValue]="item.medicalSupplyId">
                   </nz-option>
-                </nz-select> -->
+                </nz-select>
               </nz-form-control>
             </nz-form-item>
             <nz-form-item>

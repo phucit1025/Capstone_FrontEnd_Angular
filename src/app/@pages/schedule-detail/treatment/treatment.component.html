@@ -21,7 +21,7 @@
         </tr>
       </thead>
       <tbody>
-        <ng-template ngFor let-data [ngForOf]="treatmentTable.data" let-i="index">
+        <ng-container *ngFor="let data of treatmentTable.data; let i = index; trackBy: trackByFn">
           <tr>
             <td nzShowExpand [(nzExpand)]="mapOfExpandData[data.id]"></td>
             <td>{{i + 1}}</td>
@@ -66,7 +66,7 @@
     </nz-table>
     </td>
     </tr>
-    </ng-template>
+    </ng-container>
     </tbody>
     </nz-table>
     <ng-template #expandedIcon let-active>
@@ -143,7 +143,7 @@
                   <!-- //search remote data -->
                   <nz-select formControlName="drugId" style="width: 100%" nzShowSearch nzServerSearch [nzFilterOption]="nzFilterOption"
                     nzPlaceHolder="Select a drug" (ngModelChange)="setUnit($event, i)" (nzOnSearch)="searchDrug($event)">
-                    <nz-option *ngFor="let item of common.drugs" [nzLabel]="item.name" [nzValue]="item.id"> </nz-option>
+                    <nz-option *ngFor="let item of common.drugs; trackBy: trackByFn" [nzLabel]="item.name" [nzValue]="item.id"> </nz-option>
                   </nz-select>
 
                   <!-- load data on scroll -->
@@ -237,7 +237,7 @@
     <nz-spin [nzSpinning]="state.loadAllNurse || state.loadAssignNurse || state.loadGetNurse">
       <nz-select style="width: 200px;" nzShowSearch nzAllowClear nzPlaceHolder="Select a nurse"
         [(ngModel)]="treatmentDetail.nurseData">
-        <nz-option *ngFor="let nurse of common.nurses" [nzLabel]="nurse.fullName" [nzValue]="nurse.id"></nz-option>
+        <nz-option *ngFor="let nurse of common.nurses; trackBy: trackByFn" [nzLabel]="nurse.fullName" [nzValue]="nurse.id"></nz-option>
       </nz-select>
     </nz-spin>
   </ng-template>

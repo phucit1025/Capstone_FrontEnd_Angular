@@ -1,7 +1,7 @@
 import { GLOBAL } from './../../global';
 import { NzMessageService } from 'ng-zorro-antd';
 import { FormBuilder, FormControl, Validators, FormArray } from '@angular/forms';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ScheduleService } from '../../page-services/schedule.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
@@ -10,7 +10,8 @@ import { TreatmentComponent } from './treatment/treatment.component';
 @Component({
   selector: 'app-schedule-detail',
   templateUrl: './schedule-detail.component.html',
-  styleUrls: ['./schedule-detail.component.css']
+  styleUrls: ['./schedule-detail.component.css'],
+  preserveWhitespaces: false
 })
 export class ScheduleDetailComponent implements OnInit {
   @ViewChild(TreatmentComponent) treatment : TreatmentComponent;
@@ -72,20 +73,51 @@ export class ScheduleDetailComponent implements OnInit {
 
   ngOnInit() {
     // this.loadAllDrug();
-    this.loadAllSupply();
+    // this.loadAllSupply();
     this.treatment.loadAllNurse();
     this.createNewForm();
   }
 
- 
+  delete_mark_VI(str) {
+    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, 'a');
+    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, 'e');
+    str = str.replace(/ì|í|ị|ỉ|ĩ/g, 'i');
+    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, 'o');
+    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, 'u');
+    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, 'y');
+    str = str.replace(/đ/g, 'd');
+    str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, 'A');
+    str = str.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, 'E');
+    str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, 'I');
+    str = str.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, 'O');
+    str = str.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, 'U');
+    str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, 'Y');
+    str = str.replace(/Đ/g, 'D');
+    return str;
+  }
+
+nzFilterOption = () => true;
+
+trackByFnSupply(index, item){
+  return item ? item.id : undefined;
+}
+
+searchSupply(value: string): void {
+  this.schedule.searchSupply(value)
+    .subscribe(data => {
+      console.log(data);
+      this.common.supplies = data.map(item => ({
+        medicalSupplyId: item.medicalSupplyId,
+        medicalSupplyName: item.medicalSupplyName,
+      }));
+    }, er => console.log(er));
+}
 
   createNewForm() {
     this.surgeryDetail.supplyForm = this.fb.group({
       listSupply: this.fb.array([this.createFormSupply()])
     });
   }
-
-  
 
   getSupply(id) {
     this.state.loadGetSupply = true;
@@ -96,12 +128,6 @@ export class ScheduleDetailComponent implements OnInit {
       this.state.loadGetSupply = false;
     });
   }
-
-  
-
-  
-
-  
 
   loadAllSupply() {
     this.state.loadAllSupply = true;
@@ -148,8 +174,6 @@ export class ScheduleDetailComponent implements OnInit {
     });
   }
 
-  
-
   createFormSupply() {
     return this.fb.group({
       medicalSupplyId: new FormControl('', Validators.required),
@@ -157,21 +181,15 @@ export class ScheduleDetailComponent implements OnInit {
     });
   }
 
-  
-
   addFormSupply(): void {
     const array = this.surgeryDetail.supplyForm.get('listSupply') as FormArray;
     array.push(this.createFormSupply());
   }
 
-  
-
   deleteFormSupply(index: number) {
     const array = this.surgeryDetail.supplyForm.get('listSupply') as FormArray;
     array.removeAt(index);
-  }
-
-  
+  } 
 
   submitAddSupplyForm() {
     if (this.surgeryDetail.supplyForm.valid && this.surgeryDetail.supplyForm.value.listSupply.length > 0) {
@@ -210,8 +228,6 @@ export class ScheduleDetailComponent implements OnInit {
       this.surgeryDetail.surgeryProcedure = GLOBAL.copyObject(this.surgeryDetail.containData);
     });
   }
-
-  
 
   openStartShift() {
     switch (this.data.statusName) {
@@ -282,8 +298,6 @@ export class ScheduleDetailComponent implements OnInit {
     }
 
   }
-
-  
 
   getHealthcare(id) {
     this.state.loadHealthcare = true;
