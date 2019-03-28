@@ -177,4 +177,12 @@ export class ScheduleService {
     var blob = new Blob([data], { type: "application/pdf" } );
     FileSaver.saveAs(blob, "SurgeryExport");
   }
+
+  searchDrug(value){
+    return this.http.get<Array<{  id: number; name: string; unit: string }>>(GLOBAL.API + `Drug/SearchDrugOnQuery?q=${value}`);
+  }
+  
+  searchSupply(value) {
+    return this.http.get<Array<{  medicalSupplyId: number; medicalSupplyName: string}>>(GLOBAL.API + `Utils/GetMedicalSupplyOnQuery?q=${value}`);
+  }
 }

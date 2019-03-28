@@ -15,6 +15,7 @@ import {ScheduleDetailComponent} from './schedule-detail/schedule-detail.compone
 import {ErrorsComponent} from './errors/errors.component';
 import {SweetAlert2Module} from '@toverux/ngx-sweetalert2';
 import { ConfirmMedicalComponent } from './confirm-medical/confirm-medical.component';
+import { TreatmentComponent } from './schedule-detail/treatment/treatment.component';
 
 registerLocaleData(en);
 
@@ -28,7 +29,8 @@ registerLocaleData(en);
     ImportFileComponent,
     ScheduleDetailComponent,
     ErrorsComponent,
-    ConfirmMedicalComponent
+    ConfirmMedicalComponent,
+    TreatmentComponent
   ],
   imports: [
     CommonModule,

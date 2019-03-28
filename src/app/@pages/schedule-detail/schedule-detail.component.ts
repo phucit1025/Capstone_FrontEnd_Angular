@@ -1,17 +1,21 @@
 import { GLOBAL } from './../../global';
 import { NzMessageService } from 'ng-zorro-antd';
 import { FormBuilder, FormControl, Validators, FormArray } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ScheduleService } from '../../page-services/schedule.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
+import { TreatmentComponent } from './treatment/treatment.component';
 
 @Component({
   selector: 'app-schedule-detail',
   templateUrl: './schedule-detail.component.html',
-  styleUrls: ['./schedule-detail.component.css']
+  styleUrls: ['./schedule-detail.component.css'],
+  preserveWhitespaces: false
 })
 export class ScheduleDetailComponent implements OnInit {
+  @ViewChild(TreatmentComponent) treatment : TreatmentComponent;
+
   id: number;
   detailSchedule: any;
   data: any;
@@ -31,24 +35,19 @@ export class ScheduleDetailComponent implements OnInit {
     load: true,
     loadGetSupply: false,
     loadEditSurgery: false,
-    loadTreatment: false,
-    loadAssignNurse: false,
-    loadGetNurse: false,
+    
     loadAllSupply: false,
     loadChangeStatus: false,
     loadAllDrug: false,
-    loadAllNurse: false,
+   
     loadAddSupply: false,
-    loadAddTreatment: false,
     loadSaveProcedure: false,
     editMode: false,
-    treatmentMode: null as 'Edit' | 'Create',
     showAddSupply: false,
-    showTreatmentReport: false,
-    showAssignNurse: false,
+    
     showStatusModal: false,
     loadHealthcare: false,
-    assignedForNurse: false,
+  
   };
   surgeryDetail = {
     surgeryProcedure: '',
@@ -56,19 +55,12 @@ export class ScheduleDetailComponent implements OnInit {
     supplyForm: null,
     supplyUsed: []
   };
-  treatmentDetail = {
-    treatmentReport: [],
-    nurseData: null,
-    treatmentForm: null,
-    assignForm: null,
-  };
+  
   healthcareDetail = {
     healthcareReport: []
   };
   common = {
-    drugs: [],
     supplies: [],
-    nurses: []
   };
 
   constructor(private message: NzMessageService, private schedule: ScheduleService,
@@ -80,25 +72,51 @@ export class ScheduleDetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadAllDrug();
-    this.loadAllSupply();
-    this.loadAllNurse();
+    // this.loadAllDrug();
+    // this.loadAllSupply();
+    this.treatment.loadAllNurse();
     this.createNewForm();
   }
+
+  delete_mark_VI(str) {
+    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, 'a');
+    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, 'e');
+    str = str.replace(/ì|í|ị|ỉ|ĩ/g, 'i');
+    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, 'o');
+    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, 'u');
+    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, 'y');
+    str = str.replace(/đ/g, 'd');
+    str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, 'A');
+    str = str.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, 'E');
+    str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, 'I');
+    str = str.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, 'O');
+    str = str.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, 'U');
+    str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, 'Y');
+    str = str.replace(/Đ/g, 'D');
+    return str;
+  }
+
+nzFilterOption = () => true;
+
+trackByFnSupply(index, item){
+  return item ? item.id : undefined;
+}
+
+searchSupply(value: string): void {
+  this.schedule.searchSupply(value)
+    .subscribe(data => {
+      console.log(data);
+      this.common.supplies = data.map(item => ({
+        medicalSupplyId: item.medicalSupplyId,
+        medicalSupplyName: item.medicalSupplyName,
+      }));
+    }, er => console.log(er));
+}
 
   createNewForm() {
     this.surgeryDetail.supplyForm = this.fb.group({
       listSupply: this.fb.array([this.createFormSupply()])
     });
-  }
-
-  createNewFormTreatment() {
-    this.treatmentDetail.treatmentForm = this.fb.group({
-      progressiveDisease: new FormControl(''),
-      shiftId: new FormControl(this.data.id),
-      treatmentReportDrugs: this.fb.array([this.createFormDrugs()])
-    });
-    this.state.treatmentMode = 'Create';
   }
 
   getSupply(id) {
@@ -111,32 +129,6 @@ export class ScheduleDetailComponent implements OnInit {
     });
   }
 
-  getTreatment(id) {
-    this.state.loadTreatment = true;
-    this.schedule.getTreatmentReport(id).subscribe((tm: any) => {
-      this.treatmentDetail.treatmentReport = tm;
-      this.state.loadTreatment = false;
-      this.createNewFormTreatment();
-    }, er => this.state.loadTreatment = false);
-  }
-
-  getNurseByShiftId(id) {
-    this.state.loadGetNurse = true;
-    this.schedule.getNurseByShiftId(id).subscribe((nurse: any) => {
-      this.treatmentDetail.nurseData = nurse.id;
-      this.state.loadGetNurse = false;
-      this.state.assignedForNurse = true;
-    }, er => this.state.loadGetNurse = false);
-  }
-
-  loadAllNurse() {
-    this.state.loadAllNurse = true;
-    this.schedule.getAllNurse().subscribe((nurses: any) => {
-      this.common.nurses = nurses;
-      this.state.loadAllNurse = false;
-    }, er => this.state.loadAllNurse = false);
-  }
-
   loadAllSupply() {
     this.state.loadAllSupply = true;
     this.schedule.getAllSupply().subscribe((supplies: any) => {
@@ -145,13 +137,13 @@ export class ScheduleDetailComponent implements OnInit {
     }, er => this.state.loadAllSupply = false);
   }
 
-  loadAllDrug() {
-    this.state.loadAllDrug = true;
-    this.schedule.getAllDrug().subscribe((drugs: any) => {
-      this.common.drugs = drugs;
-      this.state.loadAllDrug = false;
-    }, er => this.state.loadAllDrug = false);
-  }
+  // loadAllDrug() {
+  //   this.state.loadAllDrug = true;
+  //   this.schedule.getAllDrug().subscribe((drugs: any) => {
+  //     this.common.drugs = drugs;
+  //     this.state.loadAllDrug = false;
+  //   }, er => this.state.loadAllDrug = false);
+  // }
 
   getEkipMember(id) {
     this.schedule.getEkipMember(id).subscribe(res => {
@@ -170,9 +162,9 @@ export class ScheduleDetailComponent implements OnInit {
       console.log(res);
       this.getSupply(res.id);
       this.getEkipMember(res.id);
-      this.getTreatment(res.id);
+      this.treatment.getTreatment(res.id);
       this.getHealthcare(res.id);
-      this.getNurseByShiftId(res.id);
+      this.treatment.getNurseByShiftId(res.id);
       this.surgeryDetail.surgeryProcedure = res.procedure;
       this.surgeryDetail.containData = res.procedure;
     }, er => {
@@ -182,27 +174,10 @@ export class ScheduleDetailComponent implements OnInit {
     });
   }
 
-  setUnit(id, index) {
-    const data = this.common.drugs.filter(drug => drug.id === id);
-    this.treatmentDetail.treatmentForm.get('treatmentReportDrugs').controls[index].controls['unit'].patchValue(id ? data[0].unit : null);
-  }
-
   createFormSupply() {
     return this.fb.group({
       medicalSupplyId: new FormControl('', Validators.required),
       quantity: new FormControl(1, [Validators.required, Validators.min(1)])
-    });
-  }
-
-  createFormDrugs() {
-    return this.fb.group({
-      id: new FormControl(0, Validators.required),
-      drugId: new FormControl(null, Validators.required),
-      morningQuantity: new FormControl(1, [Validators.required, Validators.min(0)]),
-      afternoonQuantity: new FormControl(1, [Validators.required, Validators.min(0)]),
-      eveningQuantity: new FormControl(1, [Validators.required, Validators.min(0)]),
-      nightQuantity: new FormControl(1, [Validators.required, Validators.min(0)]),
-      unit: new FormControl(null, Validators.required),
     });
   }
 
@@ -211,20 +186,10 @@ export class ScheduleDetailComponent implements OnInit {
     array.push(this.createFormSupply());
   }
 
-  addFormDrugs() {
-    const array = this.treatmentDetail.treatmentForm.get('treatmentReportDrugs') as FormArray;
-    array.push(this.createFormDrugs());
-  }
-
   deleteFormSupply(index: number) {
     const array = this.surgeryDetail.supplyForm.get('listSupply') as FormArray;
     array.removeAt(index);
-  }
-
-  deleteFormDrugs(index: number) {
-    const array = this.treatmentDetail.treatmentForm.get('treatmentReportDrugs') as FormArray;
-    array.removeAt(index);
-  }
+  } 
 
   submitAddSupplyForm() {
     if (this.surgeryDetail.supplyForm.valid && this.surgeryDetail.supplyForm.value.listSupply.length > 0) {
@@ -261,48 +226,6 @@ export class ScheduleDetailComponent implements OnInit {
       this.message.error('Save Fail!!!');
       this.state.loadSaveProcedure = false;
       this.surgeryDetail.surgeryProcedure = GLOBAL.copyObject(this.surgeryDetail.containData);
-    });
-  }
-
-  saveTreatment() {
-    this.state.loadAddTreatment = true;
-    const data = this.treatmentDetail.treatmentForm.value;
-    if (this.state.treatmentMode === 'Create') {
-      this.schedule.createTreatmentReport(data).subscribe(res => {
-        this.message.success('Create Successful');
-        this.state.showTreatmentReport = false;
-        this.state.loadAddTreatment = false;
-        this.createNewFormTreatment();
-        this.getTreatment(this.id);
-      }, er => {
-        this.message.error('Create Fail!!!');
-        this.state.loadAddTreatment = false;
-      });
-    } else if (this.state.treatmentMode === 'Edit') {
-      console.log(data);
-      this.schedule.editTreatmentReport(data).subscribe(res => {
-        this.message.success('Edit Successful');
-        this.state.showTreatmentReport = false;
-        this.state.loadAddTreatment = false;
-        this.createNewFormTreatment();
-        this.getTreatment(this.id);
-      }, er => {
-        this.message.error('Edit Fail!!!');
-        this.state.loadAddTreatment = false;
-      }); 
-    }
-  }
-
-  changeNurse() {
-    this.state.loadAssignNurse = true;
-    this.schedule.assignNurse(this.data.id, this.treatmentDetail.nurseData).subscribe(res => {
-      this.message.success('Assign Successful');
-      this.state.loadAssignNurse = false;
-      this.state.showAssignNurse = false;
-      this.state.assignedForNurse = true;
-    }, er => {
-      this.message.error('Assign Fail!!!');
-      this.state.loadAssignNurse = false;
     });
   }
 
@@ -374,56 +297,6 @@ export class ScheduleDetailComponent implements OnInit {
       case 'Postoperative': break;
     }
 
-  }
-
-  deleteTreatment(id){
-    this.state.loadAddTreatment = true;
-    this.schedule.deleteTreatmentReport(id).subscribe(() => {
-      this.state.showTreatmentReport = false;
-      this.state.loadAddTreatment = false;
-      this.message.success('Delete Successful');
-      this.getTreatment(this.id);
-    }, er => {
-      this.message.error('Delete Fail');
-       this.state.loadAddTreatment = false;
-    });
-  }
-
-  createEditFormTreatment(data) {
-    console.log(data);
-    this.treatmentDetail.treatmentForm = this.fb.group({
-      id:  new FormControl(data.id),
-      progressiveDisease: new FormControl(data.progressiveDisease),
-      shiftId: new FormControl(this.id),
-      treatmentReportDrugs: this.fb.array([]),
-      deleteTreatmentReportId: this.fb.array([]),
-    });
-    this.patchFormDrugArray(data.treatmentReportDrugs);
-    this.state.showTreatmentReport = true; 
-    this.state.treatmentMode = 'Edit';
-  }
-
-  pushDeleteTreatmentReportId(id){
-    console.log(id);
-    if (this.state.treatmentMode === 'Edit') {
-      let ctrl = this.treatmentDetail.treatmentForm.controls.deleteTreatmentReportId;
-      ctrl.push(new FormControl(id));
-    }
-  }
-
-  patchFormDrugArray(data) {
-    let ctrl = this.treatmentDetail.treatmentForm.controls.treatmentReportDrugs;
-    return data.map(x => {
-      ctrl.push(this.fb.group({
-        id: new FormControl(x.id, Validators.required),
-        drugId: new FormControl(x.drugId, Validators.required),
-        morningQuantity: new FormControl(x.morningQuantity, [Validators.required, Validators.min(0)]),
-        afternoonQuantity: new FormControl(x.afternoonQuantity, [Validators.required, Validators.min(0)]),
-        eveningQuantity: new FormControl(x.eveningQuantity, [Validators.required, Validators.min(0)]),
-        nightQuantity: new FormControl(x.nightQuantity, [Validators.required, Validators.min(0)]),
-        unit: new FormControl(x.unit, Validators.required),
-      }))
-    });
   }
 
   getHealthcare(id) {
