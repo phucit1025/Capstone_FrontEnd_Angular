@@ -91,7 +91,7 @@
           </button>
         </div>
       </div>
-      <div *ngIf="swapMode">
+      <div *ngIf="swapMode && data.statusName === 'Preoperative'">
         <button [ngClass]="{'checked' : (selected.firstShiftId === data.id || selected.secondShiftId ===data.id)}"
           [disabled]="canDisabled()" class="checkButton" (click)="chooseNode()" style="width: 100%" nz-button
           nzType="default">
