@@ -80,13 +80,8 @@
     </div>
     <br>
     <!-- Room Container -->
-<<<<<<< HEAD
     <div nz-row id="room-container" class="room-container">
       <ng-container *ngFor="let room of rooms | roomPipe: state.searchText">
-=======
-    <div id="room-container" class="room-container">
-      <ng-container *ngFor="let room of rooms | roomPipe: state.searchText; let i = count">
->>>>>>> 82405296ee4629c705edeb98b90d1cd0ae5a844e
         <div *ngIf="room !== -1" class="date">
           <!-- Room header -->
           <div class="room-name">
@@ -225,14 +220,10 @@
 
   <ng-template #startContent>
     <p><b>Surgery Shift:</b> {{selectedObject?.id}} </p>
-<<<<<<< HEAD
     <p *ngIf="!selectedObject?.actualStartDateTime"><b>Estimated Start Datetime:</b> {{selectedObject?.estimatedStartDateTime | date: 'dd/MM/yyyy - HH:mm'}} </p>
     <p *ngIf="selectedObject?.actualStartDateTime"><b>Start Datetime:</b> {{selectedObject?.actualStartDateTime | date: 'dd/MM/yyyy - HH:mm'}} </p>
     <p *ngIf="!selectedObject?.actualEndDateTime"><b>Estimated End Datetime:</b> {{selectedObject?.estimatedEndDateTime | date: 'dd/MM/yyyy - HH:mm'}}</p>
     <p *ngIf="selectedObject?.actualEndDateTime"><b>Estimated End Datetime:</b> {{selectedObject?.actualEndDateTime | date: 'dd/MM/yyyy - HH:mm'}}</p>
-=======
-    <p><b>Actual Start Time:</b> {{selectedObject?.actualStartDateTime | date: 'dd/MM/yyyy - HH:mm'}} </p>
->>>>>>> 82405296ee4629c705edeb98b90d1cd0ae5a844e
     <label class="mr-2">
       <b>Actual {{selectedObject?.statusName === 'Preoperative' ? 'Start' : 'End'}} Time:</b>
     </label>

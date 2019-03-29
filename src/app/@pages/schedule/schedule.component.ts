@@ -301,11 +301,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   openStartShift(data) {
-<<<<<<< HEAD
-=======
     console.log(data);
     this.actualEndTimeError = false;
->>>>>>> 82405296ee4629c705edeb98b90d1cd0ae5a844e
     switch (data.statusName) {
       case 'Preoperative':
         this.selectedObject = data;
@@ -325,52 +322,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   startShift() {
-<<<<<<< HEAD
-    switch (this.selectedObject.statusName) {
-      case 'Preoperative':
-        const Pdate = moment(this.date).format('YYYY-MM-DD');
-        const Ptime = moment(this.selectedTime).format('HH:mm');
-
-        this.schedule.setIntraoperativeStatus({
-          shiftId: this.selectedObject.id,
-          time: Pdate + ' ' + Ptime
-        }).subscribe(sc => {
-          this.messageService.success('Change Successful');
-          this.isShowStartModal = false;
-          this.getSchedule();
-        }, er => {
-          this.messageService.error('Change Fail');
-        });
-        break;
-      case 'Intraoperative':
-        const date = moment(this.date).format('YYYY-MM-DD');
-        const time = moment(this.selectedTime).format('HH:mm');
-        const bedPost = this.selectedBed;
-        const roomPost = this.selectedRoom;
-        const data = {
-          actualEndDateTime: date + ' ' + time,
-          shiftId: this.selectedObject.id
-        } as any;
-        if (bedPost) {
-          data.bedPost = bedPost;
-        }
-        if (roomPost) {
-          data.roomPost = roomPost;
-        }
-        this.schedule.setPostoperativeStatus(GLOBAL.parseUrlString(data)).subscribe(sc => {
-          this.schedule.refreshSurgeryShift(this.selectedObject.id).subscribe(sc => {
-            this.getSchedule();
-          });
-          this.messageService.success('Change Successful');
-          this.isShowStartModal = false;
-          this.selectedObject = null;
-          this.selectedTime = null;
-        }, er => {
-          this.messageService.error('Change Fail');
-        });
-        break;
-      case 'Postoperative': break;
-=======
     if (!this.actualEndTimeError) {
       switch (this.selectedObject.statusName) {
         case 'Preoperative':
@@ -417,7 +368,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
           break;
         case 'Postoperative': break;
       }
->>>>>>> 82405296ee4629c705edeb98b90d1cd0ae5a844e
     }
   }
 
