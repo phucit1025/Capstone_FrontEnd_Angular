@@ -1,5 +1,5 @@
 <nz-layout class="layout">
-  <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="triggerTemplate" [nzWidth]="250">
+  <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="triggerTemplate">
     <div style="cursor: pointer" routerLink="/" class="logo">
       <img src="assets/logo.png" class="mr-1" alt="">
       <span style="color: #09425A" [hidden]="isCollapsed">EBSMS</span>
@@ -49,9 +49,7 @@
     <nz-footer style="background: #e0e0e0;">
       <span style="color: #004d40; font-weight: bold" >
         Surgery Management System (eBSMS) - 
-        Made with <i class="fas fa-heart"></i> & 
-        <i class="fas fa-coffee"></i> 
-        by Surgery Project Team
+        Made by Surgery Project Team
       </span>
     </nz-footer>
   </nz-layout>
