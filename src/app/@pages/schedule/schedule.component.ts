@@ -9,6 +9,8 @@ import { SwalComponent } from '@toverux/ngx-sweetalert2';
 import swal from 'sweetalert2';
 import * as moment from 'moment';
 
+import { NzNotificationService } from 'ng-zorro-antd';
+
 @Component({
   selector: 'app-schedule',
   templateUrl: './schedule.component.html',
@@ -49,7 +51,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   };
   slotRooms: any;
   actualEndTimeError = false;
-  constructor(private schedule: ScheduleService, private messageService: NzMessageService, private fb: FormBuilder) {
+  constructor(private notification: NzNotificationService, private schedule: ScheduleService, private messageService: NzMessageService, private fb: FormBuilder) {
   }
 
   ngOnInit() {
@@ -376,5 +378,11 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     const serverDate = new Date(this.serverTime);
     this.actualEndTimeError = (serverDate.getHours() * 60 + serverDate.getMinutes())
     - (selectedDate.getHours() * 60 + selectedDate.getMinutes()) > 0;
+  }
+  createBasicNotification(): void {
+    this.notification.blank(
+      'Notification Title',
+      'This is the content of the notification. This is the content of the notification. This is the content of the notification.'
+    );
   }
 }

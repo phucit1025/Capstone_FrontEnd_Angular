@@ -21,10 +21,25 @@
       <div style="height: 100%" class="d-flex align-items-center">
         <i class="trigger" style="cursor: pointer" nz-icon [type]="isCollapsed?'menu-unfold':'menu-fold'"
           (click)="isCollapsed=!isCollapsed"></i>
-        <div class="mr-auto"></div>
-        <nz-badge [nzCount]="5" style="margin-right: 20px">
-          <a class="head-example"><i nz-icon type="bell" style="size: 30px"></i></a>
-        </nz-badge>
+        <div class="mr-auto"></div>        
+        <nz-dropdown [nzPlacement]="'bottomRight'" [nzTrigger]="'click'" style="margin-right: 30px">
+          <a nz-dropdown><nz-badge [nzCount]="msgs.length"><i class="far fa-bell" ></i></nz-badge></a>
+          <ul nz-menu style="width: 350px; height: 200px; overflow: auto">
+            <li style="text-align: center">Notification</li>
+            <li nz-menu-divider></li>
+            <div *ngIf="msgs.length > 0; else noNotification">
+              <div *ngFor="let msg of msgs">
+                <li nz-menu-item style="width: 100%">
+                  {{msg.content}}
+                  <!-- <span style="float: right; font-size: 10px;">{{msg.dateCreated | date: 'HH : mm dd/MM/yyyy'}}</span> -->
+                </li>
+              </div>
+              <div *ngIf="msgs.length == 0">
+                <li nz-menu-item style="text-align: center">No notification</li>
+              </div>
+            </div>
+          </ul>
+        </nz-dropdown>
         <nz-dropdown *ngIf="user?.data" class="user-dropdown">
           <a nz-dropdown class="d-flex justify-content-center align-items-center">
             <nz-avatar [nzSize]="'small'" nzIcon="user"></nz-avatar>

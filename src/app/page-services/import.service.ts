@@ -19,4 +19,8 @@ export class ImportService {
   importShiftMedicalSupply(data) {
     return this.http.post(GLOBAL.API + this.name + '/ImportSurgeryShiftMedicalSupply', data);
   }
+
+  notifyMessage() {
+    return this.http.get(GLOBAL.API + 'MessageNotification/GetAllNotification');
+  }
 }

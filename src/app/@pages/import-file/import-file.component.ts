@@ -133,6 +133,7 @@ export class ImportFileComponent implements OnInit {
       );
       apiList.subscribe(el => {
         this.message.success('Import Successful');
+        this.notifyMessage();
         this.state.load = false;
         if (this.isAllCheck) {
           this.clearResult();
@@ -147,5 +148,9 @@ export class ImportFileComponent implements OnInit {
     } else {
       this.message.error('Data is not valid');
     }
+  }
+
+  notifyMessage() {
+    return this.importSV.notifyMessage().subscribe(r => {});
   }
 }
