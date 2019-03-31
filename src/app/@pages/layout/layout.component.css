@@ -37,7 +37,7 @@
 }
 
 .header-gradient {
-    background: linear-gradient(40deg, #00C894, #01C290, #01BC8D , #01B98B) !important;
+    background: linear-gradient(40deg, #00C894, #01BC8D , #01B98B) !important;
     color: white;
     font-weight: bold;
 }
@@ -47,4 +47,8 @@
 }
 .background-layout-content {
     background: white !important;
+}
+
+/deep/ .ant-layout-content{
+  min-height: fit-content;
 }

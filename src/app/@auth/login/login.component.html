@@ -1,22 +1,24 @@
 <div class="login-dark">
     <form [formGroup]="form" (submit)="submit()" id="frmLogin">
         <div class="div-logo">
-            <div class="illustration"></div>
-            <span class="title">Surgery Management System</span>
+            <div class="illustration"><img src="assets/logo.png" alt="logo" sizes="100px 100px;"></div>
+            <div class="title"><span>Surgery Management System</span></div>
         </div>
-        <div class="form-group" data-validate="Username is required">
-            <input class="form-control" formControlName="username" type="text" placeholder="Username">
+        <div class="form-group inner-addon left-addon" data-validate="Username is required">
+            <i class="fas fa-user glyphicon"></i>
+            <input class="form-control z-depth-1" formControlName="username" type="text" placeholder="Username">
         </div>
-        <div class="form-group" data-validate="Password is required">
-            <input class="form-control" formControlName="password" type="password" placeholder="Password">
+        <div class="form-group inner-addon left-addon" data-validate="Password is required">
+            <i class="fas fa-lock glyphicon"></i>
+            <input class="form-control z-depth-1" formControlName="password" type="password" placeholder="Password">
         </div>
         <div class="text-danger p-1">
             {{state.errorMessage}}
         </div>
-        <div class="form-group" style="padding-right: 10px">
-            <button [disabled]="form.invalid || state.load" class="btn btn-primary" type="submit">
+        <div class="form-group" style="margin-top: 30px">
+            <button [disabled]="form.invalid || state.load" style="margin: 0" class="z-depth-1 btn btn-login" type="submit">
                 <i *ngIf="state.load" nz-icon type="loading" theme="outline"></i>
-                <span>Login</span>
+                <span> Login</span>
             </button>
         </div>
     </form>

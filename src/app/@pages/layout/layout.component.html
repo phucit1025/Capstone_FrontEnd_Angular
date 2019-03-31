@@ -1,10 +1,10 @@
 <nz-layout class="layout">
-  <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="triggerTemplate" [nzWidth]="250">
+  <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="triggerTemplate">
     <div style="cursor: pointer" routerLink="/" class="logo">
       <img src="assets/logo.png" class="mr-1" alt="">
-      <span style="color: #09425A" [hidden]="isCollapsed">EBSMS</span>
+      <span style="color: #10867A" [hidden]="isCollapsed">EBSMS</span>
     </div>
-    <ul class="navbar-background" nz-menu [nzMode]="'inline'" style="height:100%; overflow-y: auto; overflow-x: hidden">
+    <ul class="navbar-background" nz-menu [nzMode]="'inline'" style="height:100%">
       <ng-container *ngFor="let item of menu">
         <li *ngIf="user.data && item.roles.indexOf(user.data.role) !== -1" [routerLinkActive]="'ant-menu-item-selected'"
           [routerLinkActiveOptions]="{exact: true}" nz-menu-item [routerLink]="item.link">
@@ -19,9 +19,12 @@
   <nz-layout style="overflow: hidden" style="background: #c8e6c9">
     <nz-header class="navbar-layout header-gradient">
       <div style="height: 100%" class="d-flex align-items-center">
-        <i class="trigger" nz-icon [type]="isCollapsed?'menu-unfold':'menu-fold'"
+        <i class="trigger" style="cursor: pointer" nz-icon [type]="isCollapsed?'menu-unfold':'menu-fold'"
           (click)="isCollapsed=!isCollapsed"></i>
         <div class="mr-auto"></div>
+        <nz-badge [nzCount]="5" style="margin-right: 20px">
+          <a class="head-example"><i nz-icon type="bell" style="size: 30px"></i></a>
+        </nz-badge>
         <nz-dropdown *ngIf="user?.data" class="user-dropdown">
           <a nz-dropdown class="d-flex justify-content-center align-items-center">
             <nz-avatar [nzSize]="'small'" nzIcon="user"></nz-avatar>
@@ -36,20 +39,15 @@
         </nz-dropdown>
       </div>
     </nz-header>
-    <!-- <nz-content style="margin: 15px" class="background-layout-content example z-depth-2"> -->
 
-    <nz-content style="margin: 15px; overflow-y: auto" class="background-layout-content example z-depth-2">
+    <nz-content style="margin: 15px;" class="background-layout-content z-depth-1">
       <div style="padding:30px">
         <router-outlet></router-outlet>
       </div>
     </nz-content>
-    <nz-footer style="background: #e0e0e0;">
-      <span style="color: #004d40; font-weight: bold" >
+    <nz-footer style="background: #e0e0e0; color: #004d40; font-weight: bold">
         Surgery Management System (eBSMS) - 
-        Made with <i class="fas fa-heart"></i> & 
-        <i class="fas fa-coffee"></i> 
-        by Surgery Project Team
-      </span>
+        Made by Surgery Project Team
     </nz-footer>
   </nz-layout>
 </nz-layout>

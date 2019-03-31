@@ -45,7 +45,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     finish: false,
     reload: false,
     create: false,
-    loadSlotRoom: false
+    loadSlotRoom: false,
+    selectedStatus: [],
   };
   slotRooms: any;
   actualEndTimeError = false;
@@ -165,6 +166,13 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     result.subscribe(res => {
       room.slotRooms.forEach((slot, index) => {
         slot['surgeries'] = res[index];
+        var shiftId;
+        for (let i = 0; i < slot['surgeries'].length; i++) {
+          shiftId = slot['surgeries'][i].id;
+          this.schedule.checkStatusPreviousSurgeryShift(shiftId).subscribe((result: any) => {
+            slot['surgeries'][i]['isStart'] = result;
+          });
+        }
       });
       this.state.load = false;
       this.state.finish = true;
@@ -362,7 +370,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         case 'Postoperative': break;
       }
     }
-
   }
 
   checkActualEndTime() {

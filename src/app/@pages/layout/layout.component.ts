@@ -31,7 +31,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
       roles: ['ChiefNurse']
     }
   ];
-  isCollapsed = false;
+  isCollapsed = true;
   triggerTemplate = null;
   user = {
     data: null,
