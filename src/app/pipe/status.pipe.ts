@@ -1,25 +1,21 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
-  name: 'roomPipe'
+  name: 'statusPipe'
 })
-export class RoomPipe implements PipeTransform {
+export class StatusPipe implements PipeTransform {
 
-  transform(array: any, search: string): any {
-    if (search && search.trim()) {
+  transform(array: any, status: any[]): any {
+    if (status && status.length > 0) {
       const newData = JSON.parse(JSON.stringify(array));
       array.map((el, i) => {
         el.slotRooms.forEach((slot, k) => {
           if (newData[i]) {
-            newData[i].slotRooms[k].surgeries = slot.surgeries.filter(sg => {
-              const sgArr = [];
-              if (sg) {
-                // tslint:disable-next-line:forin
-                for (const kudo in sg) {
-                  sgArr.push(sg[kudo]);
-                }
-              }
-              return sgArr.join(',').toLowerCase().includes(search.trim().toLowerCase());
+            newData[i].slotRooms[k].surgeries = [];
+            status.forEach(st => {
+              newData[i].slotRooms[k].surgeries = newData[i].slotRooms[k].surgeries
+                .concat(slot.surgeries.filter(sg => sg.statusName.trim().toLowerCase() === st.trim().toLowerCase()));
+              console.log();
             });
           }
         });

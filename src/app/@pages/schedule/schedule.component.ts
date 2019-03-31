@@ -45,7 +45,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     finish: false,
     reload: false,
     create: false,
-    loadSlotRoom: false
+    loadSlotRoom: false,
+    selectedStatus: [],
   };
   slotRooms: any;
   actualEndTimeError = false;

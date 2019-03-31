@@ -14,8 +14,9 @@ import {ImportFileComponent} from './import-file/import-file.component';
 import {ScheduleDetailComponent} from './schedule-detail/schedule-detail.component';
 import {ErrorsComponent} from './errors/errors.component';
 import {SweetAlert2Module} from '@toverux/ngx-sweetalert2';
-import { ConfirmMedicalComponent } from './confirm-medical/confirm-medical.component';
-import { TreatmentComponent } from './schedule-detail/treatment/treatment.component';
+import {ConfirmMedicalComponent} from './confirm-medical/confirm-medical.component';
+import {TreatmentComponent} from './schedule-detail/treatment/treatment.component';
+import {StatusPipe} from '../pipe/status.pipe';
 
 registerLocaleData(en);
 
@@ -26,6 +27,7 @@ registerLocaleData(en);
     DurationComponent,
     ScheduleCardComponent,
     RoomPipe,
+    StatusPipe,
     ImportFileComponent,
     ScheduleDetailComponent,
     ErrorsComponent,
