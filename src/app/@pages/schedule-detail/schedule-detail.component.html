@@ -207,9 +207,11 @@
               <nz-form-control>
                 <nz-select style="width: 300px" formControlName="medicalSupplyId" nzShowSearch  nzServerSearch [nzFilterOption]="nzFilterOption"
                   nzPlaceHolder="Select a supply" (nzOnSearch)="searchSupply($event)">
-                  <nz-option *ngFor="let item of common.supplies; trackBy:trackByFnSupply" [nzLabel]="item.medicalSupplyName"
+                  <ng-container *ngIf="state.showAddSupply">
+                    <nz-option *ngFor="let item of common.supplies; trackBy:trackByFnSupply" [nzLabel]="item.medicalSupplyName"
                     [nzValue]="item.medicalSupplyId">
                   </nz-option>
+                  </ng-container>
                 </nz-select>
               </nz-form-control>
             </nz-form-item>
