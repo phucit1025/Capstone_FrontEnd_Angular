@@ -380,7 +380,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     this.actualEndTimeError = (serverDate.getHours() * 60 + serverDate.getMinutes())
     - (selectedDate.getHours() * 60 + selectedDate.getMinutes()) > 0;
   }
-<<<<<<< HEAD
   createBasicNotification(): void {
     this.notification.blank(
       'Notification Title',
@@ -388,6 +387,3 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     );
   }
 }
-=======
-}
->>>>>>> 26ff86bf0fded31ed74da1fc6b77f1a6c5501b11

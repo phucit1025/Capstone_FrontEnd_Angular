@@ -24,7 +24,7 @@
         <div class="mr-auto"></div>        
         <nz-dropdown [nzPlacement]="'bottomRight'" [nzTrigger]="'click'" style="margin-right: 30px">
           <a nz-dropdown><nz-badge [nzCount]="msgs.length"><i class="far fa-bell" ></i></nz-badge></a>
-          <ul nz-menu style="width: 350px; height: 200px; overflow: auto">
+          <ul nz-menu style="width: 350px; height: 200px">
             <li style="text-align: center">Notification</li>
             <li nz-menu-divider></li>
             <div *ngIf="msgs.length > 0; else noNotification">
