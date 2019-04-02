@@ -110,3 +110,6 @@
  background:#ccc;
  border-radius:4px;
  }
+/deep/ .ant-layout-content{
+  min-height: fit-content;
+}

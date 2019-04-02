@@ -78,32 +78,16 @@ export class ScheduleDetailComponent implements OnInit {
     this.createNewForm();
   }
 
-  delete_mark_VI(str) {
-    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, 'a');
-    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, 'e');
-    str = str.replace(/ì|í|ị|ỉ|ĩ/g, 'i');
-    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, 'o');
-    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, 'u');
-    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, 'y');
-    str = str.replace(/đ/g, 'd');
-    str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, 'A');
-    str = str.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, 'E');
-    str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, 'I');
-    str = str.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, 'O');
-    str = str.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, 'U');
-    str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, 'Y');
-    str = str.replace(/Đ/g, 'D');
-    return str;
-  }
-
 nzFilterOption = () => true;
 
 trackByFnSupply(index, item){
-  return item ? item.id : undefined;
+  return item ? item.medicalSupplyId : undefined;
 }
 
 searchSupply(value: string): void {
-  this.schedule.searchSupply(value)
+  value.trim();
+  if (value != "") {
+    this.schedule.searchSupply(value)
     .subscribe(data => {
       console.log(data);
       this.common.supplies = data.map(item => ({
@@ -111,12 +95,33 @@ searchSupply(value: string): void {
         medicalSupplyName: item.medicalSupplyName,
       }));
     }, er => console.log(er));
+  }
 }
 
   createNewForm() {
     this.surgeryDetail.supplyForm = this.fb.group({
-      listSupply: this.fb.array([this.createFormSupply()])
+      listSupply: this.fb.array([]),
+      deleteMedicalSupplyIds: this.fb.array([]),
     });
+    this.patchFormSupplyArray(this.surgeryDetail.supplyUsed);
+  }
+
+  patchFormSupplyArray(supply){
+    this.common.supplies = supply;
+    let ctrl = this.surgeryDetail.supplyForm.controls.listSupply;
+    return supply.map(x => {
+      ctrl.push(this.fb.group({
+        id : new FormControl(x.id, Validators.required),
+        medicalSupplyId: new FormControl(x.medicalSupplyId, Validators.required),
+        quantity: new FormControl(x.quantity, [Validators.required, Validators.min(1)])
+      }));
+    });
+  }
+
+  pushDeleteSupplyId(id){
+    console.log(id);
+      let ctrl = this.surgeryDetail.supplyForm.controls.deleteMedicalSupplyIds;
+      ctrl.push(new FormControl(id));
   }
 
   getSupply(id) {
@@ -199,7 +204,12 @@ searchSupply(value: string): void {
         return item;
       });
 
-      this.schedule.addUsedMedicalSupply(finalData).subscribe(res => {
+      let data = {
+        shiftMedicals : finalData,
+        deleteMedicalSupplyIds : this.surgeryDetail.supplyForm.value.deleteMedicalSupplyIds
+      }
+
+      this.schedule.addUsedMedicalSupply(data).subscribe(res => {
         this.state.loadAddSupply = false;
         this.state.showAddSupply = false;
         this.createNewForm();

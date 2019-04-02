@@ -1,8 +1,8 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { NzMessageService } from 'ng-zorro-antd';
-import { GLOBAL } from '../../global';
-import { ImportService } from '../../page-services/import.service';
-import { combineLatest } from 'rxjs';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {NzMessageService} from 'ng-zorro-antd';
+import {GLOBAL} from '../../global';
+import {ImportService} from '../../page-services/import.service';
+import {combineLatest} from 'rxjs';
 
 @Component({
   selector: 'app-import-file',
@@ -27,6 +27,10 @@ export class ImportFileComponent implements OnInit {
   }
 
   ngOnInit() {
+    const data = JSON.parse(localStorage.getItem('file'));
+    if (data && data instanceof Array) {
+      this.data = data;
+    }
   }
 
   showModal(item) {
@@ -62,6 +66,7 @@ export class ImportFileComponent implements OnInit {
               : '';
           return patient;
         }));
+        localStorage.setItem('file', JSON.stringify(this.data));
         this.message.success('File parse successfully');
         this.state.load = false;
         return;
@@ -103,6 +108,7 @@ export class ImportFileComponent implements OnInit {
     this.medicals = [];
     this.data = [];
     this.mapOfCheckedId = {};
+    localStorage.setItem('file', JSON.stringify([]));
   }
 
   importList() {
@@ -139,6 +145,7 @@ export class ImportFileComponent implements OnInit {
           this.clearResult();
         } else {
           this.data = this.reRenderIndex(this.getUnCheckedItem());
+          localStorage.setItem('file', JSON.stringify(this.data));
           this.mapOfCheckedId = {};
         }
       }, er => {

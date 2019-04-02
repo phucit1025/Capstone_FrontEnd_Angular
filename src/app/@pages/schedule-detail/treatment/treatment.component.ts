@@ -1,6 +1,6 @@
 import { NzMessageService } from 'ng-zorro-antd';
 import { FormBuilder, FormControl, Validators, FormArray } from '@angular/forms';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { ScheduleService } from './../../../page-services/schedule.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -30,8 +30,8 @@ export class TreatmentComponent implements OnInit {
     treatmentForm: null,
     assignForm: null,
   };
+  drugs: Array<{  id: number; name: string; unit: string }> = [];
   common = {
-    drugs: [],
     nurses: []
   };
   customeStyle = {
@@ -42,7 +42,8 @@ export class TreatmentComponent implements OnInit {
   };
 
   constructor(private message: NzMessageService, private schedule: ScheduleService,
-    private router: Router, private route: ActivatedRoute, private fb: FormBuilder) {
+    private router: Router, private route: ActivatedRoute, private fb: FormBuilder,
+    private changeDetector: ChangeDetectorRef) {
   }
 
   ngOnInit() {
@@ -55,15 +56,22 @@ export class TreatmentComponent implements OnInit {
   nzFilterOption = () => true;
 
   searchDrug(value: string): void {
-    this.schedule.searchDrug(value)
+    value.trim();
+    if (value != "") {
+      this.schedule.searchDrug(value)
       .subscribe(data => {
         console.log(data);
-        this.common.drugs = data.map(item => ({
+        this.drugs = data.map(item => ({
             id: item.id,
             name: item.name,
             unit: item.unit,
         }));
+        this.drugs = [...this.drugs];
+        this.changeDetector.detectChanges();
+        console.log(this.drugs);
       }, er => console.log(er));
+   
+    }
   }
 
   loadAllNurse() {
@@ -102,7 +110,7 @@ export class TreatmentComponent implements OnInit {
   }
   
   setUnit(id, index) {
-    const data = this.common.drugs.filter(drug => drug.id === id);
+    const data = this.drugs.filter(drug => drug.id === id);
     this.treatmentDetail.treatmentForm.get('treatmentReportDrugs').controls[index].controls['unit'].patchValue(id ? data[0].unit : null);
   }
 
@@ -199,7 +207,7 @@ export class TreatmentComponent implements OnInit {
         name : d.name,
         unit : d.unit
     }));
-    this.common.drugs = drugs
+    this.drugs = drugs
     let ctrl = this.treatmentDetail.treatmentForm.controls.treatmentReportDrugs;
     return data.map(x => {
       ctrl.push(this.fb.group({
