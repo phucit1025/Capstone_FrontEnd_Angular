@@ -2,13 +2,13 @@ import * as moment from 'moment';
 import * as XLSX from 'xlsx';
 
 export const GLOBAL = Object.freeze({
-  // API: 'https://localhost:44372/api/',
-  API: 'http://45.119.212.145:5520/api/',
+  API: 'https://localhost:44372/api/',
+  // API: 'http://45.119.212.145:5520/api/',
   convertDate: (date: Date) => {
     let dateString = '';
     dateString += date.getFullYear();
     dateString += date.getMonth() >= 10 ? (date.getMonth() + 1) : '0' + (date.getMonth() + 1);
-    dateString += date.getDate();
+    dateString += date.getDate() >= 10 ? date.getDate() : '0' + date.getDate();
     return dateString;
   },
   parseObject: function (object) {
