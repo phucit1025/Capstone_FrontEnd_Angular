@@ -141,9 +141,9 @@
                   </nz-select> -->
                   
                   <!-- //search remote data -->
-                  <nz-select formControlName="drugId" style="width: 100%" nzShowSearch nzServerSearch [nzFilterOption]="nzFilterOption"
+                  <nz-select formControlName="drugId" style="width: 100%" nzShowSearch [nzServerSearch]="true"
                     nzPlaceHolder="Select a drug" (ngModelChange)="setUnit($event, i)" (nzOnSearch)="searchDrug($event)">
-                    <nz-option *ngFor="let item of common.drugs; trackBy: trackByFn" [nzLabel]="item.name" [nzValue]="item.id"> </nz-option>
+                    <nz-option *ngFor="let item of drugs; trackBy: trackByFn" [nzLabel]="item.name" [nzValue]="item.id"> </nz-option>
                   </nz-select>
 
                   <!-- load data on scroll -->
@@ -225,7 +225,7 @@
       <button
         [disabled]="state.loadAddTreatment || treatmentDetail.treatmentForm?.value?.treatmentReportDrugs?.length === 0 || treatmentDetail.treatmentForm?.invalid"
         nz-button nzType="primary" class="mb-2" (click)="saveTreatment()">
-        Create
+        Save
       </button>
     </div>
   </ng-template>

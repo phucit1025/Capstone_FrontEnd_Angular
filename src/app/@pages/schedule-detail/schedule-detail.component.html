@@ -99,9 +99,9 @@
           </tbody>
         </nz-table>
         <div class="text-right mt-2">
-          <button (click)="state.showAddSupply = true" nz-button nzType="primary" class="mb-2">
-            <i nz-icon type="plus"></i>
-            Add
+          <button (click)="state.showAddSupply = true; createNewForm()" nz-button nzType="primary" class="mb-2">
+            <i nz-icon type="edit"></i>
+              Edit
           </button>
         </div>
       </div>
@@ -198,20 +198,17 @@
   [nzContent]="createSupplyBody" [nzFooter]="createSupplyFooter" (nzOnCancel)="state.showAddSupply = false">
   <ng-template #createSupplyBody>
     <nz-spin [nzSpinning]="state.loadAddSupply">
-      <form nz-form [nzLayout]="'inline'" [formGroup]="surgeryDetail.supplyForm">
-        <div formArrayName="listSupply"
+      <form *ngIf="surgeryDetail.supplyForm" nz-form [nzLayout]="'inline'" [formGroup]="surgeryDetail.supplyForm">
+        <div formArrayName="listSupply" 
           *ngFor="let item of surgeryDetail.supplyForm.get('listSupply').controls; let i = index;">
           <div [formGroupName]="i">
             <nz-form-item>
               <nz-form-label>Name</nz-form-label>
               <nz-form-control>
-                <nz-select style="width: 300px" formControlName="medicalSupplyId" nzShowSearch  nzServerSearch [nzFilterOption]="nzFilterOption"
+                <nz-select style="width: 300px" formControlName="medicalSupplyId" nzShowSearch  [nzServerSearch]="true"
                   nzPlaceHolder="Select a supply" (nzOnSearch)="searchSupply($event)">
-                  <ng-container *ngIf="state.showAddSupply">
-                    <nz-option *ngFor="let item of common.supplies; trackBy:trackByFnSupply" [nzLabel]="item.medicalSupplyName"
-                    [nzValue]="item.medicalSupplyId">
-                  </nz-option>
-                  </ng-container>
+                    <nz-option *ngFor="let item of common.supplies; trackBy: trackByFnSupply" [nzLabel]="item.medicalSupplyName"
+                    [nzValue]="item.medicalSupplyId"></nz-option>
                 </nz-select>
               </nz-form-control>
             </nz-form-item>
@@ -223,7 +220,7 @@
             </nz-form-item>
             <nz-form-item>
               <nz-form-control>
-                <button (click)="deleteFormSupply(i)" nz-button nzType="danger" nzShape="round"><i nz-icon
+                <button (click)="deleteFormSupply(i); pushDeleteSupplyId(item.controls['id'].value)" nz-button nzType="danger" nzShape="round"><i nz-icon
                     type="close"></i></button>
               </nz-form-control>
             </nz-form-item>
@@ -244,7 +241,7 @@
         Cancel
       </button>
       <button
-        [disabled]="state.loadAddSupply || surgeryDetail.supplyForm.value.listSupply.length === 0 || surgeryDetail.supplyForm.invalid"
+        [disabled]="state.loadAddSupply || surgeryDetail.supplyForm?.value?.listSupply.length === 0 || surgeryDetail.supplyForm?.invalid"
         (click)="submitAddSupplyForm()" nz-button nzType="primary" class="mb-2">
         Save
       </button>

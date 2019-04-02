@@ -81,11 +81,13 @@ export class ScheduleDetailComponent implements OnInit {
 nzFilterOption = () => true;
 
 trackByFnSupply(index, item){
-  return item ? item.id : undefined;
+  return item ? item.medicalSupplyId : undefined;
 }
 
 searchSupply(value: string): void {
-  this.schedule.searchSupply(value)
+  value.trim();
+  if (value != "") {
+    this.schedule.searchSupply(value)
     .subscribe(data => {
       console.log(data);
       this.common.supplies = data.map(item => ({
@@ -93,12 +95,33 @@ searchSupply(value: string): void {
         medicalSupplyName: item.medicalSupplyName,
       }));
     }, er => console.log(er));
+  }
 }
 
   createNewForm() {
     this.surgeryDetail.supplyForm = this.fb.group({
-      listSupply: this.fb.array([this.createFormSupply()])
+      listSupply: this.fb.array([]),
+      deleteMedicalSupplyIds: this.fb.array([]),
     });
+    this.patchFormSupplyArray(this.surgeryDetail.supplyUsed);
+  }
+
+  patchFormSupplyArray(supply){
+    this.common.supplies = supply;
+    let ctrl = this.surgeryDetail.supplyForm.controls.listSupply;
+    return supply.map(x => {
+      ctrl.push(this.fb.group({
+        id : new FormControl(x.id, Validators.required),
+        medicalSupplyId: new FormControl(x.medicalSupplyId, Validators.required),
+        quantity: new FormControl(x.quantity, [Validators.required, Validators.min(1)])
+      }));
+    });
+  }
+
+  pushDeleteSupplyId(id){
+    console.log(id);
+      let ctrl = this.surgeryDetail.supplyForm.controls.deleteMedicalSupplyIds;
+      ctrl.push(new FormControl(id));
   }
 
   getSupply(id) {
@@ -181,7 +204,12 @@ searchSupply(value: string): void {
         return item;
       });
 
-      this.schedule.addUsedMedicalSupply(finalData).subscribe(res => {
+      let data = {
+        shiftMedicals : finalData,
+        deleteMedicalSupplyIds : this.surgeryDetail.supplyForm.value.deleteMedicalSupplyIds
+      }
+
+      this.schedule.addUsedMedicalSupply(data).subscribe(res => {
         this.state.loadAddSupply = false;
         this.state.showAddSupply = false;
         this.createNewForm();
