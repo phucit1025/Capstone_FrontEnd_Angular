@@ -40,6 +40,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
     data: null,
     sb: null
   };
+  
   @ViewChild('trigger') customTrigger: TemplateRef<void>;
 
   constructor(private auth: AuthService, private userSV: UserService,
@@ -50,11 +51,12 @@ export class LayoutComponent implements OnInit, OnDestroy {
  
   private _hubConnection: HubConnection;
   msgs = [];
+  countNoti = 0;
   ngOnInit() {
     this.user.sb = this.userSV.getUser.subscribe(user => {
       this.user.data = user;
     });
-    // this.notificationMessage.getNotification().subscribe();
+    this.loadNotification(this.user.data.role);
 
     this._hubConnection = new HubConnectionBuilder()
     .withUrl('https://localhost:44372/notify').build();
@@ -62,11 +64,13 @@ export class LayoutComponent implements OnInit, OnDestroy {
       .start()
       .then(() => console.log('Connection started!'))
       .catch(err => console.log('Error while establishing connection :('));
+ 
 
-    this._hubConnection.on('GetNotifications', (messages) => {
-      this.msgs = messages;
+    this._hubConnection.on('GetNotifications', (roleName, messages) => {
+      if (roleName == this.user.data.role) {
+        this.msgs = messages;
+      }
     });
-
   }
 
   ngOnDestroy(): void {
@@ -82,6 +86,21 @@ export class LayoutComponent implements OnInit, OnDestroy {
   /** custom trigger can be TemplateRef **/
   changeTrigger(): void {
     this.triggerTemplate = this.customTrigger;
+  }
+
+  loadNotification(roleName) {
+    this.notificationMessage.getNotification(roleName).subscribe((messages: any) => {
+      this.msgs = messages;
+      this.countNoti = this.msgs.filter(item => item.isRead == false).length;
+    });
+  }
+
+  SetIsReadNotification(roleName) {
+    if (this.countNoti > 0) {
+      this.notificationMessage.setIsReadNotification(roleName).subscribe(() => {
+        this.loadNotification(roleName);
+      });
+    }
   }
 
   createBasicNotification(): void {

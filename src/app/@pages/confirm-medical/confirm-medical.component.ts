@@ -76,7 +76,7 @@ export class ConfirmMedicalComponent implements OnInit {
     }
   }
 
-  notifyMessage() {
-    return this.confirmMedical.notifyMessage().subscribe(r => {});
-  }
+  // notifyMessage() {
+  //   return this.confirmMedical.notifyMessage().subscribe();
+  // }
 }

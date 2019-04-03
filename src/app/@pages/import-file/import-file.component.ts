@@ -2,7 +2,10 @@ import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {NzMessageService} from 'ng-zorro-antd';
 import {GLOBAL} from '../../global';
 import {ImportService} from '../../page-services/import.service';
+import {NotificationService} from '../../page-services/notification.service';
 import {combineLatest} from 'rxjs';
+
+import {LayoutComponent} from '../layout/layout.component';
 
 @Component({
   selector: 'app-import-file',
@@ -23,7 +26,8 @@ export class ImportFileComponent implements OnInit {
   selectedObject = null;
 
 
-  constructor(private message: NzMessageService, private importSV: ImportService) {
+  constructor(private message: NzMessageService, private importSV: ImportService,
+    private layoutData: LayoutComponent, private notificationService:NotificationService) {
   }
 
   ngOnInit() {
@@ -128,7 +132,6 @@ export class ImportFileComponent implements OnInit {
       delete el.patientDob;
       return el;
     });
-    console.log(profiles);
     const medicals = GLOBAL.copyObject(this.medicals).map(medical => {
       return {
         medicalSupplyId: medical.code,
@@ -144,7 +147,7 @@ export class ImportFileComponent implements OnInit {
       );
       apiList.subscribe(el => {
         this.message.success('Import Successful');
-        this.notifyMessage(); //notify
+        this.notificationService.getTmpNotification(this.layoutData.user.data.role).subscribe(re => {}); //notify
         this.state.load = false;
         if (this.isAllCheck) {
           this.clearResult();
@@ -161,11 +164,5 @@ export class ImportFileComponent implements OnInit {
     } else {
       this.message.error('Data is not valid');
     }
-  }
-
-
-
-  notifyMessage() {
-    return this.importSV.notifyMessage().subscribe(r => {});
   }
 }
