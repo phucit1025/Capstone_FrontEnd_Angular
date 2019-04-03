@@ -113,7 +113,7 @@ export class ImportFileComponent implements OnInit {
 
   importList() {
     const profiles = GLOBAL.copyObject(this.getCheckedItem()).map(el => {
-      delete el.detailMedical;
+      // delete el.detailMedical;
       delete el.medicalRecord;
       delete el.doctorName;
       delete el.patientId;
@@ -124,22 +124,21 @@ export class ImportFileComponent implements OnInit {
       delete el.patientDob;
       return el;
     });
-    const medicals = GLOBAL.copyObject(this.medicals).map(medical => {
-      return {
-        medicalSupplyId: medical.code,
-        surgeryShiftCode: medical.surgeryShiftCode,
-        quantity: medical.quantity
-      };
-    });
-    if (profiles && medicals) {
+    // const medicals = GLOBAL.copyObject(this.medicals).map(medical => {
+    //   return {
+    //     medicalSupplyId: medical.code,
+    //     surgeryShiftCode: medical.surgeryShiftCode,
+    //     quantity: medical.quantity
+    //   };
+    // });
+    if (profiles) {
       this.state.load = true;
       // const apiList = combineLatest(
       //   this.importSV.importShift(profiles),
       //   this.importSV.importShiftMedicalSupply(medicals)
       // );
       const data = {
-        surgeryShifts: profiles,
-        medicalSupply: medicals,
+        surgeryShifts: profiles
       }
       this.importSV.importShift(data).subscribe(el => {
         this.message.success('Import Successful');
