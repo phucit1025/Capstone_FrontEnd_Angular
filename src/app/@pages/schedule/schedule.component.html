@@ -253,6 +253,17 @@
       Invalid time
     </span>
     <div *ngIf="selectedObject?.statusName === 'Intraoperative'" class="row">
+      <div class="col-12">
+        <nz-form-item>
+          <nz-form-label><b>Room Type</b></nz-form-label>
+          <nz-form-control>
+              <nz-radio-group [(ngModel)]="roomType">
+                  <label nz-radio-button nzValue="3">Intensive Care</label>
+                  <label nz-radio-button nzValue="4">Recovery</label>
+                </nz-radio-group>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
       <div class="col-6">
         <nz-form-item>
           <nz-form-label><b>Room</b></nz-form-label>

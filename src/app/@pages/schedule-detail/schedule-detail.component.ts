@@ -29,7 +29,8 @@ export class ScheduleDetailComponent implements OnInit {
   selected = {
     selectedTime: null,
     selectedBed: null,
-    selectedRoom: null
+    selectedRoom: null,
+    roomType: null,
   };
   state = {
     load: true,
@@ -250,6 +251,7 @@ searchSupply(value: string): void {
         this.selected.selectedTime = new Date(this.data.endTime);
         this.selected.selectedRoom = null;
         this.selected.selectedBed = null;
+        this.selected.roomType = '3';
         break;
       case 'Postoperative': break;
     }
@@ -290,6 +292,8 @@ searchSupply(value: string): void {
         if (roomPost) {
           data.roomPost = roomPost;
         }
+        data.roomType = this.selected.roomType;
+        console.log(GLOBAL.parseUrlString(data));
         this.state.loadChangeStatus = true;
         this.schedule.setPostoperativeStatus(GLOBAL.parseUrlString(data)).subscribe(sc => {
           this.message.success('Change Successful');
