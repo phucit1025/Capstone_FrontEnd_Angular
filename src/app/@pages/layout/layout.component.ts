@@ -1,10 +1,13 @@
 import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {AuthService} from '../../page-services/auth.service';
 import {UserService} from '../../page-services/user.service';
+import { NotificationService } from '../../page-services/notification.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Title} from '@angular/platform-browser';
 import 'rxjs/add/operator/mergeMap';
+import { NzNotificationService } from 'ng-zorro-antd';
 
+import {HubConnection, HubConnectionBuilder} from '@aspnet/signalr';
 @Component({
   selector: 'app-layout',
   templateUrl: './layout.component.html',
@@ -37,15 +40,36 @@ export class LayoutComponent implements OnInit, OnDestroy {
     data: null,
     sb: null
   };
+  
   @ViewChild('trigger') customTrigger: TemplateRef<void>;
 
   constructor(private auth: AuthService, private userSV: UserService,
-              private router: Router, private activedRoute: ActivatedRoute) {
+              private router: Router, private activedRoute: ActivatedRoute,
+              private notification: NzNotificationService,
+              private notificationMessage: NotificationService ) {
   }
-
+ 
+  private _hubConnection: HubConnection;
+  msgs = [];
+  countNoti = 0;
   ngOnInit() {
     this.user.sb = this.userSV.getUser.subscribe(user => {
       this.user.data = user;
+    });
+    this.loadNotification(this.user.data.role);
+
+    this._hubConnection = new HubConnectionBuilder()
+    .withUrl('https://localhost:44372/notify').build();
+    this._hubConnection
+      .start()
+      .then(() => console.log('Connection started!'))
+      .catch(err => console.log('Error while establishing connection :('));
+ 
+
+    this._hubConnection.on('GetNotifications', (roleName, messages) => {
+      if (roleName == this.user.data.role) {
+        this.msgs = messages;
+      }
     });
   }
 
@@ -64,5 +88,25 @@ export class LayoutComponent implements OnInit, OnDestroy {
     this.triggerTemplate = this.customTrigger;
   }
 
+  loadNotification(roleName) {
+    this.notificationMessage.getNotification(roleName).subscribe((messages: any) => {
+      this.msgs = messages;
+      this.countNoti = this.msgs.filter(item => item.isRead == false).length;
+    });
+  }
 
+  SetIsReadNotification(roleName) {
+    if (this.countNoti > 0) {
+      this.notificationMessage.setIsReadNotification(roleName).subscribe(() => {
+        this.loadNotification(roleName);
+      });
+    }
+  }
+
+  createBasicNotification(): void {
+    this.notification.blank(
+      'Notification Title',
+      'This is the content of the notification. This is the content of the notification. This is the content of the notification.'
+    );
+  }
 }

@@ -2,8 +2,7 @@ import * as moment from 'moment';
 import * as XLSX from 'xlsx';
 
 export const GLOBAL = Object.freeze({
-  // API: 'https://localhost:44372/api/',
-  API: 'http://45.119.212.145:5520/api/',
+  API: 'https://localhost:44372/api/',
   convertDate: (date: Date) => {
     let dateString = '';
     dateString += date.getFullYear();

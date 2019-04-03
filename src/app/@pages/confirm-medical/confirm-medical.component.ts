@@ -77,7 +77,14 @@ export class ConfirmMedicalComponent implements OnInit {
       }
     }
   }
+<<<<<<< HEAD
   createSupplyList(data){
     this.supplyList = data.medicalSupplies;
   }
+=======
+
+  // notifyMessage() {
+  //   return this.confirmMedical.notifyMessage().subscribe();
+  // }
+>>>>>>> 2f4d8dd0b4ef881308d41623298cbfa2fdc409b9
 }

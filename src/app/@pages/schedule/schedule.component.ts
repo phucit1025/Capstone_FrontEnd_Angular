@@ -9,6 +9,8 @@ import {SwalComponent} from '@toverux/ngx-sweetalert2';
 import swal from 'sweetalert2';
 import * as moment from 'moment';
 
+import { NzNotificationService } from 'ng-zorro-antd';
+
 @Component({
   selector: 'app-schedule',
   templateUrl: './schedule.component.html',
@@ -51,8 +53,12 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   };
   slotRooms: any;
   actualEndTimeError = false;
+<<<<<<< HEAD
 
   constructor(private schedule: ScheduleService, private messageService: NzMessageService, private fb: FormBuilder) {
+=======
+  constructor(private notification: NzNotificationService, private schedule: ScheduleService, private messageService: NzMessageService, private fb: FormBuilder) {
+>>>>>>> 2f4d8dd0b4ef881308d41623298cbfa2fdc409b9
   }
 
   ngOnInit() {
@@ -395,5 +401,11 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         return countSlot += slot.surgeries.length;
       }, count);
     }, 0);
+  }
+  createBasicNotification(): void {
+    this.notification.blank(
+      'Notification Title',
+      'This is the content of the notification. This is the content of the notification. This is the content of the notification.'
+    );
   }
 }

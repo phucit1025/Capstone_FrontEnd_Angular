@@ -23,4 +23,8 @@ export class ConfirmMedicalService {
   makeScheduleList() {
     return this.http.get(GLOBAL.API + 'Schedule/MakeScheduleList');
   }
+
+  notifyMessage() {
+    return this.http.get(GLOBAL.API + 'MessageNotification/GetAllNotification');
+  }
 }

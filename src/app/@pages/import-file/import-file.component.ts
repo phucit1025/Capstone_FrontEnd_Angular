@@ -2,7 +2,10 @@ import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {NzMessageService} from 'ng-zorro-antd';
 import {GLOBAL} from '../../global';
 import {ImportService} from '../../page-services/import.service';
+import {NotificationService} from '../../page-services/notification.service';
 import {combineLatest} from 'rxjs';
+
+import {LayoutComponent} from '../layout/layout.component';
 
 @Component({
   selector: 'app-import-file',
@@ -23,7 +26,8 @@ export class ImportFileComponent implements OnInit {
   selectedObject = null;
 
 
-  constructor(private message: NzMessageService, private importSV: ImportService) {
+  constructor(private message: NzMessageService, private importSV: ImportService,
+    private layoutData: LayoutComponent, private notificationService:NotificationService) {
   }
 
   ngOnInit() {
@@ -56,14 +60,13 @@ export class ImportFileComponent implements OnInit {
           patient.yearOfBirth = patient.patientDob;
           patient.expectedSurgeryDuration = patient.surgeryWeight;
           patient.detailMedical = data[1].filter(item => patient.surgeryShiftCode === item.surgeryShiftCode);
-          patient.proposedStartDateTime =
-            (patient.expectedDate && patient.expectedTime)
-              ? new Date(patient.expectedDate + ' ' + patient.expectedTime.split('-')[0])
-              : '';
-          patient.proposedEndDateTime =
-            (patient.expectedDate && patient.expectedTime)
-              ? new Date(patient.expectedDate + ' ' + patient.expectedTime.split('-')[1])
-              : '';
+          patient.proposedStartDateTime = '';
+          patient.proposedEndDateTime = '';
+          if (patient.expectedDate && patient.expectedTime) {
+            patient.ProposedDateTimeShow = patient.expectedTime + ' ' + this.generateDatetimeShow(patient.expectedDate);
+            patient.proposedStartDateTime = patient.expectedDate + 'T' + patient.expectedTime.split(' - ')[0] + 'Z';
+            patient.proposedEndDateTime = patient.expectedDate + 'T' + patient.expectedTime.split(' - ')[1] + 'Z';
+          }
           return patient;
         }));
         localStorage.setItem('file', JSON.stringify(this.data));
@@ -74,6 +77,11 @@ export class ImportFileComponent implements OnInit {
     }
     this.state.load = false;
     this.message.error('File input is not valid');
+  }
+
+  generateDatetimeShow(datetimeString) {
+    var arr = datetimeString.split('-');
+    return [arr[2], arr[1], arr[0]].join('/');
   }
 
   reRenderIndex(array) {
@@ -143,6 +151,7 @@ export class ImportFileComponent implements OnInit {
       }
       this.importSV.importShift(data).subscribe(el => {
         this.message.success('Import Successful');
+        this.notificationService.getTmpNotification(this.layoutData.user.data.role).subscribe(re => {}); //notify
         this.state.load = false;
         if (this.isAllCheck) {
           this.clearResult();
@@ -153,6 +162,7 @@ export class ImportFileComponent implements OnInit {
         }
       }, er => {
         this.message.error('Import Fail!!! Please try again');
+        console.log(er.message);
         this.state.load = false;
       });
     } else {
