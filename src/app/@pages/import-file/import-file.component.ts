@@ -50,7 +50,7 @@ export class ImportFileComponent implements OnInit {
           patient.index = len + index;
           patient.gender = patient.gender === 'F' ? 0 : 1;
           patient.patientID = patient.patientId;
-          patient.priority = patient.priorityNumber;
+          patient.priority = patient.priority;
           patient.surgeryShiftID = patient.surgeryShiftId;
           patient.surgeryCatalogID = patient.surgeryCode;
           patient.yearOfBirth = patient.patientDob;
@@ -118,7 +118,7 @@ export class ImportFileComponent implements OnInit {
       delete el.doctorName;
       delete el.patientId;
       delete el.index;
-      delete el.priority;
+      // delete el.priority;
       delete el.surgeryShiftId;
       delete el.surgeryCode;
       delete el.patientDob;
