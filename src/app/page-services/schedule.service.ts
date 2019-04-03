@@ -145,7 +145,7 @@ export class ScheduleService {
     return this.http.post(GLOBAL.API + this.name + `/RefreshSurgeryShift?shiftId=${id}`, {});
   }
   checkStatusPreviousSurgeryShift(shiftId) {
-    return this.http.get(GLOBAL.API + this.name + `/CheckStatusPreviousSurgeryShift?shiftId=${shiftId}`)
+    return this.http.get(GLOBAL.API + this.name + `/CheckStatusPreviousSurgeryShift?shiftId=${shiftId}`);
   }
 
   deleteTreatmentReport(id) {

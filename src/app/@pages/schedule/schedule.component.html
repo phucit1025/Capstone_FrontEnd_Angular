@@ -73,6 +73,7 @@
             </button>
             <button *ngIf="state.swapMode" (click)="disabled()" nz-button nzType="default">Disable Swap</button>
           </div>
+          <div *ngIf="state.searchText || state.selectedStatus.length > 0" class="text-danger text-right mt-2" style="margin-right: 115px"><b>Found : {{countResult(rooms | roomPipe: state.searchText | statusPipe: state.selectedStatus)}} result(s)</b></div>
         </nz-form-item>
       </div>
     </div>

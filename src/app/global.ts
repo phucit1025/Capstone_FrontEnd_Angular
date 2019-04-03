@@ -8,7 +8,7 @@ export const GLOBAL = Object.freeze({
     let dateString = '';
     dateString += date.getFullYear();
     dateString += date.getMonth() >= 10 ? (date.getMonth() + 1) : '0' + (date.getMonth() + 1);
-    dateString += date.getDate();
+    dateString += date.getDate() >= 10 ? date.getDate() : '0' + date.getDate();
     return dateString;
   },
   parseObject: function (object) {
