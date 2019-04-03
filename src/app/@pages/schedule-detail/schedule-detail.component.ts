@@ -1,5 +1,5 @@
 import { GLOBAL } from './../../global';
-import { NzMessageService } from 'ng-zorro-antd';
+import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { FormBuilder, FormControl, Validators, FormArray } from '@angular/forms';
 import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ScheduleService } from '../../page-services/schedule.service';
@@ -65,7 +65,7 @@ export class ScheduleDetailComponent implements OnInit {
   };
 
   constructor(private message: NzMessageService, private schedule: ScheduleService,
-    private router: Router, private route: ActivatedRoute, private fb: FormBuilder) {
+    private router: Router, private route: ActivatedRoute, private fb: FormBuilder, private modalService: NzModalService) {
     route.params.subscribe(params => {
       this.id = params.id;
       this.getDetail(params.id);
@@ -110,7 +110,14 @@ searchSupply(value: string): void {
   patchFormSupplyArray(supply){
     this.common.supplies = supply;
     let ctrl = this.surgeryDetail.supplyForm.controls.listSupply;
-    return supply.map(x => {
+    if (supply.length == 0) {
+      ctrl.push(this.fb.group({
+        id : new FormControl(0, Validators.required),
+        medicalSupplyId: new FormControl(null, Validators.required),
+        quantity: new FormControl(1, [Validators.required, Validators.min(1)])
+      }));
+    }
+    supply.map(x => {
       ctrl.push(this.fb.group({
         id : new FormControl(x.id, Validators.required),
         medicalSupplyId: new FormControl(x.medicalSupplyId, Validators.required),
@@ -323,5 +330,13 @@ searchSupply(value: string): void {
 
   exportSurgery(){
     this.schedule.exportSurgery(this.data.id);
+  }
+
+  showConfirm(): void {
+    this.modalService.confirm({
+      nzTitle: '<i>Do you Want to delete these items?</i>',
+      nzContent: '<b>Some descriptions</b>',
+      nzOnOk: () => console.log('OK')
+    });
   }
 }

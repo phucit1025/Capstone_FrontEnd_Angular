@@ -323,7 +323,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       case 'Postoperative':
         break;
     }
-    this.checkActualEndTime();
+    // this.checkActualEndTime();
   }
 
   startShift() {
@@ -381,8 +381,9 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   checkActualEndTime() {
     const selectedDate = new Date(this.selectedTime);
     const serverDate = new Date(this.serverTime);
-    this.actualEndTimeError = (serverDate.getHours() * 60 + serverDate.getMinutes())
-      - (selectedDate.getHours() * 60 + selectedDate.getMinutes()) > 0;
+    // this.actualEndTimeError = (serverDate.getHours() * 60 + serverDate.getMinutes())
+    //   - (selectedDate.getHours() * 60 + selectedDate.getMinutes()) > 0;
+    this.actualEndTimeError = false;
   }
 
   countResult(rooms) {

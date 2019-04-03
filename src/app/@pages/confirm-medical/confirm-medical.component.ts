@@ -16,6 +16,7 @@ export class ConfirmMedicalComponent implements OnInit {
     isShow: false,
   };
   pageIndex = 0;
+  supplyList = [];
 
   constructor(private confirmMedical: ConfirmMedicalService, private message: NzMessageService) {
   }
@@ -29,6 +30,7 @@ export class ConfirmMedicalComponent implements OnInit {
     this.confirmMedical.getAll().subscribe((list: any) => {
       this.listData = list;
       this.state.load = false;
+      console.log(this.listData);
     });
   }
 
@@ -74,5 +76,8 @@ export class ConfirmMedicalComponent implements OnInit {
         });
       }
     }
+  }
+  createSupplyList(data){
+    this.supplyList = data.medicalSupplies;
   }
 }

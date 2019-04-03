@@ -133,11 +133,15 @@ export class ImportFileComponent implements OnInit {
     });
     if (profiles && medicals) {
       this.state.load = true;
-      const apiList = combineLatest(
-        this.importSV.importShift(profiles),
-        this.importSV.importShiftMedicalSupply(medicals)
-      );
-      apiList.subscribe(el => {
+      // const apiList = combineLatest(
+      //   this.importSV.importShift(profiles),
+      //   this.importSV.importShiftMedicalSupply(medicals)
+      // );
+      const data = {
+        surgeryShifts: profiles,
+        medicalSupply: medicals,
+      }
+      this.importSV.importShift(data).subscribe(el => {
         this.message.success('Import Successful');
         this.state.load = false;
         if (this.isAllCheck) {
