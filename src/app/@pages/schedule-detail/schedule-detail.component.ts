@@ -333,10 +333,18 @@ searchSupply(value: string): void {
   }
 
   showConfirm(): void {
+    const data = {
+      shiftId: this.data.id,
+    }
     this.modalService.confirm({
-      nzTitle: '<i>Do you Want to delete these items?</i>',
-      nzContent: '<b>Some descriptions</b>',
-      nzOnOk: () => console.log('OK')
+      nzTitle: '<i>Do you want to finish this surgery shift?</i>',
+      nzContent: '<b>This surgery shift will be finished.</b>',
+      nzOnOk: () => this.schedule.setFinishedStatus(GLOBAL.parseUrlString(data)).subscribe(sc => {
+        this.message.success('Finish Successful');
+        this.getDetail(this.id);
+      }, er => {
+        this.message.error('Finish Fail');
+      }),
     });
   }
 }

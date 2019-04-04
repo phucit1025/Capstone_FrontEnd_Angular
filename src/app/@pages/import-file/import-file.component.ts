@@ -64,8 +64,8 @@ export class ImportFileComponent implements OnInit {
           patient.proposedEndDateTime = '';
           if (patient.expectedDate && patient.expectedTime) {
             patient.ProposedDateTimeShow = patient.expectedTime + ' ' + this.generateDatetimeShow(patient.expectedDate);
-            patient.proposedStartDateTime = patient.expectedDate + 'T' + patient.expectedTime.split(' - ')[0] + 'Z';
-            patient.proposedEndDateTime = patient.expectedDate + 'T' + patient.expectedTime.split(' - ')[1] + 'Z';
+            patient.proposedStartDateTime = patient.expectedDate + ' ' + patient.expectedTime.split(' - ')[0] + '';
+            patient.proposedEndDateTime = patient.expectedDate + ' ' + patient.expectedTime.split(' - ')[1] + '';   
           }
           return patient;
         }));
@@ -130,6 +130,9 @@ export class ImportFileComponent implements OnInit {
       delete el.surgeryShiftId;
       delete el.surgeryCode;
       delete el.patientDob;
+      delete el.expectedDate;
+      delete el.expectedTime;
+      delete el.ProposedDateTimeShow;
       return el;
     });
     // const medicals = GLOBAL.copyObject(this.medicals).map(medical => {
