@@ -21,10 +21,31 @@
       <div style="height: 100%" class="d-flex align-items-center">
         <i class="trigger" style="cursor: pointer" nz-icon [type]="isCollapsed?'menu-unfold':'menu-fold'"
           (click)="isCollapsed=!isCollapsed"></i>
-        <div class="mr-auto"></div>
-        <nz-badge [nzCount]="5" style="margin-right: 20px">
-          <a class="head-example"><i nz-icon type="bell" style="size: 30px"></i></a>
-        </nz-badge>
+        <div class="mr-auto"></div>        
+        <nz-dropdown [nzPlacement]="'bottomRight'"  [nzTrigger]="'click'" style="margin-right: 30px">
+          <a nz-dropdown (click)="SetIsReadNotification(user.data.role)"><nz-badge [nzCount]="countNoti" ><i class="far fa-bell fa-2x" ></i></nz-badge></a>
+          <ul class="notification-container" nz-menu>
+            <div class="notification-header">
+              <li class="notification-header-first">Notification</li>
+              <li nz-menu-divider></li>
+            </div>
+            <div class="notification-body" *ngIf="msgs.length > 0">
+              <div *ngFor="let msg of msgs">
+                <li nz-row nz-menu-item [ngStyle]="{'background-color': msg.isRead? 'inherit' : '#e0e0e0'}" style="border-bottom: 1px solid white; height: 50px;">
+                  <div nz-col nzMd nzSpan="20" style="white-space: pre-wrap; height: 100%;">
+                    <span>{{msg.content}}</span>
+                  </div>
+                  <div nz-col nzMd nzSpan="4" 
+                    style="white-space: pre-wrap; font-size: 10px;">
+                    <span>{{msg.dateCreated | date: 'HH:mm dd/MM/yyyy'}}</span>
+                  </div>
+                  <!-- <span style="float: right; font-size: 10px;">{{msg.dateCreated | date: 'HH : mm dd/MM/yyyy'}}</span> -->
+                </li>
+              </div>
+            </div>
+            <div class="no-notification-body" *ngIf="msgs.length == 0">No notification</div>
+          </ul>
+        </nz-dropdown>
         <nz-dropdown *ngIf="user?.data" class="user-dropdown">
           <a nz-dropdown class="d-flex justify-content-center align-items-center">
             <nz-avatar [nzSize]="'small'" nzIcon="user"></nz-avatar>

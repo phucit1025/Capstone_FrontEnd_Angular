@@ -25,8 +25,7 @@
       <th>Patient Name</th>
       <th>Gender</th>
       <th>Surgery Name</th>
-      <th>Excepted Date</th>
-      <th>Duration</th>
+      <th>Excepted DateTime</th>
       <th>Detail</th>
     </tr>
   </thead>
@@ -37,8 +36,7 @@
       <td>{{item.patientName}}</td>
       <td>{{item.gender === 1 ? 'M' : 'F'}}</td>
       <td>{{item.surgeryName}}</td>
-      <td>{{item.proposedStartDateTime ? item.proposedStartDateTime : 'N/A'}}</td>
-      <td>{{item.proposedEndDateTime ? item.proposedEndDateTime : 'N/A'}}</td>
+      <td>{{item.ProposedDateTimeShow ? item.ProposedDateTimeShow : 'N/A'}}</td>
       <td>
         <button (click)="showModal(item)" nz-button nzType="default" nzShape="circle"><i nz-icon
             type="info"></i></button>
