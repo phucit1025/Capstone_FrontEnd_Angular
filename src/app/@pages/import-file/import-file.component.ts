@@ -54,7 +54,7 @@ export class ImportFileComponent implements OnInit {
           patient.index = len + index;
           patient.gender = patient.gender === 'F' ? 0 : 1;
           patient.patientID = patient.patientId;
-          patient.priority = patient.priorityNumber;
+          patient.priority = patient.priority;
           patient.surgeryShiftID = patient.surgeryShiftId;
           patient.surgeryCatalogID = patient.surgeryCode;
           patient.yearOfBirth = patient.patientDob;
@@ -121,33 +121,32 @@ export class ImportFileComponent implements OnInit {
 
   importList() {
     const profiles = GLOBAL.copyObject(this.getCheckedItem()).map(el => {
-      delete el.detailMedical;
+      // delete el.detailMedical;
       delete el.medicalRecord;
       delete el.doctorName;
       delete el.patientId;
       delete el.index;
-      delete el.priority;
+      // delete el.priority;
       delete el.surgeryShiftId;
       delete el.surgeryCode;
       delete el.patientDob;
       return el;
     });
-    const medicals = GLOBAL.copyObject(this.medicals).map(medical => {
-      return {
-        medicalSupplyId: medical.code,
-        surgeryShiftCode: medical.surgeryShiftCode,
-        quantity: medical.quantity
-      };
-    });
-    if (profiles && medicals) {
+    // const medicals = GLOBAL.copyObject(this.medicals).map(medical => {
+    //   return {
+    //     medicalSupplyId: medical.code,
+    //     surgeryShiftCode: medical.surgeryShiftCode,
+    //     quantity: medical.quantity
+    //   };
+    // });
+    if (profiles) {
       this.state.load = true;
       // const apiList = combineLatest(
       //   this.importSV.importShift(profiles),
       //   this.importSV.importShiftMedicalSupply(medicals)
       // );
       const data = {
-        surgeryShifts: profiles,
-        medicalSupply: medicals,
+        surgeryShifts: profiles
       }
       this.importSV.importShift(data).subscribe(el => {
         this.message.success('Import Successful');
