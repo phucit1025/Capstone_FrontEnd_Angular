@@ -2,18 +2,25 @@ import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/cor
 import {AuthService} from '../../page-services/auth.service';
 import {UserService} from '../../page-services/user.service';
 import { NotificationService } from '../../page-services/notification.service';
+import {ConfirmMedicalService} from '../../page-services/confirm.service';
 import {ActivatedRoute, Router} from '@angular/router';
+import { Location } from '@angular/common';
 import {Title} from '@angular/platform-browser';
 import 'rxjs/add/operator/mergeMap';
 import { NzNotificationService } from 'ng-zorro-antd';
 
 import {HubConnection, HubConnectionBuilder} from '@aspnet/signalr';
+
 @Component({
   selector: 'app-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.css']
 })
 export class LayoutComponent implements OnInit, OnDestroy {
+  HOST = 'https://localhost:44372/';
+  SUPPLIER_ROLE = 'MedicalSupplier';
+  CHIEFNURSE_ROLE = 'ChiefNurse';
+
   menu = [
     {
       icon: 'file-excel',
@@ -46,12 +53,15 @@ export class LayoutComponent implements OnInit, OnDestroy {
   constructor(private auth: AuthService, private userSV: UserService,
               private router: Router, private activedRoute: ActivatedRoute,
               private notification: NzNotificationService,
-              private notificationMessage: NotificationService ) {
+              private notificationMessage: NotificationService,
+              private location: Location ) {
   }
  
   private _hubConnection: HubConnection;
-  msgs = [];
-  countNoti = 0;
+  msgsSupplier = [];
+  msgsChiefNurse = [];
+  countNotiSup = 0;
+  countNotiChief = 0;
   ngOnInit() {
     this.user.sb = this.userSV.getUser.subscribe(user => {
       this.user.data = user;
@@ -59,16 +69,20 @@ export class LayoutComponent implements OnInit, OnDestroy {
     this.loadNotification(this.user.data.role);
 
     this._hubConnection = new HubConnectionBuilder()
-    .withUrl('https://localhost:44372/notify').build();
+    .withUrl(this.HOST + 'notify').build();
     this._hubConnection
       .start()
       .then(() => console.log('Connection started!'))
       .catch(err => console.log('Error while establishing connection :('));
  
-
-    this._hubConnection.on('GetNotifications', (roleName, messages) => {
-      if (roleName == this.user.data.role) {
-        this.msgs = messages;
+    this._hubConnection.on('BroadcastMessage', (roleName, messages) => {
+      if (roleName == this.SUPPLIER_ROLE) {
+        this.msgsSupplier = messages;
+        this.countNotiSup = this.msgsSupplier.filter(item => item.isRead == false).length;
+      }
+      if (roleName == this.CHIEFNURSE_ROLE) {
+        this.msgsChiefNurse = messages;
+        this.countNotiChief = this.msgsChiefNurse.filter(item => item.isRead == false).length;
       }
     });
   }
@@ -90,17 +104,29 @@ export class LayoutComponent implements OnInit, OnDestroy {
 
   loadNotification(roleName) {
     this.notificationMessage.getNotification(roleName).subscribe((messages: any) => {
-      this.msgs = messages;
-      this.countNoti = this.msgs.filter(item => item.isRead == false).length;
+      if (roleName == this.SUPPLIER_ROLE) {
+        this.msgsSupplier = messages;
+        this.countNotiSup = this.msgsSupplier.filter(item => item.isRead == false).length;
+      }
+      if (roleName == this.CHIEFNURSE_ROLE) {
+      this.msgsChiefNurse  = messages;
+      this.countNotiChief = this.msgsChiefNurse.filter(item => item.isRead == false).length;
+      }
     });
   }
 
-  SetIsReadNotification(roleName) {
-    if (this.countNoti > 0) {
-      this.notificationMessage.setIsReadNotification(roleName).subscribe(() => {
+  SetIsReadNotification(notiId, roleName) {
+    if (this.countNotiSup > 0 || this.countNotiChief > 0) {
+      this.notificationMessage.setIsReadNotification(notiId).subscribe(() => {
         this.loadNotification(roleName);
       });
     }
+  }
+
+  LoadConfirmPage():void {
+    // this.location.back();
+    this.router.navigate(['/pages/confirm-medical']);
+    // this.location.();
   }
 
   createBasicNotification(): void {

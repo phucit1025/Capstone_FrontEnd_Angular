@@ -1,6 +1,7 @@
 import { NzMessageService } from 'ng-zorro-antd';
 import { Component, OnInit } from '@angular/core';
 import { ConfirmMedicalService } from '../../page-services/confirm.service';
+import {NotificationService} from '../../page-services/notification.service';
 
 @Component({
   selector: 'app-confirm-medical',
@@ -18,7 +19,8 @@ export class ConfirmMedicalComponent implements OnInit {
   pageIndex = 0;
   supplyList = [];
 
-  constructor(private confirmMedical: ConfirmMedicalService, private message: NzMessageService) {
+  constructor(private confirmMedical: ConfirmMedicalService, 
+    private message: NzMessageService, private notificationService: NotificationService) {
   }
 
   ngOnInit() {
@@ -26,11 +28,14 @@ export class ConfirmMedicalComponent implements OnInit {
   }
 
   loadAll() {
+    var countIndex = 1;
     this.state.load = true;
     this.confirmMedical.getAll().subscribe((list: any) => {
+      list.forEach(ls => {
+        ls['index'] = countIndex++;
+      })
       this.listData = list;
       this.state.load = false;
-      console.log(this.listData);
     });
   }
 
@@ -69,6 +74,7 @@ export class ConfirmMedicalComponent implements OnInit {
           this.state.load = false;
           this.message.success('Confirm Success');
           this.confirmMedical.makeScheduleList().subscribe(mRes => {
+            this.notificationService.getTmpNotification('ChiefNurse').subscribe(re => {}); //notify
           });
         }, er => {
           this.state.load = false;

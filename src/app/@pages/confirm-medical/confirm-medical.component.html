@@ -11,6 +11,7 @@
     <th [nzDisabled]="listData.length === 0" nzShowCheckbox [(nzChecked)]="isAllCheck"
         (nzCheckedChange)="checkAll($event)"
         [nzIndeterminate]="isAllCheck"></th>
+    <th>No</th>
     <th>Patient Name</th>
     <th>Surgery Name</th>
     <th>Day Created</th>
@@ -19,8 +20,9 @@
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let data of rowSelectionTable.data">
+  <tr ng-repeat="data in rowSelectionTable.data" *ngFor="let data of rowSelectionTable.data">
     <td nzShowCheckbox [(nzChecked)]="mapOfCheckedId[data.id]" (nzCheckedChange)="checkItem()"></td>
+    <td>{{data.index}}</td>
     <td>{{data.patientName}}</td>
     <td>{{data.surgeryName}}</td>
     <td>{{data.createdDate | date: 'dd/MM/yyyy'}}</td>

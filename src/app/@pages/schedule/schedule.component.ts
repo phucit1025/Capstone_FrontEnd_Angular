@@ -61,24 +61,13 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     this.getSchedule();
     this.createEmergencyForm();
     this.getServerTime();
+
   }
 
   ngOnDestroy() {
     if (this.state.interval) {
       clearInterval(this.state.interval);
     }
-  }
-
-  loadSlotRoom() {
-    this.state.loadSlotRoom = true;
-    this.schedule.getSlotRooms().subscribe((rooms: any) => {
-      rooms.forEach(room => {
-        room.slotRooms.forEach(slot => {
-          this.slotRooms.push(slot);
-        });
-      });
-      this.state.loadSlotRoom = false;
-    }, er => this.state.loadSlotRoom = false);
   }
 
   disabledStartDate = (startValue: Date): boolean => {
@@ -100,6 +89,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       startTime: new FormControl(new Date(), Validators.required),
       endTime: new FormControl(new Date(), [Validators.required]),
       isForceAdd: new FormControl(false),
+      isEmergency: new FormControl(true),
       slotRoomId: new FormControl()
     });
   }
@@ -147,6 +137,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     this.state.load = true;
     this.schedule.getSlotRooms().subscribe((rooms: any) => {
       this.rooms = rooms;
+      
       if (rooms && rooms.length > 0) {
         rooms.forEach(room => {
           this.scheduleForEachRoom(room, GLOBAL.convertDate(date ? date : this.date));
@@ -161,6 +152,12 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       this.state.reload = false;
     }
     const array = [];
+    //-------------Specialty--------------//
+    this.schedule.getSpecialtyByRoomId(room.id).subscribe((specialties: any) => {
+      room['specialties'] = specialties;
+    });
+    //-----------------------------------
+
     // Convert list roomId to list api function
     room.slotRooms.map(slot => {
       array.push(this.schedule.getSurgeryShiftsByRoomAndDate(slot.id, date));

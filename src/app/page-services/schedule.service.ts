@@ -13,6 +13,10 @@ export class ScheduleService {
   constructor(private http: HttpClient) {
   }
 
+  getSpecialtyByRoomId(roomId) {
+    return this.http.get(GLOBAL.API + this.name + `/GetSpecialtyByRoomId?roomId=${roomId}`);
+  }
+
   getSlotRooms() {
     return this.http.get(GLOBAL.API + this.name + '/GetSlotRooms');
   }
