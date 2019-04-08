@@ -18,7 +18,7 @@ export class NotificationService {
     return this.http.get(GLOBAL.API + this.name + '/GetNotifications?roleName=' + roleName);
   }
 
-  setIsReadNotification(roleName) {
-    return this.http.post(GLOBAL.API + this.name + `/SetIsReadNotification?roleName=${roleName}`, {});
+  setIsReadNotification(notiId) {
+    return this.http.post(GLOBAL.API + this.name + `/SetIsReadNotification?notiId=${notiId}`, {});
   }
 }

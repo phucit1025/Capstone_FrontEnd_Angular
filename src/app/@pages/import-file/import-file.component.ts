@@ -54,7 +54,7 @@ export class ImportFileComponent implements OnInit {
           patient.index = len + index;
           patient.gender = patient.gender === 'F' ? 0 : 1;
           patient.patientID = patient.patientId;
-          patient.priority = patient.priorityNumber;
+          patient.priority = patient.priority;
           patient.surgeryShiftID = patient.surgeryShiftId;
           patient.surgeryCatalogID = patient.surgeryCode;
           patient.yearOfBirth = patient.patientDob;
@@ -64,8 +64,8 @@ export class ImportFileComponent implements OnInit {
           patient.proposedEndDateTime = '';
           if (patient.expectedDate && patient.expectedTime) {
             patient.ProposedDateTimeShow = patient.expectedTime + ' ' + this.generateDatetimeShow(patient.expectedDate);
-            patient.proposedStartDateTime = patient.expectedDate + 'T' + patient.expectedTime.split(' - ')[0] + 'Z';
-            patient.proposedEndDateTime = patient.expectedDate + 'T' + patient.expectedTime.split(' - ')[1] + 'Z';
+            patient.proposedStartDateTime = patient.expectedDate + ' ' + patient.expectedTime.split(' - ')[0] + '';
+            patient.proposedEndDateTime = patient.expectedDate + ' ' + patient.expectedTime.split(' - ')[1] + '';   
           }
           return patient;
         }));
@@ -121,33 +121,39 @@ export class ImportFileComponent implements OnInit {
 
   importList() {
     const profiles = GLOBAL.copyObject(this.getCheckedItem()).map(el => {
-      delete el.detailMedical;
+      // delete el.detailMedical;
       delete el.medicalRecord;
       delete el.doctorName;
       delete el.patientId;
       delete el.index;
-      delete el.priority;
+      // delete el.priority;
       delete el.surgeryShiftId;
       delete el.surgeryCode;
       delete el.patientDob;
+      delete el.expectedDate;
+      delete el.expectedTime;
+      delete el.ProposedDateTimeShow;
       return el;
     });
-    const medicals = GLOBAL.copyObject(this.medicals).map(medical => {
-      return {
-        medicalSupplyId: medical.code,
-        surgeryShiftCode: medical.surgeryShiftCode,
-        quantity: medical.quantity
-      };
-    });
-    if (profiles && medicals) {
+    // const medicals = GLOBAL.copyObject(this.medicals).map(medical => {
+    //   return {
+    //     medicalSupplyId: medical.code,
+    //     surgeryShiftCode: medical.surgeryShiftCode,
+    //     quantity: medical.quantity
+    //   };
+    // });
+    if (profiles) {
       this.state.load = true;
-      const apiList = combineLatest(
-        this.importSV.importShift(profiles),
-        this.importSV.importShiftMedicalSupply(medicals)
-      );
-      apiList.subscribe(el => {
+      // const apiList = combineLatest(
+      //   this.importSV.importShift(profiles),
+      //   this.importSV.importShiftMedicalSupply(medicals)
+      // );
+      const data = {
+        surgeryShifts: profiles
+      }
+      this.importSV.importShift(data).subscribe(el => {
         this.message.success('Import Successful');
-        this.notificationService.getTmpNotification(this.layoutData.user.data.role).subscribe(re => {}); //notify
+        this.notificationService.getTmpNotification('MedicalSupplier').subscribe(re => {}); //notify
         this.state.load = false;
         if (this.isAllCheck) {
           this.clearResult();

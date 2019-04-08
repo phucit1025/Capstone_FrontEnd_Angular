@@ -1,5 +1,5 @@
 import { GLOBAL } from './../../global';
-import { NzMessageService } from 'ng-zorro-antd';
+import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { FormBuilder, FormControl, Validators, FormArray } from '@angular/forms';
 import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { ScheduleService } from '../../page-services/schedule.service';
@@ -29,7 +29,8 @@ export class ScheduleDetailComponent implements OnInit {
   selected = {
     selectedTime: null,
     selectedBed: null,
-    selectedRoom: null
+    selectedRoom: null,
+    roomType: null,
   };
   state = {
     load: true,
@@ -64,7 +65,7 @@ export class ScheduleDetailComponent implements OnInit {
   };
 
   constructor(private message: NzMessageService, private schedule: ScheduleService,
-    private router: Router, private route: ActivatedRoute, private fb: FormBuilder) {
+    private router: Router, private route: ActivatedRoute, private fb: FormBuilder, private modalService: NzModalService) {
     route.params.subscribe(params => {
       this.id = params.id;
       this.getDetail(params.id);
@@ -109,7 +110,14 @@ searchSupply(value: string): void {
   patchFormSupplyArray(supply){
     this.common.supplies = supply;
     let ctrl = this.surgeryDetail.supplyForm.controls.listSupply;
-    return supply.map(x => {
+    if (supply.length == 0) {
+      ctrl.push(this.fb.group({
+        id : new FormControl(0, Validators.required),
+        medicalSupplyId: new FormControl(null, Validators.required),
+        quantity: new FormControl(1, [Validators.required, Validators.min(1)])
+      }));
+    }
+    supply.map(x => {
       ctrl.push(this.fb.group({
         id : new FormControl(x.id, Validators.required),
         medicalSupplyId: new FormControl(x.medicalSupplyId, Validators.required),
@@ -250,6 +258,7 @@ searchSupply(value: string): void {
         this.selected.selectedTime = new Date(this.data.endTime);
         this.selected.selectedRoom = null;
         this.selected.selectedBed = null;
+        this.selected.roomType = '3';
         break;
       case 'Postoperative': break;
     }
@@ -290,6 +299,8 @@ searchSupply(value: string): void {
         if (roomPost) {
           data.roomPost = roomPost;
         }
+        data.roomType = this.selected.roomType;
+        console.log(GLOBAL.parseUrlString(data));
         this.state.loadChangeStatus = true;
         this.schedule.setPostoperativeStatus(GLOBAL.parseUrlString(data)).subscribe(sc => {
           this.message.success('Change Successful');
@@ -319,5 +330,21 @@ searchSupply(value: string): void {
 
   exportSurgery(){
     this.schedule.exportSurgery(this.data.id);
+  }
+
+  showConfirm(): void {
+    const data = {
+      shiftId: this.data.id,
+    }
+    this.modalService.confirm({
+      nzTitle: '<i>Do you want to finish this surgery shift?</i>',
+      nzContent: '<b>This surgery shift will be finished.</b>',
+      nzOnOk: () => this.schedule.setFinishedStatus(GLOBAL.parseUrlString(data)).subscribe(sc => {
+        this.message.success('Finish Successful');
+        this.getDetail(this.id);
+      }, er => {
+        this.message.error('Finish Fail');
+      }),
+    });
   }
 }

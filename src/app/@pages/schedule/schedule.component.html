@@ -73,6 +73,7 @@
             </button>
             <button *ngIf="state.swapMode" (click)="disabled()" nz-button nzType="default">Disable Swap</button>
           </div>
+          <div *ngIf="state.searchText || state.selectedStatus.length > 0" class="text-danger text-right mt-2" style="margin-right: 115px"><b>Found : {{countResult(rooms | roomPipe: state.searchText | statusPipe: state.selectedStatus)}} result(s)</b></div>
         </nz-form-item>
       </div>
     </div>
@@ -96,7 +97,7 @@
       <ng-container *ngFor="let room of rooms | roomPipe: state.searchText | statusPipe: state.selectedStatus">
         <div *ngIf="room !== -1" class="date">
           <!-- Room header -->
-          <div class="room-name">
+          <div class="room-name" [ngStyle]="{'background-color': room.name === 'Emergency' ? '#CC0000' : '#128475'}" >
             <div class="rotate">
               {{room.name}}
               <span class="quantity">( {{room.slotRooms ? room.slotRooms.length : 0}} Slots)</span>
@@ -104,7 +105,10 @@
           </div>
           <!-- Room-slot -->
           <div class="slot-group-container">
-            <div class="slot example z-depth-2" *ngFor="let slot of room.slotRooms">
+            <!-- <div class="slot">Specialty
+              <div *ngFor="let specialty of room.specialties">- {{specialty}}</div>
+            </div> -->
+            <div class="slot z-depth-2" *ngFor="let slot of room.slotRooms">
               <!-- <div class="slot-name">
                 {{slot.name}}
               </div> -->
@@ -253,6 +257,17 @@
       Invalid time
     </span>
     <div *ngIf="selectedObject?.statusName === 'Intraoperative'" class="row">
+      <div class="col-12">
+        <nz-form-item>
+          <nz-form-label><b>Room Type</b></nz-form-label>
+          <nz-form-control>
+              <nz-radio-group [(ngModel)]="roomType">
+                  <label nz-radio-button nzValue="3">Intensive Care</label>
+                  <label nz-radio-button nzValue="4">Recovery</label>
+                </nz-radio-group>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
       <div class="col-6">
         <nz-form-item>
           <nz-form-label><b>Room</b></nz-form-label>

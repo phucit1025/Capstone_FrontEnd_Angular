@@ -21,29 +21,60 @@
       <div style="height: 100%" class="d-flex align-items-center">
         <i class="trigger" style="cursor: pointer" nz-icon [type]="isCollapsed?'menu-unfold':'menu-fold'"
           (click)="isCollapsed=!isCollapsed"></i>
-        <div class="mr-auto"></div>        
-        <nz-dropdown [nzPlacement]="'bottomRight'"  [nzTrigger]="'click'" style="margin-right: 30px">
-          <a nz-dropdown (click)="SetIsReadNotification(user.data.role)"><nz-badge [nzCount]="countNoti" ><i class="far fa-bell fa-2x" ></i></nz-badge></a>
+        <div class="mr-auto"></div>
+        <nz-dropdown [nzPlacement]="'bottomRight'" [nzTrigger]="'click'" style="margin-right: 30px">
+          <a *ngIf="user.data.role == 'HospitalStaff'" nz-dropdown>
+            <nz-badge><i class="far fa-bell fa-2x"></i></nz-badge>
+          </a>
+          <a *ngIf="user.data.role == SUPPLIER_ROLE" nz-dropdown>
+            <nz-badge [nzCount]="countNotiSup"><i class="far fa-bell fa-2x"></i></nz-badge>
+          </a>
+          <a *ngIf="user.data.role == CHIEFNURSE_ROLE" nz-dropdown>
+            <nz-badge [nzCount]="countNotiChief"><i class="far fa-bell fa-2x"></i></nz-badge>
+          </a>
           <ul class="notification-container" nz-menu>
             <div class="notification-header">
               <li class="notification-header-first">Notification</li>
               <li nz-menu-divider></li>
             </div>
-            <div class="notification-body" *ngIf="msgs.length > 0">
-              <div *ngFor="let msg of msgs">
-                <li nz-row nz-menu-item [ngStyle]="{'background-color': msg.isRead? 'inherit' : '#e0e0e0'}" style="border-bottom: 1px solid white; height: 50px;">
-                  <div nz-col nzMd nzSpan="20" style="white-space: pre-wrap; height: 100%;">
-                    <span>{{msg.content}}</span>
-                  </div>
-                  <div nz-col nzMd nzSpan="4" 
-                    style="white-space: pre-wrap; font-size: 10px;">
-                    <span>{{msg.dateCreated | date: 'HH:mm dd/MM/yyyy'}}</span>
-                  </div>
-                  <!-- <span style="float: right; font-size: 10px;">{{msg.dateCreated | date: 'HH : mm dd/MM/yyyy'}}</span> -->
-                </li>
+            <!-- Hospital Staff -->
+            <div class="no-notification-body" *ngIf="user.data.role == 'HospitalStaff'">No notification</div>
+            <!-- MedicalSupplier -->
+            <div *ngIf="user.data.role == SUPPLIER_ROLE">
+              <div class="notification-body" *ngIf="msgsSupplier.length > 0">
+                <div *ngFor="let msg of msgsSupplier">
+                  <li (click)="LoadConfirmPage()" (mouseenter)="SetIsReadNotification(msg.id, user.data.role)" nz-row nz-menu-item
+                    [ngStyle]="{'background-color': msg.isRead? 'inherit' : '#e0e0e0'}"
+                    style="border-bottom: 1px solid white; height: 100px;"  class="z-depth-1">
+                    <div nz-col nzMd nzSpan="24" class="noti-content">
+                      <span>{{msg.content}}</span>
+                    </div>
+                    <div nz-col nzMd nzSpan="24" class="noti-date">
+                      <span>{{msg.dateCreated | date: 'HH:mm dd/MM/yyyy'}}</span>
+                    </div>
+                  </li>
+                </div>
               </div>
+              <div class="no-notification-body" *ngIf="msgsSupplier.length == 0">No notification</div>
             </div>
-            <div class="no-notification-body" *ngIf="msgs.length == 0">No notification</div>
+            <div *ngIf="user.data.role == CHIEFNURSE_ROLE">
+              <div class="notification-body" *ngIf="msgsChiefNurse.length > 0">
+                <div *ngFor="let msg of msgsChiefNurse">
+                  <li (mouseenter)="SetIsReadNotification(msg.id, user.data.role)" nz-row nz-menu-item
+                    [ngStyle]="{'background-color': msg.isRead? 'inherit' : '#e0e0e0'}" class="z-depth-1">
+                    <div nz-col nzMd nzSpan="24" style="font-size: 16px; white-space: pre-wrap; height: 60px;">
+                      <span>{{msg.content}}</span>
+                    </div>
+                    <div nz-col nzMd nzSpan="24" style="white-space: pre-wrap; margin-top: 5px; 
+                    font-size: 12px; height: 20px; display: flex; justify-items: flex-end; justify-content: flex-end">
+                      <span>{{msg.dateCreated | date: 'HH:mm dd/MM/yyyy'}}</span>
+                    </div>
+                    <!-- <span style="float: right; font-size: 10px;">{{msg.dateCreated | date: 'HH : mm dd/MM/yyyy'}}</span> -->
+                  </li>
+                </div>
+              </div>
+              <div class="no-notification-body" *ngIf="msgsChiefNurse.length == 0">No notification</div>
+            </div>
           </ul>
         </nz-dropdown>
         <nz-dropdown *ngIf="user?.data" class="user-dropdown">
@@ -67,8 +98,8 @@
       </div>
     </nz-content>
     <nz-footer style="background: #e0e0e0; color: #004d40; font-weight: bold">
-        Surgery Management System (eBSMS) - 
-        Made by Surgery Project Team
+      Surgery Management System (eBSMS) -
+      Made by Surgery Project Team
     </nz-footer>
   </nz-layout>
 </nz-layout>

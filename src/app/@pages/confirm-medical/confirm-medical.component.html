@@ -11,6 +11,7 @@
     <th [nzDisabled]="listData.length === 0" nzShowCheckbox [(nzChecked)]="isAllCheck"
         (nzCheckedChange)="checkAll($event)"
         [nzIndeterminate]="isAllCheck"></th>
+    <th>No</th>
     <th>Patient Name</th>
     <th>Surgery Name</th>
     <th>Day Created</th>
@@ -19,14 +20,15 @@
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let data of rowSelectionTable.data">
+  <tr ng-repeat="data in rowSelectionTable.data" *ngFor="let data of rowSelectionTable.data">
     <td nzShowCheckbox [(nzChecked)]="mapOfCheckedId[data.id]" (nzCheckedChange)="checkItem()"></td>
+    <td>{{data.index}}</td>
     <td>{{data.patientName}}</td>
     <td>{{data.surgeryName}}</td>
     <td>{{data.createdDate | date: 'dd/MM/yyyy'}}</td>
     <!-- <td>N/A</td> -->
     <td class="text-center">
-      <button nz-button nzType="primary" (click)="state.isShow = true"><i nz-icon type="info-circle"></i></button>
+      <button nz-button nzType="primary" (click)="state.isShow = true; createSupplyList(data)"><i nz-icon type="info-circle"></i></button>
     </td>
   </tr>
   </tbody>
@@ -47,7 +49,42 @@
       Detail
     </ng-template>
     <ng-template #modalContent>
-     
+      <!-- <nz-table #suppliesDetail nzBordered [nzShowPagination]="true" [nzShowSizeChanger]="true" [nzLoading]="state.load"
+        [nzData]="supplyList" [nzNoResult]="noData">
+        <thead>
+          <tr>
+            <th>Supply Name</th>
+            <th>Quantity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of suppliesDetail.data">
+            <td>{{data.supplyName}}</td>
+            <td>{{data.quantity}}</td>
+          </tr>
+        </tbody>
+      </nz-table> -->
+
+      <div class="col-12 row">
+          <div class="col-12 row">
+            <div class="col-9">
+                <span class="font-weight-bold">Supply Name</span>
+            </div>
+            <div class="col-3">
+                  <span class="font-weight-bold">Quantity</span>
+            </div>
+          </div>
+        </div>
+        <div *ngFor="let data of supplyList" class="col-12 row">
+          <div class="col-12 row">
+            <div class="col-9">
+                <span>{{data.supplyName}}</span>
+            </div>
+            <div class="col-3">
+                <span>{{data.quantity}}</span>
+            </div>
+          </div>
+        </div>
     </ng-template>
     <ng-template #modalFooter>
       <button nz-button nzType="default" (click)="state.isShow = false">Close</button>

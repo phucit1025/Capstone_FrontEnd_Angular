@@ -1,11 +1,11 @@
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { ScheduleService } from '../../page-services/schedule.service';
-import { combineLatest } from 'rxjs';
-import { GLOBAL } from '../../global';
-import { DurationComponent } from './duration/duration.component';
-import { NzMessageService } from 'ng-zorro-antd';
-import { SwalComponent } from '@toverux/ngx-sweetalert2';
+import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
+import {Component, OnInit, ViewChild, OnDestroy} from '@angular/core';
+import {ScheduleService} from '../../page-services/schedule.service';
+import {combineLatest} from 'rxjs';
+import {GLOBAL} from '../../global';
+import {DurationComponent} from './duration/duration.component';
+import {NzMessageService} from 'ng-zorro-antd';
+import {SwalComponent} from '@toverux/ngx-sweetalert2';
 import swal from 'sweetalert2';
 import * as moment from 'moment';
 
@@ -33,6 +33,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   selectedTime: any;
   selectedRoom: any;
   selectedBed: any;
+  roomType: any;
   selected = {
     firstShiftId: null,
     secondShiftId: null
@@ -60,6 +61,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     this.getSchedule();
     this.createEmergencyForm();
     this.getServerTime();
+
   }
 
   ngOnDestroy() {
@@ -68,39 +70,26 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     }
   }
 
-  loadSlotRoom() {
-    this.state.loadSlotRoom = true;
-    const arraySlot = [];
-    this.schedule.getSlotRooms().subscribe((rooms: any) => {
-      rooms.forEach(room => {
-        room.slotRooms.forEach(slot => {
-          arraySlot.push(slot);
-        });
-      });
-      this.slotRooms = arraySlot;
-      this.state.loadSlotRoom = false;
-    }, er => this.state.loadSlotRoom = false);
-  }
-
   disabledStartDate = (startValue: Date): boolean => {
     if (!startValue || !this.emergencyForm.controls['endTime'].value) {
       return false;
     }
     return startValue.getTime() >= this.emergencyForm.controls['endTime'].value.getTime() || startValue.getTime() <= (new Date()).getTime();
-  }
+  };
 
   disabledEndDate = (endValue: Date): boolean => {
     if (!endValue || !this.emergencyForm.controls['startTime'].value) {
       return false;
     }
     return endValue.getTime() <= this.emergencyForm.controls['startTime'].value.getTime();
-  }
+  };
 
   createEmergencyForm() {
     this.emergencyForm = this.fb.group({
       startTime: new FormControl(new Date(), Validators.required),
       endTime: new FormControl(new Date(), [Validators.required]),
       isForceAdd: new FormControl(false),
+      isEmergency: new FormControl(true),
       slotRoomId: new FormControl()
     });
   }
@@ -132,7 +121,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   showLoader() {
-    this.loadingId = this.messageService.loading('Action in progress', { nzDuration: 0 }).messageId;
+    this.loadingId = this.messageService.loading('Action in progress', {nzDuration: 0}).messageId;
   }
 
   removeLoader() {
@@ -143,9 +132,12 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   getSchedule(date?: any) {
+    this.state.searchText = null;
+    this.state.selectedStatus = [];
     this.state.load = true;
     this.schedule.getSlotRooms().subscribe((rooms: any) => {
       this.rooms = rooms;
+      
       if (rooms && rooms.length > 0) {
         rooms.forEach(room => {
           this.scheduleForEachRoom(room, GLOBAL.convertDate(date ? date : this.date));
@@ -160,6 +152,12 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       this.state.reload = false;
     }
     const array = [];
+    //-------------Specialty--------------//
+    this.schedule.getSpecialtyByRoomId(room.id).subscribe((specialties: any) => {
+      room['specialties'] = specialties;
+    });
+    //-----------------------------------
+
     // Convert list roomId to list api function
     room.slotRooms.map(slot => {
       array.push(this.schedule.getSurgeryShiftsByRoomAndDate(slot.id, date));
@@ -168,7 +166,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     result.subscribe(res => {
       room.slotRooms.forEach((slot, index) => {
         slot['surgeries'] = res[index];
-        var shiftId;
+        let shiftId;
         for (let i = 0; i < slot['surgeries'].length; i++) {
           shiftId = slot['surgeries'][i].id;
           this.schedule.checkStatusPreviousSurgeryShift(shiftId).subscribe((result: any) => {
@@ -318,10 +316,12 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         this.selectedTime = new Date(data.estimatedEndDateTime);
         this.selectedRoom = null;
         this.selectedBed = null;
+        this.roomType = '3';
         break;
-      case 'Postoperative': break;
+      case 'Postoperative':
+        break;
     }
-    this.checkActualEndTime();
+    // this.checkActualEndTime();
   }
 
   startShift() {
@@ -330,7 +330,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         case 'Preoperative':
           const Pdate = moment(this.date).format('YYYY-MM-DD');
           const Ptime = moment(this.selectedTime).format('HH:mm');
-  
+
           this.schedule.setIntraoperativeStatus({
             shiftId: this.selectedObject.id,
             time: Pdate + ' ' + Ptime
@@ -358,6 +358,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
           if (roomPost) {
             data.roomPost = roomPost;
           }
+          data.roomType = this.roomType;
           this.schedule.setPostoperativeStatus(GLOBAL.parseUrlString(data)).subscribe(sc => {
             this.schedule.refreshSurgeryShift(this.selectedObject.id).subscribe();
             this.messageService.success('Change Successful');
@@ -369,7 +370,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
             this.messageService.error('Change Fail');
           });
           break;
-        case 'Postoperative': break;
+        case 'Postoperative':
+          break;
       }
     }
   }
@@ -377,8 +379,20 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   checkActualEndTime() {
     const selectedDate = new Date(this.selectedTime);
     const serverDate = new Date(this.serverTime);
-    this.actualEndTimeError = (serverDate.getHours() * 60 + serverDate.getMinutes())
-    - (selectedDate.getHours() * 60 + selectedDate.getMinutes()) > 0;
+    // this.actualEndTimeError = (serverDate.getHours() * 60 + serverDate.getMinutes())
+    //   - (selectedDate.getHours() * 60 + selectedDate.getMinutes()) > 0;
+    this.actualEndTimeError = false;
+  }
+
+  countResult(rooms) {
+    if (!rooms || rooms[0] === -1) {
+      return 0;
+    }
+    return rooms.reduce((count, room) => {
+      return room.slotRooms.reduce((countSlot, slot) => {
+        return countSlot += slot.surgeries.length;
+      }, count);
+    }, 0);
   }
   createBasicNotification(): void {
     this.notification.blank(

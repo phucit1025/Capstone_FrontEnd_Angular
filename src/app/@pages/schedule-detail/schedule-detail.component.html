@@ -179,7 +179,10 @@
 <div *ngIf="data" class="text-right">
   <ng-container [ngSwitch]="data.statusName">
     <ng-container *ngSwitchCase="'Postoperative'">
-      <button (click)="openStartShift()" nz-button nzType="primary" class="mr-2">Finish Surgery Shift</button>
+      <button (click)="showConfirm()" nz-button nzType="primary" class="mr-2">Finish Surgery Shift</button>
+    </ng-container>
+    <ng-container *ngSwitchCase="'Recovery'">
+      <button (click)="showConfirm()" nz-button nzType="primary" class="mr-2">Finish Surgery Shift</button>
     </ng-container>
     <ng-container *ngSwitchCase="'Intraoperative'">
       <button (click)="openStartShift()" nz-button nzType="primary" class="mr-2">Complete Surgery Shift</button>
@@ -248,9 +251,6 @@
     </div>
   </ng-template>
 </nz-modal>
-<!-- Treatment Report -->
-<!-- Assign Nurse Modal -->
-
 
 <nz-modal [(nzVisible)]="state.showStatusModal" [nzTitle]="startTitle" [nzContent]="startContent"
   [nzFooter]="startFooter" (nzOnCancel)="state.showStatusModal = false">
@@ -267,6 +267,17 @@
     </label>
     <nz-time-picker [nzFormat]="'HH:mm'" [(ngModel)]="selected.selectedTime"></nz-time-picker>
     <div *ngIf="data?.statusName === 'Intraoperative'" class="row">
+      <div class="col-12">
+        <nz-form-item>
+          <nz-form-label><b>Room Type</b></nz-form-label>
+          <nz-form-control>
+              <nz-radio-group [(ngModel)]="selected.roomType">
+                  <label nz-radio-button nzValue="3">Intensive Care</label>
+                  <label nz-radio-button nzValue="4">Recovery</label>
+                </nz-radio-group>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
       <div class="col-6">
         <nz-form-item>
           <nz-form-label><b>Room</b></nz-form-label>
@@ -292,3 +303,4 @@
       [nzLoading]="state.loadChangeStatus">{{data?.statusName === 'Preoperative' ? 'Save' : 'Complete'}}</button>
   </ng-template>
 </nz-modal>
+

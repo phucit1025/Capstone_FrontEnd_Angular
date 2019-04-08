@@ -1,7 +1,7 @@
 <ng-container *ngIf="data.statusName === 'Preoperative' && !swapMode;else noDrag">
   <div draggable [dragScope]="parentId + ''" [dragData]="data" [class.preoperative]="data.statusName === 'Preoperative'"
     [class.intraoperative]="data.statusName === 'Intraoperative'"
-    [class.postoperative]="data.statusName === 'Postoperative'" class="d-inline-block surgery mb-3 ">
+    [class.postoperative]="data.statusName === 'Postoperative' || data.statusName === 'Recovery' || data.statusName === 'Finished'" class="d-inline-block surgery mb-3 ">
     <nz-card>
       <div class="d-flex">
         <p style="width: 100%" class="text-center" [nzTitle]="tooltipTemplate" nzPlacement="topCenter" nz-tooltip>
@@ -20,7 +20,7 @@
       </div>
       <div *ngIf="!swapMode" class="row">
         <div [class.col-4]="data.statusName === 'Preoperative'" [class.col-6]="data.statusName === 'Intraoperative'"
-          [class.col-12]="data.statusName === 'Postoperative' || data.statusName === 'Finished'" class="pl-0 pr-1">
+          [class.col-12]="data.statusName === 'Postoperative' || data.statusName === 'Recovery' || data.statusName === 'Finished'" class="pl-0 pr-1">
           <button (click)="redirect()" style="width: 100%" nz-button nzType="primary">
             Detail
           </button>
@@ -30,12 +30,12 @@
             Change
           </button>
         </div>
-        <div *ngIf="data.isStart == true && data.statusName !== 'Postoperative' && data.statusName !== 'Finished'" class="pl-1 pr-0"
+        <div *ngIf="data.isStart == true && data.statusName !== 'Postoperative' && data.statusName !== 'Recovery' && data.statusName !== 'Finished'" class="pl-1 pr-0"
           [class.col-4]="data.statusName === 'Preoperative'" [class.col-6]="data.statusName === 'Intraoperative'">
           <button [class.ant-btn-primary]="data.statusName === 'Preoperative'"
             [class.btn-third]="data.statusName === 'Intraoperative'" (click)="changeStatus()" style="width: 100%"
             nz-button nzType="default">
-            {{data.statusName === 'Preoperative' ? 'Begin' : 'Finish'}}
+            {{data.statusName === 'Preoperative' ? 'Begin' : 'Complete'}}
           </button>
         </div>
       </div>
@@ -52,7 +52,7 @@
 <ng-template #noDrag>
   <div [class.preoperative]="data.statusName === 'Preoperative'"
     [class.intraoperative]="data.statusName === 'Intraoperative'"
-    [class.postoperative]="data.statusName === 'Postoperative'" class="d-inline-block surgery mb-3 ">
+    [class.postoperative]="data.statusName === 'Postoperative' || data.statusName === 'Recovery' || data.statusName === 'Finished'" class="d-inline-block surgery mb-3 ">
     <nz-card>
       <div class="d-flex">
         <p style="width: 100%" class="text-center" [nzTitle]="tooltipTemplate" nzPlacement="topCenter" nz-tooltip>
@@ -72,7 +72,7 @@
       </div>
       <div *ngIf="!swapMode" class="row">
         <div [class.col-4]="data.statusName === 'Preoperative'" [class.col-6]="data.statusName === 'Intraoperative'"
-          [class.col-12]="data.statusName === 'Postoperative' || data.statusName === 'Finished'" class="pl-0 pr-1">
+          [class.col-12]="data.statusName === 'Postoperative' || data.statusName === 'Recovery' || data.statusName === 'Finished'" class="pl-0 pr-1">
           <button (click)="redirect()" style="width: 100%" nz-button nzType="primary">
             Detail
           </button>
@@ -82,12 +82,12 @@
             Change
           </button>
         </div>
-        <div *ngIf="data.statusName !== 'Postoperative' && data.statusName !== 'Finished'" class="pl-1 pr-0"
+        <div *ngIf="data.statusName !== 'Postoperative' && data.statusName !== 'Recovery' && data.statusName !== 'Finished'" class="pl-1 pr-0"
           [class.col-4]="data.statusName === 'Preoperative'" [class.col-6]="data.statusName === 'Intraoperative'">
           <button [class.ant-btn-primary]="data.statusName === 'Preoperative'"
             [class.btn-third]="data.statusName === 'Intraoperative'" (click)="changeStatus()" style="width: 100%"
             nz-button nzType="default">
-            {{data.statusName === 'Preoperative' ? 'Begin' : 'Finish'}}
+            {{data.statusName === 'Preoperative' ? 'Begin' : 'Complete'}}
           </button>
         </div>
       </div>
@@ -109,8 +109,8 @@
       <p>{{data.catalogCode ? data.catalogCode : 'N/A'}}</p>
     </div> -->
     <div class="d-block">
-      <p class="label" style="font-weight: bold">Surgery Name :</p>
-      <p>{{data.catalogName ? data.catalogName : 'N/A'}}</p>
+      <span class="label"><b>Specialty:</b> <br/> {{data.specialtyName ? data.specialtyName : 'N/A'}} </span> <br/>
+      <span class="label"><b>Surgery Name :</b> <br/> {{data.catalogName ? data.catalogName : 'N/A'}}</span>
     </div>
   </div>
 </ng-template>

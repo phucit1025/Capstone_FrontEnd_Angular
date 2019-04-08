@@ -13,6 +13,10 @@ export class ScheduleService {
   constructor(private http: HttpClient) {
   }
 
+  getSpecialtyByRoomId(roomId) {
+    return this.http.get(GLOBAL.API + this.name + `/GetSpecialtyByRoomId?roomId=${roomId}`);
+  }
+
   getSlotRooms() {
     return this.http.get(GLOBAL.API + this.name + '/GetSlotRooms');
   }
@@ -145,7 +149,7 @@ export class ScheduleService {
     return this.http.post(GLOBAL.API + this.name + `/RefreshSurgeryShift?shiftId=${id}`, {});
   }
   checkStatusPreviousSurgeryShift(shiftId) {
-    return this.http.get(GLOBAL.API + this.name + `/CheckStatusPreviousSurgeryShift?shiftId=${shiftId}`)
+    return this.http.get(GLOBAL.API + this.name + `/CheckStatusPreviousSurgeryShift?shiftId=${shiftId}`);
   }
 
   deleteTreatmentReport(id) {
