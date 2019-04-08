@@ -97,7 +97,7 @@
       <ng-container *ngFor="let room of rooms | roomPipe: state.searchText | statusPipe: state.selectedStatus">
         <div *ngIf="room !== -1" class="date">
           <!-- Room header -->
-          <div class="room-name">
+          <div class="room-name" [ngStyle]="{'background-color': room.name === 'Emergency' ? '#CC0000' : '#128475'}" >
             <div class="rotate">
               {{room.name}}
               <span class="quantity">( {{room.slotRooms ? room.slotRooms.length : 0}} Slots)</span>
