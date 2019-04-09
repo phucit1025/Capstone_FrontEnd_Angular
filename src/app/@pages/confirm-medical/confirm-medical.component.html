@@ -13,9 +13,9 @@
         [nzIndeterminate]="isAllCheck"></th>
     <th>No</th>
     <th>Patient Name</th>
+    <th>Specialty</th>
     <th>Surgery Name</th>
     <th>Day Created</th>
-    <!-- <th>Medical Supply</th> -->
     <th>View Detail</th>
   </tr>
   </thead>
@@ -24,6 +24,7 @@
     <td nzShowCheckbox [(nzChecked)]="mapOfCheckedId[data.id]" (nzCheckedChange)="checkItem()"></td>
     <td>{{data.index}}</td>
     <td>{{data.patientName}}</td>
+    <td>{{data.specialtyName}}</td>
     <td>{{data.surgeryName}}</td>
     <td>{{data.createdDate | date: 'dd/MM/yyyy'}}</td>
     <!-- <td>N/A</td> -->

@@ -62,11 +62,10 @@
                 <div *ngFor="let msg of msgsChiefNurse">
                   <li (mouseenter)="SetIsReadNotification(msg.id, user.data.role)" nz-row nz-menu-item
                     [ngStyle]="{'background-color': msg.isRead? 'inherit' : '#e0e0e0'}" class="z-depth-1">
-                    <div nz-col nzMd nzSpan="24" style="font-size: 16px; white-space: pre-wrap; height: 60px;">
+                    <div nz-col nzMd nzSpan="24" class="noti-content">
                       <span>{{msg.content}}</span>
                     </div>
-                    <div nz-col nzMd nzSpan="24" style="white-space: pre-wrap; margin-top: 5px; 
-                    font-size: 12px; height: 20px; display: flex; justify-items: flex-end; justify-content: flex-end">
+                    <div nz-col nzMd nzSpan="24" class="noti-date">
                       <span>{{msg.dateCreated | date: 'HH:mm dd/MM/yyyy'}}</span>
                     </div>
                     <!-- <span style="float: right; font-size: 10px;">{{msg.dateCreated | date: 'HH : mm dd/MM/yyyy'}}</span> -->
