@@ -213,16 +213,16 @@
 
  
   <nz-dropdown [nzPlacement]="'topRight'">
-    <button nz-button nzType="default" nz-dropdown (click)="exportSurgery()"><span>Export Surgery Report</span> <i nz-icon type="up"></i></button>
+    <button nz-button nzType="default" nz-dropdown><span>Export Surgery Report</span> <i nz-icon type="up"></i></button>
     <ul nz-menu>
       <li nz-menu-item>
-        <a>1st menu item</a>
+        <a (click)="exportSurgery(1)">Export Surgical Record</a>
       </li>
       <li nz-menu-item>
-        <a>2nd menu item</a>
+        <a (click)="exportSurgery(2)">Export Healthcare Report</a>
       </li>
       <li nz-menu-item>
-        <a>3rd menu item</a>
+        <a (click)="exportSurgery(3)">Export Medical Supplies Report</a>
       </li>
     </ul>
   </nz-dropdown>

@@ -379,8 +379,8 @@ searchSupply(value: string): void {
     }, er => this.state.loadHealthcare = false);
   }
 
-  exportSurgery(){
-    this.schedule.exportSurgery(this.data.id);
+  exportSurgery(type){
+    this.schedule.exportSurgery(this.data.id, type);
   }
 
   showConfirm(): void {
