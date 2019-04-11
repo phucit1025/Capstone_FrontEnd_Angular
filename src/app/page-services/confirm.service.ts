@@ -27,4 +27,8 @@ export class ConfirmMedicalService {
   notifyMessage() {
     return this.http.get(GLOBAL.API + 'MessageNotification/GetAllNotification');
   }
+
+  assignEkip() {
+    return this.http.get(GLOBAL.API + 'Schedule/AssignEkip');
+  }
 }
