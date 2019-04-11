@@ -33,7 +33,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   selectedTime: any;
   selectedRoom: any;
   selectedBed: any;
-  roomType: any;
+  statusId: any;
   selected = {
     firstShiftId: null,
     secondShiftId: null
@@ -316,7 +316,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         this.selectedTime = new Date(data.estimatedEndDateTime);
         this.selectedRoom = null;
         this.selectedBed = null;
-        this.roomType = '3';
+        this.statusId = '3';
         break;
       case 'Postoperative':
         break;
@@ -358,7 +358,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
           if (roomPost) {
             data.roomPost = roomPost;
           }
-          data.roomType = this.roomType;
+          data.statusId = this.statusId;
           this.schedule.setPostoperativeStatus(GLOBAL.parseUrlString(data)).subscribe(sc => {
             this.schedule.refreshSurgeryShift(this.selectedObject.id).subscribe();
             this.messageService.success('Change Successful');
