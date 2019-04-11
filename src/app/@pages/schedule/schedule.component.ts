@@ -18,6 +18,7 @@ import { NzNotificationService } from 'ng-zorro-antd';
 })
 
 export class ScheduleComponent implements OnInit, OnDestroy {
+
   @ViewChild('duration') duration: DurationComponent;
   @ViewChild('moveNodeconfirm') dialog: SwalComponent;
   loadingId: any;
@@ -157,7 +158,15 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       room['specialties'] = specialties;
     });
     //-----------------------------------
-
+    
+    this.schedule.getReportByRoom(room.id, date ? date : GLOBAL.convertDate(this.date))
+    .subscribe((reportRoom : any) => {
+      room['totalShift'] = reportRoom['totalShift'];
+      room['totalPre'] = reportRoom['totalPre'];
+      room['totalIntra'] = reportRoom['totalIntra'];
+      room['totalPost'] = reportRoom['totalPost'];
+    });
+    console.log(room);
     // Convert list roomId to list api function
     room.slotRooms.map(slot => {
       array.push(this.schedule.getSurgeryShiftsByRoomAndDate(slot.id, date));
@@ -166,10 +175,11 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     result.subscribe(res => {
       room.slotRooms.forEach((slot, index) => {
         slot['surgeries'] = res[index];
-        let shiftId;
+        //report
+        let shift;
         for (let i = 0; i < slot['surgeries'].length; i++) {
-          shiftId = slot['surgeries'][i].id;
-          this.schedule.checkStatusPreviousSurgeryShift(shiftId).subscribe((result: any) => {
+          shift = slot['surgeries'][i];
+          this.schedule.checkStatusPreviousSurgeryShift(shift.id).subscribe((result: any) => {
             slot['surgeries'][i]['isStart'] = result;
           });
         }
@@ -393,11 +403,5 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         return countSlot += slot.surgeries.length;
       }, count);
     }, 0);
-  }
-  createBasicNotification(): void {
-    this.notification.blank(
-      'Notification Title',
-      'This is the content of the notification. This is the content of the notification. This is the content of the notification.'
-    );
   }
 }
