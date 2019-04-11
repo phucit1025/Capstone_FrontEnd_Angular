@@ -16,6 +16,10 @@ export class ScheduleService {
   getSpecialtyByRoomId(roomId) {
     return this.http.get(GLOBAL.API + this.name + `/GetSpecialtyByRoomId?roomId=${roomId}`);
   }
+  getReportByRoom(roomId, dayNumber) {
+    return this.http.get(GLOBAL.API + this.name + `/GetReportByRoom?roomId=${roomId}&dayNumber=${dayNumber}`);
+  }
+  
 
   getSlotRooms() {
     return this.http.get(GLOBAL.API + this.name + '/GetSlotRooms');
