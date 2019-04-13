@@ -149,10 +149,16 @@ export class LayoutComponent implements OnInit, OnDestroy {
     }
   }
 
-  LoadConfirmPage(): void {
-    // this.location.back();
-    this.router.navigate(['/pages/confirm-medical']);
-    // this.location.();
+  LoadConfirmPage():void {
+    this.router.navigateByUrl('blank').then(() => {
+      this.router.navigateByUrl('/pages/confirm-medical');
+    });
+  }
+
+  LoadSchedulePage():void {
+    this.router.navigateByUrl('blank').then(() => {
+      this.router.navigateByUrl('/pages/schedule');
+    });
   }
 
   createBasicNotification(): void {

@@ -169,11 +169,11 @@ export class ScheduleService {
     return this.http.get(GLOBAL.API + 'PostOp/GetHealthCareReportBySurgeryShiftId?surgeryShiftId=' + id);
   }
 
-  exportSurgery(id) {
+  exportSurgery(id, type){
     let headers = new HttpHeaders();
     headers = headers.set('Accept', 'application/pdf');
-    return this.http.get(GLOBAL.API + 'PostOp/CreateSurgeryPdf?id=' + id, {headers: headers, responseType: 'blob'})
-      .subscribe((response) => this.downloadFile(response));
+    return this.http.get(GLOBAL.API + `PostOp/CreateSurgeryPdf?id=${id}&type=${type}`,{ headers: headers, responseType: 'blob' })
+    .subscribe((response) => this.downloadFile(response));
   }
 
 

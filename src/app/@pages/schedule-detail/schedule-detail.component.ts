@@ -49,6 +49,7 @@ export class ScheduleDetailComponent implements OnInit {
     showStatusModal: false,
     loadHealthcare: false,
   
+    showSurgeryProfile: false
   };
   surgeryDetail = {
     surgeryProcedure: '',
@@ -351,8 +352,8 @@ searchSupply(value: string): void {
     }, er => this.state.loadHealthcare = false);
   }
 
-  exportSurgery(){
-    this.schedule.exportSurgery(this.data.id);
+  exportSurgery(type){
+    this.schedule.exportSurgery(this.data.id, type);
   }
 
   showConfirm(): void {
@@ -369,5 +370,12 @@ searchSupply(value: string): void {
         this.message.error('Finish Fail');
       }),
     });
+  }
+//Emergency update
+  openSurgeryProfileModal() {
+    this.state.showSurgeryProfile = true;
+  }
+  closeSurgeryProfileModal() {
+    this.state.showSurgeryProfile = false;
   }
 }

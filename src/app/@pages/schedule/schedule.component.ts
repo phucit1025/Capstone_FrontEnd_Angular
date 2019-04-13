@@ -169,12 +169,12 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       room['specialties'] = specialties;
     });
     this.schedule.getReportByRoom(room.id, date ? date : GLOBAL.convertDate(this.date))
-      .subscribe((reportRoom: any) => {
-        room['totalShift'] = reportRoom['totalShift'];
-        room['totalPre'] = reportRoom['totalPre'];
-        room['totalIntra'] = reportRoom['totalIntra'];
-        room['totalPost'] = reportRoom['totalPost'];
-      });
+    .subscribe((reportRoom : any) => {
+      room['totalShift'] = reportRoom['totalShift'];
+      room['totalPre'] = reportRoom['totalPre'];
+      room['totalIntra'] = reportRoom['totalIntra'];
+      room['totalPost'] = reportRoom['totalPost'];
+    });
     // Convert list roomId to list api function
     room.slotRooms.map(slot => {
       array.push(this.schedule.getSurgeryShiftsByRoomAndDate(slot.id, date));
