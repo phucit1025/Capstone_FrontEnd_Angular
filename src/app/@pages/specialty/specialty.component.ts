@@ -45,7 +45,6 @@ export class SpecialtyComponent implements OnInit {
   getSpecialties(callback: any) {
     this.state.load = true;
     this.specialty.getSpecialties().subscribe((response: any[]) => {
-      console.log(response);
       this.allSpecialtyList = response;
       this.state.load = false;
       this.state.finish = true;
@@ -56,7 +55,6 @@ export class SpecialtyComponent implements OnInit {
   getSpecialityGroups() {
     this.state.load = true;
     this.specialty.getSpecialtyGroups().subscribe((response: any[]) => {
-      console.log(response);
       this.specialtyGroups = response;
       this.state.load = false;
       this.state.finish = true;

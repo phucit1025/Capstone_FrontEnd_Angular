@@ -146,7 +146,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       this.rooms = rooms;
       if (rooms && rooms.length > 0) {
         rooms.forEach(room => {
-          console.log(room.specialtyGroupId);
           if (room.specialtyGroupId !== null && this.groupsId.map(el => el.id).indexOf(room.specialtyGroupId) === -1) {
             this.groupsId.push({
               id: room.specialtyGroupId,
