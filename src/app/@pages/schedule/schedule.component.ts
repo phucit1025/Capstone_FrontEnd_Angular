@@ -9,7 +9,7 @@ import {SwalComponent} from '@toverux/ngx-sweetalert2';
 import swal from 'sweetalert2';
 import * as moment from 'moment';
 
-import { NzNotificationService } from 'ng-zorro-antd';
+import {NzNotificationService} from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-schedule',
@@ -18,7 +18,6 @@ import { NzNotificationService } from 'ng-zorro-antd';
 })
 
 export class ScheduleComponent implements OnInit, OnDestroy {
-
   @ViewChild('duration') duration: DurationComponent;
   @ViewChild('moveNodeconfirm') dialog: SwalComponent;
   loadingId: any;
@@ -36,6 +35,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   selectedBed: any;
   statusId: any;
   selected = {
+    specialtyGroupId: null,
     firstShiftId: null,
     secondShiftId: null
   };
@@ -53,8 +53,14 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     selectedStatus: [],
   };
   slotRooms: any;
+  groupsId = [];
   actualEndTimeError = false;
-  constructor(private notification: NzNotificationService, private schedule: ScheduleService, private messageService: NzMessageService, private fb: FormBuilder) {
+
+  constructor(
+    private notification: NzNotificationService,
+    private schedule: ScheduleService,
+    private messageService: NzMessageService,
+    private fb: FormBuilder) {
   }
 
   ngOnInit() {
@@ -138,9 +144,15 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     this.state.load = true;
     this.schedule.getSlotRooms().subscribe((rooms: any) => {
       this.rooms = rooms;
-      
       if (rooms && rooms.length > 0) {
         rooms.forEach(room => {
+          console.log(room.specialtyGroupId);
+          if (room.specialtyGroupId !== null && this.groupsId.map(el => el.id).indexOf(room.specialtyGroupId) === -1) {
+            this.groupsId.push({
+              id: room.specialtyGroupId,
+              name: room.specialtyGroupName
+            });
+          }
           this.scheduleForEachRoom(room, GLOBAL.convertDate(date ? date : this.date));
         });
       }
@@ -153,34 +165,30 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       this.state.reload = false;
     }
     const array = [];
-    //-------------Specialty--------------//
     this.schedule.getSpecialtyByRoomId(room.id).subscribe((specialties: any) => {
       room['specialties'] = specialties;
     });
-    //-----------------------------------
-    
     this.schedule.getReportByRoom(room.id, date ? date : GLOBAL.convertDate(this.date))
-    .subscribe((reportRoom : any) => {
-      room['totalShift'] = reportRoom['totalShift'];
-      room['totalPre'] = reportRoom['totalPre'];
-      room['totalIntra'] = reportRoom['totalIntra'];
-      room['totalPost'] = reportRoom['totalPost'];
-    });
-    console.log(room);
+      .subscribe((reportRoom: any) => {
+        room['totalShift'] = reportRoom['totalShift'];
+        room['totalPre'] = reportRoom['totalPre'];
+        room['totalIntra'] = reportRoom['totalIntra'];
+        room['totalPost'] = reportRoom['totalPost'];
+      });
     // Convert list roomId to list api function
     room.slotRooms.map(slot => {
       array.push(this.schedule.getSurgeryShiftsByRoomAndDate(slot.id, date));
     });
+
     const result = combineLatest(array);
     result.subscribe(res => {
       room.slotRooms.forEach((slot, index) => {
         slot['surgeries'] = res[index];
-        //report
-        let shift;
+        let shiftId;
         for (let i = 0; i < slot['surgeries'].length; i++) {
-          shift = slot['surgeries'][i];
-          this.schedule.checkStatusPreviousSurgeryShift(shift.id).subscribe((result: any) => {
-            slot['surgeries'][i]['isStart'] = result;
+          shiftId = slot['surgeries'][i].id;
+          this.schedule.checkStatusPreviousSurgeryShift(shiftId).subscribe((rs: any) => {
+            slot['surgeries'][i]['isStart'] = rs;
           });
         }
       });
@@ -240,6 +248,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   disabled() {
     this.state.swapMode = false;
     this.selected = {
+      specialtyGroupId: null,
       firstShiftId: null,
       secondShiftId: null
     };
@@ -253,6 +262,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         this.messageService.create('success', `<p style='padding: 10px 0; font-weight: bold'><b>Swap successful</b></p>`);
         this.getSchedule(this.date);
         this.selected = {
+          specialtyGroupId: null,
           firstShiftId: null,
           secondShiftId: null
         };
@@ -403,5 +413,12 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         return countSlot += slot.surgeries.length;
       }, count);
     }, 0);
+  }
+
+  createBasicNotification(): void {
+    this.notification.blank(
+      'Notification Title',
+      'This is the content of the notification. This is the content of the notification. This is the content of the notification.'
+    );
   }
 }

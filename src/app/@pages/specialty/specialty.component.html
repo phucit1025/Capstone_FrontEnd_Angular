@@ -1,0 +1,166 @@
+<div class="pos-relative">
+  <div nz-row class="w-full mb-2">
+    <div nz-col nzMd nzSpan="24" style="text-align: center">
+      <h2>Specialty</h2>
+    </div>
+  </div>
+  <!-- Loading -->
+  <div *ngIf="state.load" class="container" style="text-align: center">
+    <nz-spin class="isLoad" [nzSize]="'large'"></nz-spin>
+  </div>
+  <!-- Content -->
+  <ng-container *ngIf="!state.load && state.finish">
+    <div class="row">
+      <div class="col-6">
+        <div class="content-wrapper">
+          <h5 class="title">
+            Specialty Groups
+            <button
+              class="btn-add"
+              nz-button
+              nzType="default"
+              (click)="isShowCreateModal = true; creatingObject = 'Specialty Group'; objectName = ''">
+              +
+            </button>
+          </h5>
+          <div class="card-wrapper z-depth-2">
+            <nz-table
+              [nzData]="specialtyGroups">
+              <tbody>
+                <tr *ngFor="let row of specialtyGroups">
+                  <td
+                    (click)="selectedSpecialtyGroupName = row.name; selectSpecialtyGroup(row.specialtyGroupId)">
+                    {{row.name}}
+                    <i nz-icon nzType="question-circle" nzTheme="outline"></i>
+                  </td>
+                  <td style="width: 100px;">
+                    <button
+                      *ngIf="row.name !== 'Emergency'"
+                      nz-button
+                      nzType="default"
+                      (click)="selectedSpecialtyGroupName = row.name; openAddMoreModal(row.specialtyGroupId)">
+                      Add more
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </div>
+        </div>
+
+        <!-- Modal Add Specialty to Group -->
+        <nz-modal
+          [(nzVisible)]="isShowAddMoreModal"
+          [nzWidth]="'600px'"
+          [nzTitle]="startTitle"
+          [nzContent]="startContent"
+          [nzFooter]="startFooter"
+          (nzOnCancel)="isShowAddMoreModal = false">
+          <ng-template #startTitle>
+            Add Specialties to {{selectedSpecialtyGroupName}}
+          </ng-template>
+
+          <ng-template #startContent>
+            <nz-select
+            style="width: 100%;"
+            nzMode="multiple"
+            [(ngModel)]="selectedSpecialties"
+            nzPlaceHolder="Select specialties"
+            nzAllowClear
+            nzShowSearch>
+              <ng-container *ngFor="let opt of filteredSpecialtyList">
+                <nz-option
+                  [nzValue]="opt.id"
+                  [nzLabel]="opt.name">
+                </nz-option>
+              </ng-container>
+            </nz-select>
+          </ng-template>
+
+          <ng-template #startFooter>
+            <button
+              nz-button
+              nzType="default"
+              (click)="isShowAddMoreModal = false">
+              Cancel
+            </button>
+            <button
+              nz-button
+              nzType="primary"
+              (click)="setSpecialtyToGroup()">
+              Add
+            </button>
+          </ng-template>
+        </nz-modal>
+      </div>
+      <div class="col-6">
+        <div class="content-wrapper">
+          <h5 class="title">
+            {{selectedSpecialtyGroupName ? selectedSpecialtyGroupName : 'Specialty'}}
+            <button
+              class="btn-add"
+              nz-button
+              nzType="default"
+              (click)="isShowCreateModal = true; creatingObject = 'Specialty'; objectName = ''">
+              +
+            </button>
+          </h5>
+          <div class="card-wrapper z-depth-2">
+            <nz-table
+              *ngIf="selectedSpecialtyGroupName"
+              [nzData]="groupSpecialtyList">
+              <tbody>
+                <tr *ngFor="let row of groupSpecialtyList">
+                  <td>{{row.name}}</td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <!-- Loader -->
+  <div *ngIf="loadingId" class="backdrop pos-absolute top-0 left-0 right-0 bottom-0"
+       style="background: rgba(0,0,0,.5); z-index: 1000">
+  </div>
+</div>
+
+<!-- Modal Create -->
+<nz-modal
+  [(nzVisible)]="isShowCreateModal"
+  [nzWidth]="'600px'"
+  [nzTitle]="startTitle"
+  [nzContent]="startContent"
+  [nzFooter]="startFooter"
+  (nzOnCancel)="isShowCreateModal = false">
+  <ng-template #startTitle>
+    Create {{creatingObject}}
+  </ng-template>
+
+  <ng-template #startContent>
+    <input nz-input placeholder="Select a name" [(ngModel)]="objectName"/>
+  </ng-template>
+
+  <ng-template #startFooter>
+    <button
+      nz-button
+      nzType="default"
+      (click)="isShowCreateModal = false">
+      Cancel
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      (click)="createObject()">
+      Create
+    </button>
+  </ng-template>
+</nz-modal>
+
+<!-- Swal -->
+<swal
+  #createErrorSwal
+  type="error"
+  [html]="'This Name Is Being Used !'">
+</swal>

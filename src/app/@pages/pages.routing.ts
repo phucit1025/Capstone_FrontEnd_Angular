@@ -7,6 +7,8 @@ import {ScheduleDetailComponent} from './schedule-detail/schedule-detail.compone
 import {ErrorsComponent} from './errors/errors.component';
 import {AuthGuardService} from '../page-services/auth-guard.service';
 import {ConfirmMedicalComponent} from './confirm-medical/confirm-medical.component';
+import {SpecialtyComponent} from './specialty/specialty.component';
+import {RoomSpecialtyGroupComponent} from './room-specialty-group/room-specialty-group.component';
 
 const routes: Routes = [
   {
@@ -18,11 +20,6 @@ const routes: Routes = [
     canActivate: [AuthGuardService],
     canActivateChild: [AuthGuardService],
     children: [
-      {
-        path: '',
-        redirectTo: 'error',
-        pathMatch: 'full'
-      },
       {
         path: 'import-file',
         component: ImportFileComponent,
@@ -56,11 +53,27 @@ const routes: Routes = [
         },
       },
       {
+        path: 'specialty',
+        component: SpecialtyComponent,
+        data: {
+          roles: ['ChiefNurse'],
+          title: 'Specialty'
+        }
+      },
+      {
         path: 'error',
         component: ErrorsComponent,
         data: {
           roles: [],
           title: 'Error'
+        },
+      },
+      {
+        path: 'room-specialty-group',
+        component: RoomSpecialtyGroupComponent,
+        data: {
+          roles: ['ChiefNurse'],
+          title: 'Room Specialty Group'
         },
       },
     ]

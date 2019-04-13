@@ -17,6 +17,8 @@ import {SweetAlert2Module} from '@toverux/ngx-sweetalert2';
 import {ConfirmMedicalComponent} from './confirm-medical/confirm-medical.component';
 import {TreatmentComponent} from './schedule-detail/treatment/treatment.component';
 import {StatusPipe} from '../pipe/status.pipe';
+import { SpecialtyComponent } from './specialty/specialty.component';
+import {RoomSpecialtyGroupComponent} from './room-specialty-group/room-specialty-group.component';
 
 registerLocaleData(en);
 
@@ -32,7 +34,9 @@ registerLocaleData(en);
     ScheduleDetailComponent,
     ErrorsComponent,
     ConfirmMedicalComponent,
-    TreatmentComponent
+    TreatmentComponent,
+    SpecialtyComponent,
+    RoomSpecialtyGroupComponent
   ],
   imports: [
     CommonModule,

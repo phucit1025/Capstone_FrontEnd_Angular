@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { GLOBAL } from '../global';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {GLOBAL} from '../global';
 import * as FileSaver from 'file-saver';
 
 @Injectable({
@@ -16,19 +16,19 @@ export class ScheduleService {
   getSpecialtyByRoomId(roomId) {
     return this.http.get(GLOBAL.API + this.name + `/GetSpecialtyByRoomId?roomId=${roomId}`);
   }
-  getReportByRoom(roomId, dayNumber) {
-    return this.http.get(GLOBAL.API + this.name + `/GetReportByRoom?roomId=${roomId}&dayNumber=${dayNumber}`);
-  }
-  
 
   getSlotRooms() {
-    return this.http.get(GLOBAL.API + this.name + '/GetSlotRooms');
+    return this.http.get(GLOBAL.API + this.name + '/GetSurgeryRooms');
+  }
+
+  getReportByRoom(id, date) {
+    return this.http.get(GLOBAL.API + this.name + '/GetReportByRoom?roomId=' + id + '&dayNumber=' + date);
   }
 
   getSurgeryShiftsByRoomAndDate(slotRoomId, dayNumber) {
     return this.http.get(GLOBAL.API + this.name + '/GetSurgeryShiftsByRoomAndDate',
       {
-        params: { slotRoomId: slotRoomId, dayNumber: dayNumber }
+        params: {slotRoomId: slotRoomId, dayNumber: dayNumber}
       });
   }
 
@@ -152,6 +152,7 @@ export class ScheduleService {
   refreshSurgeryShift(id) {
     return this.http.post(GLOBAL.API + this.name + `/RefreshSurgeryShift?shiftId=${id}`, {});
   }
+
   checkStatusPreviousSurgeryShift(shiftId) {
     return this.http.get(GLOBAL.API + this.name + `/CheckStatusPreviousSurgeryShift?shiftId=${shiftId}`);
   }
@@ -164,33 +165,33 @@ export class ScheduleService {
     return this.http.post(GLOBAL.API + 'PostOp/EditTreatmentReport', data);
   }
 
-  getHealthcareReport(id){
+  getHealthcareReport(id) {
     return this.http.get(GLOBAL.API + 'PostOp/GetHealthCareReportBySurgeryShiftId?surgeryShiftId=' + id);
   }
 
-  exportSurgery(id){
+  exportSurgery(id) {
     let headers = new HttpHeaders();
     headers = headers.set('Accept', 'application/pdf');
-    return this.http.get(GLOBAL.API + 'PostOp/CreateSurgeryPdf?id=' + id,{ headers: headers, responseType: 'blob' })
-    .subscribe((response) => this.downloadFile(response));
+    return this.http.get(GLOBAL.API + 'PostOp/CreateSurgeryPdf?id=' + id, {headers: headers, responseType: 'blob'})
+      .subscribe((response) => this.downloadFile(response));
   }
 
 
   /**
-  * Method is use to download file.
-  * @param data - Array Buffer data
-  * @param type - type of the document.
-  */
+   * Method is use to download file.
+   * @param data - Array Buffer data
+   * @param type - type of the document.
+   */
   downloadFile(data: any) {
-    var blob = new Blob([data], { type: "application/pdf" } );
-    FileSaver.saveAs(blob, "SurgeryExport");
+    var blob = new Blob([data], {type: 'application/pdf'});
+    FileSaver.saveAs(blob, 'SurgeryExport');
   }
 
-  searchDrug(value){
-    return this.http.get<Array<{  id: number; name: string; unit: string }>>(GLOBAL.API + `Drug/SearchDrugOnQuery?q=${value}`);
+  searchDrug(value) {
+    return this.http.get<Array<{ id: number; name: string; unit: string }>>(GLOBAL.API + `Drug/SearchDrugOnQuery?q=${value}`);
   }
-  
+
   searchSupply(value) {
-    return this.http.get<Array<{  medicalSupplyId: number; medicalSupplyName: string}>>(GLOBAL.API + `Utils/GetMedicalSupplyOnQuery?q=${value}`);
+    return this.http.get<Array<{ medicalSupplyId: number; medicalSupplyName: string }>>(GLOBAL.API + `Utils/GetMedicalSupplyOnQuery?q=${value}`);
   }
 }

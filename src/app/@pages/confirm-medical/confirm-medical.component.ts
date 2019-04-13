@@ -1,6 +1,6 @@
-import { NzMessageService } from 'ng-zorro-antd';
-import { Component, OnInit } from '@angular/core';
-import { ConfirmMedicalService } from '../../page-services/confirm.service';
+import {NzMessageService} from 'ng-zorro-antd';
+import {Component, OnInit} from '@angular/core';
+import {ConfirmMedicalService} from '../../page-services/confirm.service';
 import {NotificationService} from '../../page-services/notification.service';
 
 @Component({
@@ -19,8 +19,8 @@ export class ConfirmMedicalComponent implements OnInit {
   pageIndex = 0;
   supplyList = [];
 
-  constructor(private confirmMedical: ConfirmMedicalService, 
-    private message: NzMessageService, private notificationService: NotificationService) {
+  constructor(private confirmMedical: ConfirmMedicalService,
+              private message: NzMessageService, private notificationService: NotificationService) {
   }
 
   ngOnInit() {
@@ -28,12 +28,8 @@ export class ConfirmMedicalComponent implements OnInit {
   }
 
   loadAll() {
-    var countIndex = 1;
     this.state.load = true;
     this.confirmMedical.getAll().subscribe((list: any) => {
-      list.forEach(ls => {
-        ls['index'] = countIndex++;
-      })
       this.listData = list;
       this.state.load = false;
     });
@@ -63,7 +59,7 @@ export class ConfirmMedicalComponent implements OnInit {
   confirm() {
     if (this.isActive()) {
       const data = this.getCheckedItem().map(el => {
-        return { id: el.id };
+        return {id: el.id};
       });
       if (data && data.length > 0) {
         this.state.load = true;
@@ -74,8 +70,10 @@ export class ConfirmMedicalComponent implements OnInit {
           this.state.load = false;
           this.message.success('Confirm Success');
           this.confirmMedical.makeScheduleList().subscribe(mRes => {
-            this.notificationService.getTmpNotification('ChiefNurse').subscribe(re => {}); //notify
-            this.confirmMedical.assignEkip().subscribe(re => {}); //assign ekip
+            this.notificationService.getTmpNotification('ChiefNurse').subscribe(re => {
+            }); //notify
+            this.confirmMedical.assignEkip().subscribe(re => {
+            }); //assign ekip
           });
         }, er => {
           this.state.load = false;
@@ -84,7 +82,8 @@ export class ConfirmMedicalComponent implements OnInit {
       }
     }
   }
-  createSupplyList(data){
+
+  createSupplyList(data) {
     this.supplyList = data.medicalSupplies;
   }
 }

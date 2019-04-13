@@ -1,7 +1,7 @@
-import { ScheduleService } from './../../../page-services/schedule.service';
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Router } from '@angular/router';
-import { NzMessageService } from 'ng-zorro-antd';
+import {ScheduleService} from './../../../page-services/schedule.service';
+import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Router} from '@angular/router';
+import {NzMessageService} from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-schedule-card',
@@ -13,6 +13,7 @@ export class ScheduleCardComponent implements OnInit, AfterViewInit {
   @Input() swapMode;
   @Input() selected;
   @Input() parentId;
+  @Input() groupId;
 
   @Output() swapModeChange = new EventEmitter();
   @Output() selectedChange = new EventEmitter();
@@ -52,7 +53,9 @@ export class ScheduleCardComponent implements OnInit, AfterViewInit {
   }
 
   canDisabled() {
-    return (this.selected.firstShiftId
+    return (this.selected.specialtyGroupId === null
+      || this.selected.specialtyGroupId !== this.groupId
+      || this.selected.firstShiftId
       && this.selected.secondShiftId
       && this.data.id !== this.selected.firstShiftId
       && this.data.id !== this.selected.secondShiftId);

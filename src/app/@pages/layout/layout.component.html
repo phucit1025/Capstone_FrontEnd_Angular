@@ -22,7 +22,7 @@
         <i class="trigger" style="cursor: pointer" nz-icon [type]="isCollapsed?'menu-unfold':'menu-fold'"
           (click)="isCollapsed=!isCollapsed"></i>
         <div class="mr-auto"></div>
-        <nz-dropdown [nzPlacement]="'bottomRight'" [nzTrigger]="'click'" style="margin-right: 30px">
+        <nz-dropdown *ngIf="user.data" [nzPlacement]="'bottomRight'" [nzTrigger]="'click'" style="margin-right: 30px">
           <a *ngIf="user.data.role == 'HospitalStaff'" nz-dropdown>
             <nz-badge><i class="far fa-bell fa-2x"></i></nz-badge>
           </a>

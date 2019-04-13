@@ -1,0 +1,46 @@
+<nz-table *ngIf="!state.load" #basicTable [nzData]="state.data">
+  <thead>
+  <tr>
+    <th>No</th>
+    <th>Room Name</th>
+    <th>Group Name</th>
+    <th>Action</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let data of basicTable.data; let i = index">
+    <td>{{i + 1}}</td>
+    <td>{{data.name}}</td>
+    <td>{{data.groupName}}</td>
+    <td [width]="70" class="text-right">
+      <button nz-button nzType="default" (click)="createForm(data.id, data.groupId); state.visible = true">
+        {{data.groupId ? 'Set Group' : 'Change Group'}}
+      </button>
+    </td>
+  </tr>
+  </tbody>
+</nz-table>
+<div *ngIf="state.load" class="d-flex justify-content-center">
+  <nz-spin nzSimple></nz-spin>
+</div>
+
+<nz-modal [(nzVisible)]="state.visible" nzTitle="Group" (nzOnCancel)="state.visible = false"
+          [nzFooter]="null"
+          (nzOnOk)="submit()">
+  <nz-spin [nzSpinning]="group.loadForm">
+    <form *ngIf="group.form" [formGroup]="group.form" (ngSubmit)="submit()">
+      <label>Group</label>
+      <div class="mt-0">
+        <nz-select *ngIf="!group.loadSelect" style="width: 100%" formControlName="specialtyGroupId" nzLoading
+                   [nzDisabled]="group.loadSelect">
+          <nz-option *ngFor="let gr of group.data" [nzValue]="gr.specialtyGroupId" [nzLabel]="gr.name"></nz-option>
+        </nz-select>
+        <nz-select *ngIf="group.loadSelect" style="width: 100%" nzLoading [nzDisabled]="group.loadSelect">
+        </nz-select>
+      </div>
+      <div class="text-right">
+        <button [disabled]="group.loadSelect || group.loadForm" class="mt-4" nz-button nzType="primary" type="submit">Save</button>
+      </div>
+    </form>
+  </nz-spin>
+</nz-modal>
