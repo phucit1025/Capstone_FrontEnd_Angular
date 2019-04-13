@@ -1,11 +1,11 @@
-import { GLOBAL } from './../../global';
-import { NzMessageService, NzModalService } from 'ng-zorro-antd';
-import { FormBuilder, FormControl, Validators, FormArray } from '@angular/forms';
-import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { ScheduleService } from '../../page-services/schedule.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import {GLOBAL} from './../../global';
+import {NzMessageService, NzModalService} from 'ng-zorro-antd';
+import {FormBuilder, FormControl, Validators, FormArray} from '@angular/forms';
+import {Component, OnInit, ViewChild, ChangeDetectionStrategy} from '@angular/core';
+import {ScheduleService} from '../../page-services/schedule.service';
+import {ActivatedRoute, Router} from '@angular/router';
 import * as moment from 'moment';
-import { TreatmentComponent } from './treatment/treatment.component';
+import {TreatmentComponent} from './treatment/treatment.component';
 
 @Component({
   selector: 'app-schedule-detail',
@@ -14,7 +14,7 @@ import { TreatmentComponent } from './treatment/treatment.component';
   preserveWhitespaces: false
 })
 export class ScheduleDetailComponent implements OnInit {
-  @ViewChild(TreatmentComponent) treatment : TreatmentComponent;
+  @ViewChild(TreatmentComponent) treatment: TreatmentComponent;
 
   id: number;
   detailSchedule: any;
@@ -36,19 +36,19 @@ export class ScheduleDetailComponent implements OnInit {
     load: true,
     loadGetSupply: false,
     loadEditSurgery: false,
-    
+
     loadAllSupply: false,
     loadChangeStatus: false,
     loadAllDrug: false,
-   
+
     loadAddSupply: false,
     loadSaveProcedure: false,
     editMode: false,
     showAddSupply: false,
-    
+
     showStatusModal: false,
     loadHealthcare: false,
-  
+
     showSurgeryProfile: false
   };
   surgeryDetail = {
@@ -57,7 +57,7 @@ export class ScheduleDetailComponent implements OnInit {
     supplyForm: null,
     supplyUsed: []
   };
-  
+
   healthcareDetail = {
     healthcareReport: []
   };
@@ -66,7 +66,7 @@ export class ScheduleDetailComponent implements OnInit {
   };
 
   constructor(private message: NzMessageService, private schedule: ScheduleService,
-    private router: Router, private route: ActivatedRoute, private fb: FormBuilder, private modalService: NzModalService) {
+              private router: Router, private route: ActivatedRoute, private fb: FormBuilder, private modalService: NzModalService) {
     route.params.subscribe(params => {
       this.id = params.id;
       this.getDetail(params.id);
@@ -80,25 +80,25 @@ export class ScheduleDetailComponent implements OnInit {
     this.createNewForm();
   }
 
-nzFilterOption = () => true;
+  nzFilterOption = () => true;
 
-trackByFnSupply(index, item){
-  return item ? item.medicalSupplyId : undefined;
-}
-
-searchSupply(value: string): void {
-  value.trim();
-  if (value != "") {
-    this.schedule.searchSupply(value)
-    .subscribe(data => {
-      console.log(data);
-      this.common.supplies = data.map(item => ({
-        medicalSupplyId: item.medicalSupplyId,
-        medicalSupplyName: item.medicalSupplyName,
-      }));
-    }, er => console.log(er));
+  trackByFnSupply(index, item) {
+    return item ? item.medicalSupplyId : undefined;
   }
-}
+
+  searchSupply(value: string): void {
+    value.trim();
+    if (value != '') {
+      this.schedule.searchSupply(value)
+        .subscribe(data => {
+          console.log(data);
+          this.common.supplies = data.map(item => ({
+            medicalSupplyId: item.medicalSupplyId,
+            medicalSupplyName: item.medicalSupplyName,
+          }));
+        }, er => console.log(er));
+    }
+  }
 
   createNewForm() {
     this.surgeryDetail.supplyForm = this.fb.group({
@@ -108,29 +108,29 @@ searchSupply(value: string): void {
     this.patchFormSupplyArray(this.surgeryDetail.supplyUsed);
   }
 
-  patchFormSupplyArray(supply){
+  patchFormSupplyArray(supply) {
     this.common.supplies = supply;
     let ctrl = this.surgeryDetail.supplyForm.controls.listSupply;
     if (supply.length == 0) {
       ctrl.push(this.fb.group({
-        id : new FormControl(0, Validators.required),
+        id: new FormControl(0, Validators.required),
         medicalSupplyId: new FormControl(null, Validators.required),
         quantity: new FormControl(1, [Validators.required, Validators.min(1)])
       }));
     }
     supply.map(x => {
       ctrl.push(this.fb.group({
-        id : new FormControl(x.id, Validators.required),
+        id: new FormControl(x.id, Validators.required),
         medicalSupplyId: new FormControl(x.medicalSupplyId, Validators.required),
         quantity: new FormControl(x.quantity, [Validators.required, Validators.min(1)])
       }));
     });
   }
 
-  pushDeleteSupplyId(id){
+  pushDeleteSupplyId(id) {
     console.log(id);
-      let ctrl = this.surgeryDetail.supplyForm.controls.deleteMedicalSupplyIds;
-      ctrl.push(new FormControl(id));
+    let ctrl = this.surgeryDetail.supplyForm.controls.deleteMedicalSupplyIds;
+    ctrl.push(new FormControl(id));
   }
 
   getSupply(id) {
@@ -162,7 +162,8 @@ searchSupply(value: string): void {
   getEkipMember(id) {
     this.schedule.getEkipMember(id).subscribe(res => {
       this.data.ekipMember = res;
-    }, er => { });
+    }, er => {
+    });
   }
 
   getDetail(id) {
@@ -203,7 +204,7 @@ searchSupply(value: string): void {
   deleteFormSupply(index: number) {
     const array = this.surgeryDetail.supplyForm.get('listSupply') as FormArray;
     array.removeAt(index);
-  } 
+  }
 
   submitAddSupplyForm() {
     if (this.surgeryDetail.supplyForm.valid && this.surgeryDetail.supplyForm.value.listSupply.length > 0) {
@@ -214,9 +215,9 @@ searchSupply(value: string): void {
       });
 
       let data = {
-        shiftMedicals : finalData,
-        deleteMedicalSupplyIds : this.surgeryDetail.supplyForm.value.deleteMedicalSupplyIds
-      }
+        shiftMedicals: finalData,
+        deleteMedicalSupplyIds: this.surgeryDetail.supplyForm.value.deleteMedicalSupplyIds
+      };
 
       this.schedule.addUsedMedicalSupply(data).subscribe(res => {
         this.state.loadAddSupply = false;
@@ -260,7 +261,7 @@ searchSupply(value: string): void {
         this.selected.statusId = '3';
         break;
       case 'Postoperative':
-      this.state.showStatusModal = true;
+        this.state.showStatusModal = true;
         this.selected.selectedRoom = null;
         this.selected.selectedBed = null;
         this.selected.statusId = '4';
@@ -286,7 +287,7 @@ searchSupply(value: string): void {
         }, er => {
           this.message.error('Change Fail');
           this.state.loadChangeStatus = false;
-        })
+        });
         break;
       case 'Intraoperative':
         const date = moment(this.data.endTime).format('YYYY-MM-DD');
@@ -309,7 +310,7 @@ searchSupply(value: string): void {
         }, er => {
           this.message.error('Change Fail');
           this.state.loadChangeStatus = false;
-        })
+        });
         break;
       case 'Postoperative':
         const bedPost = this.selected.selectedBed;
@@ -338,7 +339,7 @@ searchSupply(value: string): void {
         }, er => {
           this.message.error('Change Fail');
           this.state.loadChangeStatus = false;
-        })
+        });
         break;
     }
 
@@ -352,14 +353,14 @@ searchSupply(value: string): void {
     }, er => this.state.loadHealthcare = false);
   }
 
-  exportSurgery(type){
+  exportSurgery(type) {
     this.schedule.exportSurgery(this.data.id, type);
   }
 
   showConfirm(): void {
     const data = {
       shiftId: this.data.id,
-    }
+    };
     this.modalService.confirm({
       nzTitle: '<i>Do you want to finish this surgery shift?</i>',
       nzContent: '<b>This surgery shift will be finished.</b>',
@@ -371,10 +372,12 @@ searchSupply(value: string): void {
       }),
     });
   }
+
 //Emergency update
   openSurgeryProfileModal() {
     this.state.showSurgeryProfile = true;
   }
+
   closeSurgeryProfileModal() {
     this.state.showSurgeryProfile = false;
   }

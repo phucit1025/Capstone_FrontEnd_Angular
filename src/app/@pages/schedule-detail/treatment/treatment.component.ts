@@ -1,8 +1,8 @@
-import { NzMessageService } from 'ng-zorro-antd';
-import { FormBuilder, FormControl, Validators, FormArray } from '@angular/forms';
-import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
-import { ScheduleService } from './../../../page-services/schedule.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import {NzMessageService} from 'ng-zorro-antd';
+import {FormBuilder, FormControl, Validators, FormArray} from '@angular/forms';
+import {Component, OnInit, Input, ChangeDetectorRef} from '@angular/core';
+import {ScheduleService} from './../../../page-services/schedule.service';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-treatment',
@@ -10,10 +10,10 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./treatment.component.css']
 })
 export class TreatmentComponent implements OnInit {
-  @Input() id:number;
-  @Input() data:any;
+  @Input() id: number;
+  @Input() data: any;
   mapOfExpandData: { [key: string]: boolean } = {};
-  state={
+  state = {
     loadTreatment: false,
     loadAddTreatment: false,
     treatmentMode: null as 'Edit' | 'Create',
@@ -30,7 +30,7 @@ export class TreatmentComponent implements OnInit {
     treatmentForm: null,
     assignForm: null,
   };
-  drugs: Array<{  id: number; name: string; unit: string }> = [];
+  drugs: Array<{ id: number; name: string; unit: string }> = [];
   common = {
     nurses: []
   };
@@ -42,35 +42,35 @@ export class TreatmentComponent implements OnInit {
   };
 
   constructor(private message: NzMessageService, private schedule: ScheduleService,
-    private router: Router, private route: ActivatedRoute, private fb: FormBuilder,
-    private changeDetector: ChangeDetectorRef) {
+              private router: Router, private route: ActivatedRoute, private fb: FormBuilder,
+              private changeDetector: ChangeDetectorRef) {
   }
 
   ngOnInit() {
   }
 
-  trackByFn(index, item){
+  trackByFn(index, item) {
     return item ? item.id : undefined;
   }
-  
+
   nzFilterOption = () => true;
 
   searchDrug(value: string): void {
     value.trim();
-    if (value != "") {
+    if (value != '') {
       this.schedule.searchDrug(value)
-      .subscribe(data => {
-        console.log(data);
-        this.drugs = data.map(item => ({
+        .subscribe(data => {
+          console.log(data);
+          this.drugs = data.map(item => ({
             id: item.id,
             name: item.name,
             unit: item.unit,
-        }));
-        this.drugs = [...this.drugs];
-        this.changeDetector.detectChanges();
-        console.log(this.drugs);
-      }, er => console.log(er));
-   
+          }));
+          this.drugs = [...this.drugs];
+          this.changeDetector.detectChanges();
+          console.log(this.drugs);
+        }, er => console.log(er));
+
     }
   }
 
@@ -108,7 +108,7 @@ export class TreatmentComponent implements OnInit {
       this.state.assignedForNurse = true;
     }, er => this.state.loadGetNurse = false);
   }
-  
+
   setUnit(id, index) {
     const data = this.drugs.filter(drug => drug.id === id);
     this.treatmentDetail.treatmentForm.get('treatmentReportDrugs').controls[index].controls['unit'].patchValue(id ? data[0].unit : null);
@@ -149,7 +149,7 @@ export class TreatmentComponent implements OnInit {
       }, er => {
         this.message.error('Edit Fail!!!');
         this.state.loadAddTreatment = false;
-      }); 
+      });
     }
   }
 
@@ -166,7 +166,7 @@ export class TreatmentComponent implements OnInit {
     });
   }
 
-  deleteTreatment(id){
+  deleteTreatment(id) {
     this.state.loadAddTreatment = true;
     this.schedule.deleteTreatmentReport(id).subscribe(() => {
       this.state.showTreatmentReport = false;
@@ -175,25 +175,25 @@ export class TreatmentComponent implements OnInit {
       this.getTreatment(this.id);
     }, er => {
       this.message.error('Delete Fail');
-       this.state.loadAddTreatment = false;
+      this.state.loadAddTreatment = false;
     });
   }
 
   createEditFormTreatment(data) {
     console.log(data);
     this.treatmentDetail.treatmentForm = this.fb.group({
-      id:  new FormControl(data.id),
+      id: new FormControl(data.id),
       progressiveDisease: new FormControl(data.progressiveDisease),
       shiftId: new FormControl(this.id),
       treatmentReportDrugs: this.fb.array([]),
       deleteTreatmentReportId: this.fb.array([]),
     });
     this.patchFormDrugArray(data.treatmentReportDrugs);
-    this.state.showTreatmentReport = true; 
+    this.state.showTreatmentReport = true;
     this.state.treatmentMode = 'Edit';
   }
 
-  pushDeleteTreatmentReportId(id){
+  pushDeleteTreatmentReportId(id) {
     console.log(id);
     if (this.state.treatmentMode === 'Edit') {
       let ctrl = this.treatmentDetail.treatmentForm.controls.deleteTreatmentReportId;
@@ -203,11 +203,11 @@ export class TreatmentComponent implements OnInit {
 
   patchFormDrugArray(data) {
     let drugs = data.map(d => ({
-        id : d.drugId,
-        name : d.name,
-        unit : d.unit
+      id: d.drugId,
+      name: d.name,
+      unit: d.unit
     }));
-    this.drugs = drugs
+    this.drugs = drugs;
     let ctrl = this.treatmentDetail.treatmentForm.controls.treatmentReportDrugs;
     return data.map(x => {
       ctrl.push(this.fb.group({
@@ -218,7 +218,7 @@ export class TreatmentComponent implements OnInit {
         eveningQuantity: new FormControl(x.eveningQuantity, [Validators.required, Validators.min(0)]),
         nightQuantity: new FormControl(x.nightQuantity, [Validators.required, Validators.min(0)]),
         unit: new FormControl(x.unit, Validators.required),
-      }))
+      }));
     });
   }
 

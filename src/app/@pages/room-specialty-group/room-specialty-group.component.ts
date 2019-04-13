@@ -65,6 +65,7 @@ export class RoomSpecialtyGroupComponent implements OnInit {
     this.specialtySV.setRoomToGroup(this.group.form.value).subscribe(sc => {
       this.messageSV.success('Change Group Successful');
       this.group.loadForm = false;
+      this.loadRoom();
     }, er => {
       this.group.loadForm = false;
       this.messageSV.error('Change Group Fail!!!');
