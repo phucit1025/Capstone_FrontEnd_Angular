@@ -86,8 +86,9 @@
       <div nz-col nzMd nzSpan="12">
         <div style="float: right">
           <label class="mr-2"><b>Status : </b></label>
-          <nz-tag [nzColor]="'#a5d6a7'">Proceeding</nz-tag>
-          <nz-tag [nzColor]="'#9e9e9e'">Completed</nz-tag>
+          <nz-tag [nzColor]="'#e1f5fe'"><span style="color: black; font-weight: bold">Preparing</span></nz-tag>
+          <nz-tag [nzColor]="'#a5d6a7'"><span style="color: black; font-weight: bold">Proceeding</span></nz-tag>
+          <nz-tag [nzColor]="'#9e9e9e'"><span style="color: black; font-weight: bold">Completed</span></nz-tag>
         </div>
       </div>
     </div>
@@ -105,9 +106,18 @@
           </div>
           <!-- Room-slot -->
           <div class="slot-group-container">
-            <!-- <div class="slot">Specialty
-              <div *ngFor="let specialty of room.specialties">- {{specialty}}</div>
-            </div> -->
+            <div class="slot" style="background: #a5d6a7">
+              <div class="specialty-container"> 
+                <div class="room-report">
+                  <span class="badge badge-custom">Total</span>: {{room.totalShift}} shift(s) <br/>
+                  <span class="badge badge-custom room-status" style="background: #E1F5FE">Preparing</span>: {{room.totalPre}}  shift(s) <br/>
+                  <span class="badge badge-custom room-status" style="background: #A5D6A7">Proceeding</span>: {{room.totalIntra}} shift(s) <br/>
+                  <span class="badge badge-custom room-status" style="background: #9E9E9E">Completed</span>: {{room.totalPost}} shift(s) <br/>
+                </div>
+                <div nz-menu-divider></div>
+                <div *ngFor="let specialty of room.specialties">- {{specialty}}</div>
+              </div>
+            </div>
             <div class="slot z-depth-2" *ngFor="let slot of room.slotRooms">
               <!-- <div class="slot-name">
                 {{slot.name}}
@@ -182,7 +192,7 @@
               </nz-form-item>
             </div>
           </div>
-          <div nz-row>
+          <!-- <div nz-row>
             <div nz-col nzSpan="12">
               <nz-form-item>
                 <nz-form-control>
@@ -203,7 +213,7 @@
                 </nz-form-control>
               </nz-form-item>
             </div>
-          </div>
+          </div> -->
         </form>
       </nz-spin>
     </ng-template>
@@ -233,41 +243,30 @@
 <nz-modal [(nzVisible)]="isShowStartModal" [nzTitle]="startTitle" [nzContent]="startContent" [nzFooter]="startFooter"
           (nzOnCancel)="startItem = null; isShowStartModal = false">
   <ng-template #startTitle>
-    Change Intraoperative Status
+    Change Status
   </ng-template>
 
   <ng-template #startContent>
-    <p><b>Surgery Shift:</b> {{selectedObject?.id}} </p>
-    <p *ngIf="!selectedObject?.actualStartDateTime"><b>Estimated Start
-      Datetime:</b> {{selectedObject?.estimatedStartDateTime | date: 'dd/MM/yyyy - HH:mm'}} </p>
-    <p *ngIf="selectedObject?.actualStartDateTime"><b>Start
-      Datetime:</b> {{selectedObject?.actualStartDateTime | date: 'dd/MM/yyyy - HH:mm'}} </p>
-    <p *ngIf="!selectedObject?.actualEndDateTime"><b>Estimated End
-      Datetime:</b> {{selectedObject?.estimatedEndDateTime | date: 'dd/MM/yyyy - HH:mm'}}</p>
-    <p *ngIf="selectedObject?.actualEndDateTime"><b>Estimated End
-      Datetime:</b> {{selectedObject?.actualEndDateTime | date: 'dd/MM/yyyy - HH:mm'}}</p>
-    <label class="mr-2">
-      <b>Actual {{selectedObject?.statusName === 'Preoperative' ? 'Start' : 'End'}} Time:</b>
-    </label>
-    <nz-time-picker [nzFormat]="'HH:mm'" [(ngModel)]="selectedTime"
-                    (ngModelChange)="checkActualEndTime()"></nz-time-picker>
-    <span
-      style="color: red; padding-left: 10px;"
-      *ngIf="actualEndTimeError">
-      Invalid time
-    </span>
-    <div *ngIf="selectedObject?.statusName === 'Intraoperative'" class="row">
-      <div class="col-12">
-        <nz-form-item>
-          <nz-form-label><b>Room Type</b></nz-form-label>
-          <nz-form-control>
-              <nz-radio-group [(ngModel)]="roomType">
-                  <label nz-radio-button nzValue="3">Intensive Care</label>
-                  <label nz-radio-button nzValue="4">Recovery</label>
-                </nz-radio-group>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
+    <div *ngIf="selectedObject?.statusName === 'Intraoperative' || selectedObject?.statusName === 'Preoperative' ">
+      <p><b>Surgery Shift:</b> {{selectedObject?.id}} </p>
+      <p *ngIf="!selectedObject?.actualStartDateTime"><b>Estimated Start
+          Datetime:</b> {{selectedObject?.estimatedStartDateTime | date: 'dd/MM/yyyy - HH:mm'}} </p>
+      <p *ngIf="selectedObject?.actualStartDateTime"><b>Start
+          Datetime:</b> {{selectedObject?.actualStartDateTime | date: 'dd/MM/yyyy - HH:mm'}} </p>
+      <p *ngIf="!selectedObject?.actualEndDateTime"><b>Estimated End
+          Datetime:</b> {{selectedObject?.estimatedEndDateTime | date: 'dd/MM/yyyy - HH:mm'}}</p>
+      <p *ngIf="selectedObject?.actualEndDateTime"><b>Estimated End
+          Datetime:</b> {{selectedObject?.actualEndDateTime | date: 'dd/MM/yyyy - HH:mm'}}</p>
+      <label class="mr-2">
+        <b>Actual {{selectedObject?.statusName === 'Preoperative' ? 'Start' : 'End'}} Time:</b>
+      </label>
+      <nz-time-picker [nzFormat]="'HH:mm'" [(ngModel)]="selectedTime" (ngModelChange)="checkActualEndTime()">
+      </nz-time-picker>
+      <span style="color: red; padding-left: 10px;" *ngIf="actualEndTimeError">
+        Invalid time
+      </span>
+    </div>
+    <div *ngIf="selectedObject?.statusName === 'Postoperative'" class="row">
       <div class="col-6">
         <nz-form-item>
           <nz-form-label><b>Room</b></nz-form-label>

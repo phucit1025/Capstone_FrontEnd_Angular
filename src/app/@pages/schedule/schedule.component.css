@@ -102,3 +102,21 @@
   border: 1px solid black;
   color: black;
 }
+
+.specialty-container {
+  height: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+  background: #b9f6ca;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.room-report .badge-custom {
+  font-size: 15px;
+  box-shadow: none !important;
+  color: black !important;
+}
+.room-status {
+  margin: 5px;
+}

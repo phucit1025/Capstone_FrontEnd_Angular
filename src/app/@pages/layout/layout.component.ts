@@ -18,6 +18,7 @@ import {HubConnection, HubConnectionBuilder} from '@aspnet/signalr';
 })
 export class LayoutComponent implements OnInit, OnDestroy {
   HOST = 'https://localhost:44372/';
+  // HOST = 'http://172.20.10.7:5000/';
   SUPPLIER_ROLE = 'MedicalSupplier';
   CHIEFNURSE_ROLE = 'ChiefNurse';
 
@@ -124,9 +125,15 @@ export class LayoutComponent implements OnInit, OnDestroy {
   }
 
   LoadConfirmPage():void {
-    // this.location.back();
-    this.router.navigate(['/pages/confirm-medical']);
-    // this.location.();
+    this.router.navigateByUrl('blank').then(() => {
+      this.router.navigateByUrl('/pages/confirm-medical');
+    });
+  }
+
+  LoadSchedulePage():void {
+    this.router.navigateByUrl('blank').then(() => {
+      this.router.navigateByUrl('/pages/schedule');
+    });
   }
 
   createBasicNotification(): void {

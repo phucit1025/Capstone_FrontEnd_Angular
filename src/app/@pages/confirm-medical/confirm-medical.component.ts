@@ -75,6 +75,7 @@ export class ConfirmMedicalComponent implements OnInit {
           this.message.success('Confirm Success');
           this.confirmMedical.makeScheduleList().subscribe(mRes => {
             this.notificationService.getTmpNotification('ChiefNurse').subscribe(re => {}); //notify
+            this.confirmMedical.assignEkip().subscribe(re => {}); //assign ekip
           });
         }, er => {
           this.state.load = false;

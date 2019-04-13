@@ -30,7 +30,7 @@ export class ScheduleDetailComponent implements OnInit {
     selectedTime: null,
     selectedBed: null,
     selectedRoom: null,
-    roomType: null,
+    statusId: null,
   };
   state = {
     load: true,
@@ -49,6 +49,7 @@ export class ScheduleDetailComponent implements OnInit {
     showStatusModal: false,
     loadHealthcare: false,
   
+    showSurgeryProfile: false
   };
   surgeryDetail = {
     surgeryProcedure: '',
@@ -63,6 +64,8 @@ export class ScheduleDetailComponent implements OnInit {
   common = {
     supplies: [],
   };
+  messageInfo: any;
+  currentStatus: any;
 
   constructor(private message: NzMessageService, private schedule: ScheduleService,
     private router: Router, private route: ActivatedRoute, private fb: FormBuilder, private modalService: NzModalService) {
@@ -77,6 +80,9 @@ export class ScheduleDetailComponent implements OnInit {
     // this.loadAllSupply();
     this.treatment.loadAllNurse();
     this.createNewForm();
+
+    
+    
   }
 
 nzFilterOption = () => true;
@@ -172,6 +178,30 @@ searchSupply(value: string): void {
       this.detailSchedule = res;
       this.state.load = false;
       this.data = res;
+      switch (this.data.statusName) {
+        case "Preoperative":
+          this.messageInfo = "This patient is preparing for surgery";
+          this.currentStatus = 0;
+          break;
+        case "Intraoperative":
+          this.messageInfo = "This patient is undergoing surgery";
+          this.currentStatus = 1;
+          break;
+        case "Postoperative":
+          this.messageInfo = "This patient is taking recovery to consciousness";
+          this.currentStatus = 2;
+          break;
+        case "Recovery":
+          this.messageInfo = "This patient is taking recovery";
+          this.currentStatus = 3;
+          break;
+  
+        default:
+          this.messageInfo = "This surgey shift is finished";
+          this.currentStatus = 4;
+          break;
+      }
+      console.log(this.messageInfo);
       console.log(res);
       this.getSupply(res.id);
       this.getEkipMember(res.id);
@@ -256,11 +286,14 @@ searchSupply(value: string): void {
       case 'Intraoperative':
         this.state.showStatusModal = true;
         this.selected.selectedTime = new Date(this.data.endTime);
+        this.selected.statusId = '3';
+        break;
+      case 'Postoperative':
+      this.state.showStatusModal = true;
         this.selected.selectedRoom = null;
         this.selected.selectedBed = null;
-        this.selected.roomType = '3';
+        this.selected.statusId = '4';
         break;
-      case 'Postoperative': break;
     }
   }
 
@@ -287,19 +320,11 @@ searchSupply(value: string): void {
       case 'Intraoperative':
         const date = moment(this.data.endTime).format('YYYY-MM-DD');
         const time = moment(this.selected.selectedTime).format('HH:mm');
-        const bedPost = this.selected.selectedBed;
-        const roomPost = this.selected.selectedRoom;
         const data = {
           actualEndDateTime: date + ' ' + time,
           shiftId: this.data.id
         } as any;
-        if (bedPost) {
-          data.bedPost = bedPost;
-        }
-        if (roomPost) {
-          data.roomPost = roomPost;
-        }
-        data.roomType = this.selected.roomType;
+        data.statusId = this.selected.statusId;
         console.log(GLOBAL.parseUrlString(data));
         this.state.loadChangeStatus = true;
         this.schedule.setPostoperativeStatus(GLOBAL.parseUrlString(data)).subscribe(sc => {
@@ -315,7 +340,34 @@ searchSupply(value: string): void {
           this.state.loadChangeStatus = false;
         })
         break;
-      case 'Postoperative': break;
+      case 'Postoperative':
+        const bedPost = this.selected.selectedBed;
+        const roomPost = this.selected.selectedRoom;
+        const data1 = {
+          shiftId: this.data.id
+        } as any;
+        if (bedPost) {
+          data1.bedPost = bedPost;
+        }
+        if (roomPost) {
+          data1.roomPost = roomPost;
+        }
+        data1.statusId = this.selected.statusId;
+        console.log(GLOBAL.parseUrlString(data1));
+        this.state.loadChangeStatus = true;
+        this.schedule.setPostoperativeStatus(GLOBAL.parseUrlString(data1)).subscribe(sc => {
+          this.message.success('Change Successful');
+          this.state.showStatusModal = false;
+          this.selected.selectedBed = null;
+          this.selected.selectedRoom = null;
+          this.selected.selectedTime = null;
+          this.state.loadChangeStatus = false;
+          this.getDetail(this.id);
+        }, er => {
+          this.message.error('Change Fail');
+          this.state.loadChangeStatus = false;
+        })
+        break;
     }
 
   }
@@ -328,8 +380,8 @@ searchSupply(value: string): void {
     }, er => this.state.loadHealthcare = false);
   }
 
-  exportSurgery(){
-    this.schedule.exportSurgery(this.data.id);
+  exportSurgery(type){
+    this.schedule.exportSurgery(this.data.id, type);
   }
 
   showConfirm(): void {
@@ -346,5 +398,12 @@ searchSupply(value: string): void {
         this.message.error('Finish Fail');
       }),
     });
+  }
+//Emergency update
+  openSurgeryProfileModal() {
+    this.state.showSurgeryProfile = true;
+  }
+  closeSurgeryProfileModal() {
+    this.state.showSurgeryProfile = false;
   }
 }

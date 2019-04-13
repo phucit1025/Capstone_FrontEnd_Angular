@@ -16,6 +16,13 @@ export class ScheduleService {
   getSpecialtyByRoomId(roomId) {
     return this.http.get(GLOBAL.API + this.name + `/GetSpecialtyByRoomId?roomId=${roomId}`);
   }
+<<<<<<< HEAD
+=======
+  getReportByRoom(roomId, dayNumber) {
+    return this.http.get(GLOBAL.API + this.name + `/GetReportByRoom?roomId=${roomId}&dayNumber=${dayNumber}`);
+  }
+  
+>>>>>>> 6bb5dd55f1cfb1283ca16fe65fdda967c62e0b9f
 
   getSlotRooms() {
     return this.http.get(GLOBAL.API + this.name + '/GetSlotRooms');
@@ -164,10 +171,10 @@ export class ScheduleService {
     return this.http.get(GLOBAL.API + 'PostOp/GetHealthCareReportBySurgeryShiftId?surgeryShiftId=' + id);
   }
 
-  exportSurgery(id){
+  exportSurgery(id, type){
     let headers = new HttpHeaders();
     headers = headers.set('Accept', 'application/pdf');
-    return this.http.get(GLOBAL.API + 'PostOp/CreateSurgeryPdf?id=' + id,{ headers: headers, responseType: 'blob' })
+    return this.http.get(GLOBAL.API + `PostOp/CreateSurgeryPdf?id=${id}&type=${type}`,{ headers: headers, responseType: 'blob' })
     .subscribe((response) => this.downloadFile(response));
   }
 
