@@ -8,72 +8,79 @@
     <nz-step nzTitle="Finished"></nz-step>
   </nz-steps>
 </div>
-<h2 style="text-align: center; margin-bottom: 50px">Information of Surgery Shift</h2>
+<h2 style="text-align: center">Information of Surgery Shift</h2>
+<h5 style="text-align: center; margin-bottom: 20px">No: {{data?.id}}</h5>
 <nz-spin [nzSpinning]="state.load">
+  <div class="row">
+  </div>
   <div class="row personInfo mb-4">
-    <div class="col-md-6 col-12 d-flex">
-      <div class="label">
-        <b>Patient</b>
-      </div>
-      <p>: {{data?.patientName}}</p>
+    <div class="btn-edit-surgery-profile">
+      <button style="float: right; margin-bottom: 5px" nz-button (click)="openSurgeryProfileModal()">
+        <i class="fas fa-edit"></i>
+      </button>
     </div>
-    <div class="col-md-6 col-12 d-flex">
+    <div class="col-md-6 d-flex">
+      <div class="label">
+        <b>Patient Name</b>
+      </div>
+      <p>: {{data?.patientName ? data?.patientName : 'N/A'}}</p>
+    </div>
+    <div class="col-md-6 d-flex">
       <div class="label">
         <b>Gender</b>
       </div>
-      <p>: {{data?.gender}}</p>
+      <p>: {{data?.gender ? data?.gender : 'N/A'}}</p>
     </div>
-    <div class="col-md-6 col-12 d-flex">
+    <div class="col-md-6 d-flex">
       <div class="label">
         <b>Age</b>
       </div>
-      <p>: {{data?.age}}</p>
+      <p>: {{data?.age ? data?.age : 'N/A'}}</p>
     </div>
-    <div class="col-md-6 col-12 d-flex">
+    <div class="col-md-6 d-flex">
       <div class="label">
         <b>Specialty</b>
       </div>
-      <p>: {{data?.specialty}}</p>
+      <p>: {{data?.specialty ? data?.specialty : 'N/A'}}</p>
     </div>
-    <div class="col-md-6 col-12 d-flex">
+    <div class="col-md-6 d-flex">
       <div class="label">
         <b>Surgery Name</b>
       </div>
-      <p>: {{data?.surgeryName}}</p>
+      <p>: {{data?.surgeryName ? data?.surgeryName : 'N/A'}}</p>
     </div>
-    <div class="col-md-6 col-12 d-flex">
+    <div class="col-md-6 d-flex">
       <div class="label">
         <b>Type Of Surgery</b>
       </div>
-      <p>: {{data?.surgeryType}}</p>
+      <p>: {{data?.surgeryType ? data?.surgeryType : 'N/A'}}</p>
     </div>
-    <div class="col-md-6 col-12 d-flex">
+    <div class="col-md-6 d-flex">
       <div class="label">
         <b>Estimated Start Time</b>
       </div>
-      <p>: {{data?.startTime ? (data.startTime | date: 'dd/MM/yyyy - HH:mm') : 'N/A'}}</p>
+      <p>: {{data?.startTime ? (data.startTime | date: 'HH:mm - dd/MM/yyyy') : 'N/A'}}</p>
     </div>
-    <div class="col-md-6 col-12 d-flex">
+    <div class="col-md-6 d-flex">
       <div class="label">
         <b>Estimated End Time</b>
       </div>
-      <p>: {{data?.endTime ? (data.endTime | date: 'dd/MM/yyyy - HH:mm') : 'N/A'}}</p>
+      <p>: {{data?.endTime ? (data.endTime | date: 'HH:mm - dd/MM/yyyy') : 'N/A'}}</p>
     </div>
-    <div class="col-md-6 col-12 d-flex">
+    <div class="col-md-6 d-flex">
       <div class="label">
         <b>Actual Start Time</b>
       </div>
-      <p>: {{data?.actualStartTime ? (data.actualStartTime | date: 'dd/MM/yyyy - HH:mm') : 'N/A'}}</p>
+      <p>: {{data?.actualStartTime ? (data.actualStartTime | date: 'HH:mm - dd/MM/yyyy') : 'N/A'}}</p>
     </div>
-    <div class="col-md-6 col-12 d-flex">
+    <div class="col-md-6 d-flex">
       <div class="label">
         <b>Actual End Time</b>
       </div>
-      <p>: {{data?.actualEndTime ? (data.actualEndTime | date: 'dd/MM/yyyy - HH:mm') : 'N/A'}}</p>
+      <p>: {{data?.actualEndTime ? (data.actualEndTime | date: 'HH:mm - dd/MM/yyyy') : 'N/A'}}</p>
     </div>
   </div>
 </nz-spin>
-
 <nz-divider></nz-divider>
 
 <nz-collapse [nzBordered]="false">
@@ -221,9 +228,9 @@
       <li nz-menu-item>
         <a (click)="exportSurgery(2)">Export Healthcare Report</a>
       </li>
-      <li nz-menu-item>
+      <!-- <li nz-menu-item>
         <a (click)="exportSurgery(3)">Export Medical Supplies Report</a>
-      </li>
+      </li> -->
     </ul>
   </nz-dropdown>
 </div>
@@ -289,6 +296,7 @@
     Change Status
   </ng-template>
 
+
   <ng-template #startContent>
     <div *ngIf="data?.statusName === 'Intraoperative' || data?.statusName === 'Preoperative' ">
       <p><b>Surgery Shift:</b> {{data?.id}} </p>
@@ -329,4 +337,42 @@
       [nzLoading]="state.loadChangeStatus">{{data?.statusName === 'Preoperative' ? 'Save' : 'Complete'}}</button>
   </ng-template>
 </nz-modal>
-
+<!-- Emergency update surgery profile -->
+<nz-modal
+  [(nzVisible)]="state.showSurgeryProfile"
+  nzTitle="Update Surgery Profile"
+  (nzOnCancel)="closeSurgeryProfileModal()"
+  (nzOnOk)="handleOk()"
+  [nzOkLoading]="isOkLoading">
+  <div nz-row class="body-surgery-profile-modal">
+    <form nz-form>
+      <div nz-col nzSpan="11">
+        <span>Identity Number:</span>
+        <input nz-input name="editID" type="text">
+      </div>
+      <div nz-col nzSpan="2"></div>
+      <div nz-col nzSpan="11">
+        <span>Patient Name:</span>
+        <input nz-input name="editID" type="text">
+      </div>
+      <div nz-col nzSpan="11">
+        <span>Gender:</span>
+        <input nz-input name="editGender" type="text">
+      </div>
+      <div nz-col nzSpan="2"></div>
+      <div nz-col nzSpan="11">
+        <span>Year of birth:</span> 
+        <input nz-input name="editYOB" type="number">
+      </div>
+      <div nz-col nzSpan="11">
+        <span>Specialty:</span> 
+        <input nz-input name="editSpecialty" type="text">
+      </div>
+      <div nz-col nzSpan="2"></div>
+      <div nz-col nzSpan="11">
+        <span>Surgery Name:</span>
+        <input nz-input name="editSurName" type="ematextil">
+      </div>
+    </form>
+  </div>
+</nz-modal>

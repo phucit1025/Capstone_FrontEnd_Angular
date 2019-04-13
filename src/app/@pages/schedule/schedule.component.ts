@@ -166,7 +166,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       room['totalIntra'] = reportRoom['totalIntra'];
       room['totalPost'] = reportRoom['totalPost'];
     });
-    console.log(room);
     // Convert list roomId to list api function
     room.slotRooms.map(slot => {
       array.push(this.schedule.getSurgeryShiftsByRoomAndDate(slot.id, date));

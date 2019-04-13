@@ -5,7 +5,9 @@
 .label{
     min-width: 220px;
 }
-
+.primary-table {
+    background: #e8f5e9 !important
+}
 .primary-table th{
     background: #09425A;
     color: white
@@ -30,4 +32,21 @@
     font-weight: bold;
     color: #00C994 !important;
     font-size: 18px;
+}
+
+.personInfo {
+    position: relative;
+    background: #e8f5e9;
+    margin: 0;
+    padding-top: 10px;
+    border-radius: 5px;
+}
+.btn-edit-surgery-profile {
+    z-index: 1000;
+    position: absolute;
+    top: 2px;
+    right: 2px;
+}
+.body-surgery-profile-modal span{
+    font-weight: bold
 }

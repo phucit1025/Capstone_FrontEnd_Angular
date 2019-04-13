@@ -60,7 +60,7 @@
             <div *ngIf="user.data.role == CHIEFNURSE_ROLE">
               <div class="notification-body" *ngIf="msgsChiefNurse.length > 0">
                 <div *ngFor="let msg of msgsChiefNurse">
-                  <li (mouseenter)="SetIsReadNotification(msg.id, user.data.role)" nz-row nz-menu-item
+                  <li (click)="LoadSchedulePage()" (mouseenter)="SetIsReadNotification(msg.id, user.data.role)" nz-row nz-menu-item
                     [ngStyle]="{'background-color': msg.isRead? 'inherit' : '#e0e0e0'}" class="z-depth-1">
                     <div nz-col nzMd nzSpan="24" class="noti-content">
                       <span>{{msg.content}}</span>
