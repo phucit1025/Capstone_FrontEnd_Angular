@@ -64,6 +64,8 @@ export class ScheduleDetailComponent implements OnInit {
   common = {
     supplies: [],
   };
+  messageInfo : any;
+  currentStatus: any;
 
   constructor(private message: NzMessageService, private schedule: ScheduleService,
               private router: Router, private route: ActivatedRoute, private fb: FormBuilder, private modalService: NzModalService) {
@@ -175,6 +177,29 @@ export class ScheduleDetailComponent implements OnInit {
       this.state.load = false;
       this.data = res;
       console.log(res);
+      switch (this.data.statusName) {
+        case "Preoperative":
+          this.messageInfo = "This patient is preparing for surgery";
+          this.currentStatus = 0;
+          break;
+        case "Intraoperative":
+          this.messageInfo = "This patient is undergoing surgery";
+          this.currentStatus = 1;
+          break;
+        case "Postoperative":
+          this.messageInfo = "This patient is taking recovery to consciousness";
+          this.currentStatus = 2;
+          break;
+        case "Recovery":
+          this.messageInfo = "This patient is taking recovery";
+          this.currentStatus = 3;
+          break;
+  
+        default:
+          this.messageInfo = "This surgey shift is finished";
+          this.currentStatus = 4;
+          break;
+      }
       this.getSupply(res.id);
       this.getEkipMember(res.id);
       this.treatment.getTreatment(res.id);
@@ -316,7 +341,6 @@ export class ScheduleDetailComponent implements OnInit {
         const bedPost = this.selected.selectedBed;
         const roomPost = this.selected.selectedRoom;
         const data1 = {
-          actualEndDateTime: date + ' ' + time,
           shiftId: this.data.id
         } as any;
         if (bedPost) {

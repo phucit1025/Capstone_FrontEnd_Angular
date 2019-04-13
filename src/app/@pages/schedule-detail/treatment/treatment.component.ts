@@ -1,6 +1,6 @@
 import {NzMessageService} from 'ng-zorro-antd';
 import {FormBuilder, FormControl, Validators, FormArray} from '@angular/forms';
-import {Component, OnInit, Input, ChangeDetectorRef} from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
 import {ScheduleService} from './../../../page-services/schedule.service';
 import {ActivatedRoute, Router} from '@angular/router';
 
@@ -26,6 +26,7 @@ export class TreatmentComponent implements OnInit {
   };
   treatmentDetail = {
     treatmentReport: [],
+    nurse : null,
     nurseData: null,
     treatmentForm: null,
     assignForm: null,
@@ -42,8 +43,7 @@ export class TreatmentComponent implements OnInit {
   };
 
   constructor(private message: NzMessageService, private schedule: ScheduleService,
-              private router: Router, private route: ActivatedRoute, private fb: FormBuilder,
-              private changeDetector: ChangeDetectorRef) {
+              private router: Router, private route: ActivatedRoute, private fb: FormBuilder) {
   }
 
   ngOnInit() {
@@ -67,7 +67,6 @@ export class TreatmentComponent implements OnInit {
             unit: item.unit,
           }));
           this.drugs = [...this.drugs];
-          this.changeDetector.detectChanges();
           console.log(this.drugs);
         }, er => console.log(er));
 
@@ -103,6 +102,7 @@ export class TreatmentComponent implements OnInit {
   getNurseByShiftId(id) {
     this.state.loadGetNurse = true;
     this.schedule.getNurseByShiftId(id).subscribe((nurse: any) => {
+      this.treatmentDetail.nurse = nurse;
       this.treatmentDetail.nurseData = nurse.id;
       this.state.loadGetNurse = false;
       this.state.assignedForNurse = true;
@@ -160,6 +160,7 @@ export class TreatmentComponent implements OnInit {
       this.state.loadAssignNurse = false;
       this.state.showAssignNurse = false;
       this.state.assignedForNurse = true;
+      this.getNurseByShiftId(this.data.id);
     }, er => {
       this.message.error('Assign Fail!!!');
       this.state.loadAssignNurse = false;

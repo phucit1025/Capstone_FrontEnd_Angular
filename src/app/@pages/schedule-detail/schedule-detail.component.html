@@ -326,7 +326,11 @@
 
   <ng-template #startFooter>
     <button nz-button nzType="default" (click)="state.showStatusModal = false">Cancel</button>
-    <button [disabled]="state.loadChangeStatus || !selected.selectedTime" nz-button nzType="primary" (click)="startShift()"
+    <button *ngIf="data?.statusName != 'Postoperative'" [disabled]="state.loadChangeStatus || !selected.selectedTime"
+      nz-button nzType="primary" (click)="startShift()"
+      [nzLoading]="state.loadChangeStatus">{{data?.statusName === 'Preoperative' ? 'Save' : 'Complete'}}</button>
+    <button *ngIf="data?.statusName === 'Postoperative'" [disabled]="state.loadChangeStatus" nz-button nzType="primary"
+      (click)="startShift()"
       [nzLoading]="state.loadChangeStatus">{{data?.statusName === 'Preoperative' ? 'Save' : 'Complete'}}</button>
   </ng-template>
 </nz-modal>
