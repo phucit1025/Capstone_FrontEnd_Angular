@@ -1,3 +1,4 @@
+<!-- <nz-alert class="mb-5" nzType="info" nzMessage="{{messageInfo}}" nzShowIcon></nz-alert> -->
 <div class="mb-5 p-3" style="background: rgb(247, 247, 247);">
   <nz-steps [nzCurrent]="currentStatus" nzProgressDot>
     <nz-step nzTitle="Preoperative"></nz-step>
@@ -85,64 +86,71 @@
 <nz-collapse [nzBordered]="false">
   <nz-collapse-panel class="primary-table" [nzHeader]="'Surgery Information Detail'" [ngStyle]="customeStyle"
     nzExpandedIcon="expandedIcon">
-    <h4>Performed Ekip: </h4>
-    <ng-container *ngIf="data?.ekipMember?.length > 0; else noDoctor">
-      <div class=" mb-2" *ngFor="let doctor of data.ekipMember">
-        <b class="ml-5" style="color:#009ABB">{{doctor.workJob}} : </b><span>{{doctor.name}}</span>
-      </div>
-    </ng-container>
-    <ng-template #noDoctor>
-      <p>There is no ekip member</p>
-    </ng-template>
-    <div class="row mt-3">
-      <div class="col-md-6 col-12">
-        <h4>Medical Supplies Used</h4>
-        <nz-table #supplyUsedTable [nzData]="surgeryDetail.supplyUsed" [nzLoading]="state.loadGetSupply"
-          [nzFrontPagination]="false" [nzShowPagination]="false">
-          <thead>
-            <tr>
-              <th>No.</th>
-              <th>Name</th>
-              <th class="text-center">Quantity</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let data of supplyUsedTable.data; let i = index">
-              <td>{{i + 1}}</td>
-              <td>{{data.medicalSupplyName}}</td>
-              <td class="text-center">{{data.quantity}}</td>
-            </tr>
-          </tbody>
-        </nz-table>
-        <div class="text-right mt-2">
-          <button (click)="state.showAddSupply = true; createNewForm()" nz-button nzType="primary" class="mb-2">
-            <i nz-icon type="edit"></i>
-              Edit
-          </button>
+    <div class="row">
+      <div class="col-md-6">
+        <div>
+          <h4>Performed Ekip: </h4>
+          <ng-container *ngIf="data?.ekipMember?.length > 0; else noDoctor">
+            <div class=" mb-2" *ngFor="let doctor of data.ekipMember">
+              <b class="ml-5" style="color:#009ABB">{{doctor.workJob}} : </b><span>{{doctor.name}}</span>
+            </div>
+          </ng-container>
+          <ng-template #noDoctor>
+            <p>There is no ekip member</p>
+          </ng-template>
+        </div>
+        <div>
+          <h4>Medical Supplies Used</h4>
+          <nz-table #supplyUsedTable [nzData]="surgeryDetail.supplyUsed" [nzLoading]="state.loadGetSupply"
+            [nzFrontPagination]="false" [nzShowPagination]="false">
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>Name</th>
+                <th class="text-center">Quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of supplyUsedTable.data; let i = index">
+                <td>{{i + 1}}</td>
+                <td>{{data.medicalSupplyName}}</td>
+                <td class="text-center">{{data.quantity}}</td>
+              </tr>
+            </tbody>
+          </nz-table>
+          <div class="text-right mt-2">
+            <button (click)="state.showAddSupply = true; createNewForm()" nz-button nzType="primary" class="mb-2">
+              <i nz-icon type="edit"></i>
+                Edit
+            </button>
+          </div>
         </div>
       </div>
-      <div class="col-md-6 col-12">
+      <div class="col-md-6">
         <h4>Surgery Procedure</h4>
         <nz-spin [nzSpinning]="state.loadSaveProcedure">
-          <textarea class="sug-area" [disabled]="!state.editMode" rows="4" nz-input
-            [(ngModel)]="surgeryDetail.surgeryProcedure"></textarea>
-          <div class="text-right mt-2">
-            <button *ngIf="!state.editMode" (click)="state.editMode = true" nz-button nzType="primary" class="mb-2">
-              <i nz-icon type="edit"></i>
-              Edit
-            </button>
-            <ng-container *ngIf="state.editMode">
-              <button (click)="state.editMode = false; surgeryDetail.surgeryProcedure = surgeryDetail.containData"
-                nz-button nzType="danger" class="mb-2 mr-2">
-                <i nz-icon type="close"></i>
-                Cancel
+          <div>
+            <textarea class="sug-area" [disabled]="!state.editMode" rows="20" nz-input
+              [(ngModel)]="surgeryDetail.surgeryProcedure"></textarea>
+            <div class="text-right mt-2">
+              <button *ngIf="!state.editMode" (click)="state.editMode = true" nz-button nzType="primary" class="mb-2">
+                <i nz-icon type="edit"></i>
+                Edit
               </button>
-              <button [disabled]="surgeryDetail.surgeryProcedure === surgeryDetail.containData"
-                (click)="saveSurgeryProcedure()" nz-button nzType="primary" class="mb-2">
-                <i nz-icon type="check"></i>
-                Save
-              </button>
-            </ng-container>
+              <ng-container *ngIf="state.editMode">
+                <button (click)="state.editMode = false; surgeryDetail.surgeryProcedure = surgeryDetail.containData"
+                  nz-button nzType="danger" class="mb-2 mr-2">
+                  <i nz-icon type="close"></i>
+                  Cancel
+                </button>
+                <button [disabled]="surgeryDetail.surgeryProcedure === surgeryDetail.containData"
+                  (click)="saveSurgeryProcedure()" nz-button nzType="primary" class="mb-2">
+                  <i nz-icon type="check"></i>
+                  Save
+                </button>
+              </ng-container>
+            </div>
+          
           </div>
         </nz-spin>
       </div>
@@ -300,11 +308,6 @@
       <nz-time-picker [nzFormat]="'HH:mm'" [(ngModel)]="selected.selectedTime"></nz-time-picker>
     </div>
     <div *ngIf="data?.statusName === 'Postoperative'" class="row">
-      <div class="col-12">
-        <nz-form-item>
-          <nz-form-label><b>Move to Recovery</b></nz-form-label>
-        </nz-form-item>
-      </div>
       <div class="col-6">
         <nz-form-item>
           <nz-form-label><b>Room</b></nz-form-label>
@@ -326,7 +329,11 @@
 
   <ng-template #startFooter>
     <button nz-button nzType="default" (click)="state.showStatusModal = false">Cancel</button>
-    <button [disabled]="state.loadChangeStatus || !selected.selectedTime" nz-button nzType="primary" (click)="startShift()"
+    <button *ngIf="data?.statusName != 'Postoperative'" [disabled]="state.loadChangeStatus || !selected.selectedTime"
+      nz-button nzType="primary" (click)="startShift()"
+      [nzLoading]="state.loadChangeStatus">{{data?.statusName === 'Preoperative' ? 'Save' : 'Complete'}}</button>
+    <button *ngIf="data?.statusName === 'Postoperative'" [disabled]="state.loadChangeStatus" nz-button nzType="primary"
+      (click)="startShift()"
       [nzLoading]="state.loadChangeStatus">{{data?.statusName === 'Preoperative' ? 'Save' : 'Complete'}}</button>
   </ng-template>
 </nz-modal>
