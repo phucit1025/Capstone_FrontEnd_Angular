@@ -14,7 +14,7 @@
   <div class="row">
   </div>
   <div class="row personInfo mb-4">
-    <div class="btn-edit-surgery-profile">
+    <div *ngIf="data?.isEmergency" class="btn-edit-surgery-profile">
       <button style="float: right; margin-bottom: 5px" nz-button (click)="openSurgeryProfileModal()">
         <i class="fas fa-edit"></i>
       </button>
@@ -342,36 +342,41 @@
   [(nzVisible)]="state.showSurgeryProfile"
   nzTitle="Update Surgery Profile"
   (nzOnCancel)="closeSurgeryProfileModal()"
-  (nzOnOk)="handleOk()"
+  (nzOnOk)="updateSurgeryProfile()"
   [nzOkLoading]="isOkLoading">
   <div nz-row class="body-surgery-profile-modal">
-    <form nz-form>
+    <form nz-form [formGroup]="surgeryProfileEditForm">
       <div nz-col nzSpan="11">
         <span>Identity Number:</span>
-        <input nz-input name="editID" type="text">
+        <input nz-input formControlName="editIdentityNumber" type="number">
       </div>
-      <div nz-col nzSpan="2"></div>
+      <div nz-col nzSpan="2">
+        <button><i class="far fa-check"></i></button>
+      </div>
       <div nz-col nzSpan="11">
         <span>Patient Name:</span>
-        <input nz-input name="editID" type="text">
+        <input nz-input formControlName="editPatientName" type="text">
       </div>
       <div nz-col nzSpan="11">
-        <span>Gender:</span>
-        <input nz-input name="editGender" type="text">
+        <span>Gender:</span> <br/>
+        <nz-radio-group [(ngModel)]="radioGenderValue" formControlName="editGender">
+          <label nz-radio nzValue="0">Female</label>
+          <label nz-radio nzValue="1">Male</label>
+        </nz-radio-group>
       </div>
       <div nz-col nzSpan="2"></div>
       <div nz-col nzSpan="11">
         <span>Year of birth:</span> 
-        <input nz-input name="editYOB" type="number">
+        <input nz-input formControlName="editYob" type="number">
       </div>
       <div nz-col nzSpan="11">
         <span>Specialty:</span> 
-        <input nz-input name="editSpecialty" type="text">
+        <input nz-input type="text">
       </div>
       <div nz-col nzSpan="2"></div>
       <div nz-col nzSpan="11">
         <span>Surgery Name:</span>
-        <input nz-input name="editSurName" type="ematextil">
+        <input nz-input formControlName="editSurgeryId" type="text">
       </div>
     </form>
   </div>
