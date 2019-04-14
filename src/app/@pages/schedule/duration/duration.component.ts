@@ -45,18 +45,24 @@ export class DurationComponent implements OnInit {
           listId.forEach(id => {
             array.push(this.schedule.getRoomInfo(id));
           });
-          const result = combineLatest(array);
-          result.subscribe(el => {
+          if (array.length === 0) {
             this.state.load = false;
             this.state.finish = true;
-            el.forEach((room) => {
-              this.roomList.push(room);
+          } else {
+            const result = combineLatest(array);
+            result.subscribe(el => {
+              this.state.load = false;
+              this.state.finish = true;
+              el.forEach((room) => {
+                this.roomList.push(room);
+              }, er => {
+                this.state.load = false;
+              });
             }, er => {
               this.state.load = false;
             });
-          }, er => {
-            this.state.load = false;
-          });
+          }
+
         }, er => {
           this.state.load = false;
           this.message.create('error', `<p>${er.status === 400 ? er.error : 'Cannot load'}</p>`);
