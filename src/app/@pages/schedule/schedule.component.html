@@ -87,7 +87,7 @@
     </div>
     <div nz-row nzAlign="bottom" nzType="flex">
       <div nz-col nzMd nzSpan="12">
-        <button (click)="isShowEmergency = true; loadSlotRoom()" class="btn btn-primary">
+        <button (click)="isShowEmergency = true; " class="btn btn-primary">
           Add Emergency Shift
         </button>
       </div>
@@ -269,7 +269,7 @@
       <label class="mr-2">
         <b>Actual {{selectedObject?.statusName === 'Preoperative' ? 'Start' : 'End'}} Time:</b>
       </label>
-      <nz-time-picker [nzFormat]="'HH:mm'" [(ngModel)]="selectedTime" (ngModelChange)="checkActualEndTime()">
+      <nz-time-picker [nzFormat]="'HH:mm'" [(ngModel)]="selectedTime" (ngModelChange)="checkActualEndTime(selectedObject)">
       </nz-time-picker>
       <span style="color: red; padding-left: 10px;" *ngIf="actualEndTimeError">
         Invalid time
