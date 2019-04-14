@@ -31,4 +31,8 @@ export class ConfirmMedicalService {
   assignEkip() {
     return this.http.get(GLOBAL.API + 'Schedule/AssignEkip');
   }
+
+  assignTechnicalStaff(){
+    return this.http.get(GLOBAL.API + 'Schedule/AssignTechnicalStaff');
+  }
 }

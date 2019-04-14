@@ -1,11 +1,11 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {NzMessageService} from 'ng-zorro-antd';
-import {GLOBAL} from '../../global';
-import {ImportService} from '../../page-services/import.service';
-import {NotificationService} from '../../page-services/notification.service';
-import {combineLatest} from 'rxjs';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { NzMessageService } from 'ng-zorro-antd';
+import { GLOBAL } from '../../global';
+import { ImportService } from '../../page-services/import.service';
+import { NotificationService } from '../../page-services/notification.service';
+import { combineLatest } from 'rxjs';
 
-import {LayoutComponent} from '../layout/layout.component';
+import { LayoutComponent } from '../layout/layout.component';
 
 @Component({
   selector: 'app-import-file',
@@ -27,7 +27,7 @@ export class ImportFileComponent implements OnInit {
 
 
   constructor(private message: NzMessageService, private importSV: ImportService,
-    private layoutData: LayoutComponent, private notificationService:NotificationService) {
+    private layoutData: LayoutComponent, private notificationService: NotificationService) {
   }
 
   ngOnInit() {
@@ -65,7 +65,7 @@ export class ImportFileComponent implements OnInit {
           if (patient.expectedDate && patient.expectedTime) {
             patient.ProposedDateTimeShow = patient.expectedTime + ' ' + this.generateDatetimeShow(patient.expectedDate);
             patient.proposedStartDateTime = patient.expectedDate + ' ' + patient.expectedTime.split(' - ')[0] + '';
-            patient.proposedEndDateTime = patient.expectedDate + ' ' + patient.expectedTime.split(' - ')[1] + '';   
+            patient.proposedEndDateTime = patient.expectedDate + ' ' + patient.expectedTime.split(' - ')[1] + '';
           }
           return patient;
         }));
@@ -120,6 +120,10 @@ export class ImportFileComponent implements OnInit {
   }
 
   importList() {
+    if (this.getCheckedItem().length == 0) {
+      this.message.error('Import Fail: There are nothing to Import !!!');
+      return;
+    }
     const profiles = GLOBAL.copyObject(this.getCheckedItem()).map(el => {
       // delete el.detailMedical;
       delete el.medicalRecord;
@@ -153,7 +157,7 @@ export class ImportFileComponent implements OnInit {
       }
       this.importSV.importShift(data).subscribe(el => {
         this.message.success('Import Successful');
-        this.notificationService.getTmpNotification('MedicalSupplier').subscribe(re => {}); //notify
+        this.notificationService.getTmpNotification('MedicalSupplier').subscribe(re => { }); //notify
         this.state.load = false;
         if (this.isAllCheck) {
           this.clearResult();

@@ -74,6 +74,8 @@ export class ConfirmMedicalComponent implements OnInit {
             }); //notify
             this.confirmMedical.assignEkip().subscribe(re => {
             }); //assign ekip
+            this.confirmMedical.assignTechnicalStaff().subscribe(re => {
+            }); //assign Technical staff
           });
         }, er => {
           this.state.load = false;
