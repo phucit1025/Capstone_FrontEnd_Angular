@@ -53,7 +53,7 @@ export class RoomSpecialtyGroupComponent implements OnInit {
   }
 
   createForm(idRoom, idGroup) {
-    const id = [new FormControl(idGroup, Validators.required)];
+    const id = [new FormControl(idRoom, Validators.required)];
     this.group.form = this.fb.group({
       surgeryRoomId: new FormArray(id, Validators.required),
       specialtyGroupId: new FormControl(idGroup, Validators.required),
@@ -65,6 +65,7 @@ export class RoomSpecialtyGroupComponent implements OnInit {
     this.specialtySV.setRoomToGroup(this.group.form.value).subscribe(sc => {
       this.messageSV.success('Change Group Successful');
       this.group.loadForm = false;
+      this.loadRoom();
     }, er => {
       this.group.loadForm = false;
       this.messageSV.error('Change Group Fail!!!');

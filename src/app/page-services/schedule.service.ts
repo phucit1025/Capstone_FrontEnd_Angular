@@ -18,7 +18,7 @@ export class ScheduleService {
   }
 
   getSlotRooms() {
-    return this.http.get(GLOBAL.API + this.name + '/GetSlotRooms');
+    return this.http.get(GLOBAL.API + this.name + '/GetSurgeryRooms');
   }
 
   getReportByRoom(id, date) {
