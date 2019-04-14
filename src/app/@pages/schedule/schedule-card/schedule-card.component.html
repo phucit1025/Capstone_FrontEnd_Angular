@@ -6,8 +6,13 @@
     <nz-card>
       <div class="d-flex">
         <p style="width: 100%" class="text-center" [nzTitle]="tooltipTemplate" nzPlacement="topCenter" nz-tooltip>
-          <i class="mr-2" nz-icon type="info-circle" theme="outline"></i>
-          <b>{{data.id}} {{data.id.isStart}}</b>
+          <span *ngIf="!data.isEmergency">
+            <i style="color: black" class="mr-2 fas fa-info-circle"></i>
+          </span>
+          <span *ngIf="data.isEmergency">
+            <i style="color: red" class="mr-2 fas fa-exclamation-triangle"></i>
+          </span> 
+          <b>{{data.id}}</b>
         </p>
       </div>
       <div class="d-flex">
@@ -61,7 +66,12 @@
     <nz-card>
       <div class="d-flex">
         <p style="width: 100%" class="text-center" [nzTitle]="tooltipTemplate" nzPlacement="topCenter" nz-tooltip>
-          <i class="mr-2" nz-icon type="info-circle" theme="outline"></i>
+            <span *ngIf="!data.isEmergency">
+              <i style="color: black" class="mr-2 fas fa-info-circle"></i>
+            </span>
+            <span *ngIf="data.isEmergency">
+              <i style="color: red" class="mr-2 fas fa-exclamation-triangle"></i>
+            </span> 
           <b>{{data.id}}</b>
         </p>
       </div>

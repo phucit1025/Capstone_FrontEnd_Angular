@@ -234,4 +234,5 @@ export class TreatmentComponent implements OnInit {
       unit: new FormControl(null, Validators.required),
     });
   }
+
 }

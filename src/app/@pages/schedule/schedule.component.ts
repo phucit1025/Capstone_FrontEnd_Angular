@@ -9,8 +9,6 @@ import {SwalComponent} from '@toverux/ngx-sweetalert2';
 import swal from 'sweetalert2';
 import * as moment from 'moment';
 
-import {NzNotificationService} from 'ng-zorro-antd';
-
 @Component({
   selector: 'app-schedule',
   templateUrl: './schedule.component.html',
@@ -56,11 +54,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   groupsId = [];
   actualEndTimeError = false;
 
-  constructor(
-    private notification: NzNotificationService,
-    private schedule: ScheduleService,
-    private messageService: NzMessageService,
-    private fb: FormBuilder) {
+  constructor(private schedule: ScheduleService,
+    private messageService: NzMessageService, private fb: FormBuilder) {
   }
 
   ngOnInit() {
@@ -340,7 +335,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       case 'Postoperative':
         break;
     }
-    // this.checkActualEndTime();
+    // this.checkActualEndTime(data);
   }
 
   startShift() {
@@ -395,12 +390,14 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     }
   }
 
-  checkActualEndTime() {
+  checkActualEndTime(data) {
     const selectedDate = new Date(this.selectedTime);
+    const actualStartDateTime = new Date(data.actualStartDateTime);
     const serverDate = new Date(this.serverTime);
-    // this.actualEndTimeError = (serverDate.getHours() * 60 + serverDate.getMinutes())
-    //   - (selectedDate.getHours() * 60 + selectedDate.getMinutes()) > 0;
-    this.actualEndTimeError = false;
+    console.log(selectedDate);
+    console.log(actualStartDateTime);
+    this.actualEndTimeError = (selectedDate.getHours() * 60 + selectedDate.getMinutes())
+      - (actualStartDateTime.getHours() * 60 + actualStartDateTime.getMinutes()) <= 0;
   }
 
   countResult(rooms) {
@@ -412,12 +409,5 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         return countSlot += slot.surgeries.length;
       }, count);
     }, 0);
-  }
-
-  createBasicNotification(): void {
-    this.notification.blank(
-      'Notification Title',
-      'This is the content of the notification. This is the content of the notification. This is the content of the notification.'
-    );
   }
 }

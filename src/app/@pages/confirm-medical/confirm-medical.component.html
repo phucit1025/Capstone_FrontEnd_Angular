@@ -70,7 +70,10 @@
 
     <div class="col-12 row">
       <div class="col-12 row">
-        <div class="col-9">
+          <div class="col-2">
+              <span class="font-weight-bold">No</span>
+            </div>
+        <div class="col-7">
           <span class="font-weight-bold">Supply Name</span>
         </div>
         <div class="col-3">
@@ -78,9 +81,12 @@
         </div>
       </div>
     </div>
-    <div *ngFor="let data of supplyList" class="col-12 row">
+    <div *ngFor="let data of supplyList; let i = index" class="col-12 row">
       <div class="col-12 row">
-        <div class="col-9">
+          <div class="col-2">
+              <span>{{i+1}}</span>
+            </div>
+        <div class="col-7">
           <span>{{data.supplyName}}</span>
         </div>
         <div class="col-3">

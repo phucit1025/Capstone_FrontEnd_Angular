@@ -1,9 +1,10 @@
-import {GLOBAL} from './../../global';
-import {NzMessageService, NzModalService} from 'ng-zorro-antd';
-import {FormBuilder, FormControl, Validators, FormArray} from '@angular/forms';
-import {Component, OnInit, ViewChild, ChangeDetectionStrategy} from '@angular/core';
-import {ScheduleService} from '../../page-services/schedule.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import { GLOBAL } from './../../global';
+import { NzMessageService, NzModalService } from 'ng-zorro-antd';
+import { FormBuilder, FormControl, Validators, FormArray } from '@angular/forms';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { ScheduleService } from '../../page-services/schedule.service';
+import { ScheduleDetailService } from '../../page-services/schedule-detail.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import {TreatmentComponent} from './treatment/treatment.component';
 
@@ -67,8 +68,14 @@ export class ScheduleDetailComponent implements OnInit {
   messageInfo : any;
   currentStatus: any;
 
+  surgeryProfileEditForm: any;
+  radioGenderValue: any;
+  loadedEditSurgeryProfile: any
+
   constructor(private message: NzMessageService, private schedule: ScheduleService,
-              private router: Router, private route: ActivatedRoute, private fb: FormBuilder, private modalService: NzModalService) {
+    private router: Router, private route: ActivatedRoute,
+    private fb: FormBuilder, private modalService: NzModalService,
+    private schedule_detail: ScheduleDetailService) {
     route.params.subscribe(params => {
       this.id = params.id;
       this.getDetail(params.id);
@@ -80,6 +87,9 @@ export class ScheduleDetailComponent implements OnInit {
     // this.loadAllSupply();
     this.treatment.loadAllNurse();
     this.createNewForm();
+    this.createSurgeryProfileEditForm();
+
+
   }
 
   nzFilterOption = () => true;
@@ -90,7 +100,7 @@ export class ScheduleDetailComponent implements OnInit {
 
   searchSupply(value: string): void {
     value.trim();
-    if (value != '') {
+    if (value != "") {
       this.schedule.searchSupply(value)
         .subscribe(data => {
           console.log(data);
@@ -176,6 +186,30 @@ export class ScheduleDetailComponent implements OnInit {
       this.detailSchedule = res;
       this.state.load = false;
       this.data = res;
+      switch (this.data.statusName) {
+        case "Preoperative":
+          this.messageInfo = "This patient is preparing for surgery";
+          this.currentStatus = 0;
+          break;
+        case "Intraoperative":
+          this.messageInfo = "This patient is undergoing surgery";
+          this.currentStatus = 1;
+          break;
+        case "Postoperative":
+          this.messageInfo = "This patient is taking recovery to consciousness";
+          this.currentStatus = 2;
+          break;
+        case "Recovery":
+          this.messageInfo = "This patient is taking recovery";
+          this.currentStatus = 3;
+          break;
+
+        default:
+          this.messageInfo = "This surgey shift is finished";
+          this.currentStatus = 4;
+          break;
+      }
+      console.log(this.messageInfo);
       console.log(res);
       switch (this.data.statusName) {
         case "Preoperative":
@@ -242,7 +276,7 @@ export class ScheduleDetailComponent implements OnInit {
       let data = {
         shiftMedicals: finalData,
         deleteMedicalSupplyIds: this.surgeryDetail.supplyForm.value.deleteMedicalSupplyIds
-      };
+      }
 
       this.schedule.addUsedMedicalSupply(data).subscribe(res => {
         this.state.loadAddSupply = false;
@@ -396,13 +430,54 @@ export class ScheduleDetailComponent implements OnInit {
       }),
     });
   }
-
-//Emergency update
+  //Emergency update
   openSurgeryProfileModal() {
     this.state.showSurgeryProfile = true;
+
   }
 
   closeSurgeryProfileModal() {
     this.state.showSurgeryProfile = false;
+  }
+
+  createSurgeryProfileEditForm() {
+    this.radioGenderValue = '0';
+    this.surgeryProfileEditForm = this.fb.group({
+      shiftId: new FormControl(this.id),
+      editIdentityNumber: new FormControl(),
+      editPatientName: new FormControl(),
+      editGender: new FormControl(),
+      editYob: new FormControl(),
+      editSurgeryId: new FormControl()
+    });
+  }
+  loadSurgeryProfile() {
+    this.schedule_detail.loadEditSurgeryProfile(this.id).subscribe((res: any) => {
+      this.radioGenderValue = '0';
+      this.surgeryProfileEditForm = this.fb.group({
+        shiftId: new FormControl(this.id),
+        editIdentityNumber: new FormControl(res.editIdentityNumber),
+        editPatientName: new FormControl(res.EditPatientName),
+        editGender: new FormControl(res.EditGender ? res.EditGender : 0),
+        editYob: new FormControl(res.editYob),
+        editSurgeryId: new FormControl(res.EditSurgeryId)
+      });
+    });
+  }
+
+  updateSurgeryProfile() {
+    if (this.surgeryProfileEditForm) {
+      const data = this.surgeryProfileEditForm.value;
+      this.schedule_detail.updateSurgeryProfile(data).subscribe(res => {
+        this.message.success('Create Successful!!!');
+        // this.state.create = false;
+        this.closeSurgeryProfileModal()
+        this.createSurgeryProfileEditForm();
+        this.getDetail(this.id)
+      }, er => {
+        // this.state.create = false;
+        this.message.error('Create Fail!!!');
+      });
+    }
   }
 }
