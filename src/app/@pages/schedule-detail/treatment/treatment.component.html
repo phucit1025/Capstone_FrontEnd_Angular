@@ -2,7 +2,7 @@
   <nz-collapse-panel class="primary-table" [nzHeader]="'Treatment Reports'" [ngStyle]="customeStyle"
     nzExpandedIcon="expandedIcon">
     <div class="mb-3">
-      <button (click)="state.showTreatmentReport = true" class="mr-2" nz-button nzType="primary">New Treatment
+      <button (click)="state.showTreatmentReport = true; createNewFormTreatment()" class="mr-2" nz-button nzType="primary">New Treatment
         Report</button>
       <button (click)="state.showAssignNurse = true" nz-button nzType="default">Assign Nurse</button>
       <span style="float: right">{{treatmentDetail.nurse != null ? treatmentDetail.nurse.fullName : 'N/A'}}</span><b style="color:#009ABB; float: right">Current Nurse : </b>
