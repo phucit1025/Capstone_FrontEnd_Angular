@@ -104,7 +104,9 @@
     <!-- Room Container -->
     <div nz-row id="room-container" class="room-container">
       <ng-container *ngFor="let room of rooms | roomPipe: state.searchText | statusPipe: state.selectedStatus">
-        <div *ngIf="room !== -1 && (selected.specialtyGroupId === null || room.specialtyGroupId === selected.specialtyGroupId)" class="date">
+        <div
+          *ngIf="room !== -1 && (selected.specialtyGroupId === null || room.specialtyGroupId === selected.specialtyGroupId)"
+          class="date">
           <!-- Room header -->
           <div class="room-name" [ngStyle]="{'background-color': room.name === 'Emergency' ? '#CC0000' : '#128475'}">
             <div class="rotate">
@@ -118,9 +120,12 @@
               <div class="specialty-container">
                 <div class="room-report">
                   <span class="badge badge-custom">Total</span>: {{room.totalShift}} shift(s) <br/>
-                  <span class="badge badge-custom room-status" style="background: #E1F5FE">Preparing</span>: {{room.totalPre}}  shift(s) <br/>
-                  <span class="badge badge-custom room-status" style="background: #A5D6A7">Proceeding</span>: {{room.totalIntra}} shift(s) <br/>
-                  <span class="badge badge-custom room-status" style="background: #9E9E9E">Completed</span>: {{room.totalPost}} shift(s) <br/>
+                  <span class="badge badge-custom room-status"
+                        style="background: #E1F5FE">Preparing</span>: {{room.totalPre}}  shift(s) <br/>
+                  <span class="badge badge-custom room-status"
+                        style="background: #A5D6A7">Proceeding</span>: {{room.totalIntra}} shift(s) <br/>
+                  <span class="badge badge-custom room-status"
+                        style="background: #9E9E9E">Completed</span>: {{room.totalPost}} shift(s) <br/>
                 </div>
                 <div nz-menu-divider></div>
                 <div *ngFor="let specialty of room.specialties">- {{specialty}}</div>
@@ -164,7 +169,10 @@
     <ng-template #modalContent>
       <nz-tabset [nzTabPosition]="'left'">
         <nz-tab nzTitle="Duration">
-          <app-duration #duration [id]="selectedObject?.id" (detectChanges)="this.state.reload = true"></app-duration>
+          <app-duration #duration [id]="selectedObject?.id"
+                        [groupId]="selectedObject?.groupId" (detectChanges)="this.state.reload = true">
+
+          </app-duration>
         </nz-tab>
       </nz-tabset>
     </ng-template>
@@ -269,7 +277,8 @@
       <label class="mr-2">
         <b>Actual {{selectedObject?.statusName === 'Preoperative' ? 'Start' : 'End'}} Time:</b>
       </label>
-      <nz-time-picker [nzFormat]="'HH:mm'" [(ngModel)]="selectedTime" (ngModelChange)="checkActualEndTime(selectedObject)">
+      <nz-time-picker [nzFormat]="'HH:mm'" [(ngModel)]="selectedTime"
+                      (ngModelChange)="checkActualEndTime(selectedObject)">
       </nz-time-picker>
       <span style="color: red; padding-left: 10px;" *ngIf="actualEndTimeError">
         Invalid time

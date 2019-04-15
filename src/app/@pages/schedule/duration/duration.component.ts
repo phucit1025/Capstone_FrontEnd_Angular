@@ -11,6 +11,7 @@ import {combineLatest} from 'rxjs';
 })
 export class DurationComponent implements OnInit {
   @Input() id = -1;
+  @Input() groupId = -1;
   @Output() detectChanges = new EventEmitter();
   date = {
     startDate: new Date(),
@@ -27,6 +28,7 @@ export class DurationComponent implements OnInit {
 
 
   ngOnInit() {
+    console.log(this.groupId);
   }
 
   getAvailableRoom(type: boolean) {
@@ -34,11 +36,13 @@ export class DurationComponent implements OnInit {
       const data = GLOBAL.parseObject({
         startDate: this.date.startDate,
         endDate: this.date.endDate,
-        forcedChange: type
+        forcedChange: type,
+        specialtyGroupId: this.groupId
       });
       if (data) {
         this.state.load = true;
         this.state.finish = false;
+        console.log(data);
         this.schedule.getGetAvailableRoom(data).subscribe((listId: any) => {
           const array = [];
           this.roomList = [];

@@ -2,6 +2,7 @@ import {ScheduleService} from './../../../page-services/schedule.service';
 import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Router} from '@angular/router';
 import {NzMessageService} from 'ng-zorro-antd';
+import {GLOBAL} from '../../../global';
 
 @Component({
   selector: 'app-schedule-card',
@@ -63,6 +64,13 @@ export class ScheduleCardComponent implements OnInit, AfterViewInit {
 
   changeStatus() {
     this.statusChange.emit(this.data);
+  }
+
+  emitData(data) {
+    const d = GLOBAL.copyObject(data);
+    d.groupId = this.groupId;
+    console.log(d);
+    this.openModal.emit(d);
   }
 
   redirect() {

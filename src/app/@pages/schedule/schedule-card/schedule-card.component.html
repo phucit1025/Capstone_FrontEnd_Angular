@@ -33,7 +33,7 @@
           </button>
         </div>
         <div *ngIf="data.statusName === 'Preoperative'" class="col-4 pl-1 pr-1">
-          <button (click)="openModal.emit(data)" style="width: 100%" nz-button nzType="default">
+          <button (click)="emitData(data)" style="width: 100%" nz-button nzType="default">
             Change
           </button>
         </div>
@@ -94,7 +94,7 @@
           </button>
         </div>
         <div *ngIf="data.statusName === 'Preoperative'" class="col-4 pl-1 pr-1">
-          <button (click)="openModal.emit(data)" style="width: 100%" nz-button nzType="default">
+          <button (click)="emitData(data)" style="width: 100%" nz-button nzType="default">
             Change
           </button>
         </div>
