@@ -70,6 +70,8 @@ export class ScheduleDetailComponent implements OnInit {
 
   surgeryProfileEditForm: any;
   searchedCatalogs: any;
+  messageCheckPatient: any;
+  patientInfo: any;
 
   constructor(private message: NzMessageService, private schedule: ScheduleService,
     private router: Router, private route: ActivatedRoute,
@@ -508,15 +510,19 @@ export class ScheduleDetailComponent implements OnInit {
 
   checkExistedPatient() {
     const id = this.surgeryProfileEditForm.value.editIdentityNumber;
-    console.log(this.surgeryProfileEditForm.value.editIdentityNumber);
+    console.log(this.surgeryProfileEditForm.controls);
     this.schedule_detail.checkExistedPatient(id).subscribe((res : any) => {
-      if (res != null) {
-        this.surgeryProfileEditForm = this.fb.group({
-          editPatientName: new FormControl(res.Name),
-          editGender: new FormControl(res.Gender),
-          editYob: new FormControl(res.editYob),
-        });
+      if (res.name != null) {
+        this.surgeryProfileEditForm.controls.editPatientName.setValue(res.name);
+        this.surgeryProfileEditForm.controls.editGender.setValue(res.gender.toString());
+        this.surgeryProfileEditForm.controls.editYob.setValue(res.yob);
+      } else {
+        this.messageCheckPatient = "This patient isn't existed! Let create new patient";
+        this.surgeryProfileEditForm.controls.editPatientName.setValue();
+        this.surgeryProfileEditForm.controls.editGender.setValue('0');
+        this.surgeryProfileEditForm.controls.editYob.setValue();
       }
+      console.log(res);
     });
   }
 }

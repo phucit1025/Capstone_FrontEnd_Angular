@@ -365,21 +365,24 @@
             <i class="far fa-check-square"></i> Check
         </button>
       </div>
-      <div nz-col nzSpan="24" class="mb-2 mt-2">
-        <span>Patient Name:</span>
-        <input nz-input formControlName="editPatientName" type="text">
-      </div>
-      <div nz-col nzSpan="11">
-        <span>Gender:</span> <br/>
-        <nz-radio-group [(ngModel)]="radioGenderValue" formControlName="editGender">
-          <label nz-radio nzValue="0">Female</label>
-          <label nz-radio nzValue="1">Male</label>
-        </nz-radio-group>
-      </div>
-      <div nz-col nzSpan="2"></div>
-      <div nz-col nzSpan="11">
-        <span>Year of birth:</span> 
-        <input nz-input formControlName="editYob" type="number">
+      <p style="color: red">{{messageCheckPatient}}</p>
+      <div id="divNewPatient">
+        <div nz-col nzSpan="24" class="mb-2 mt-2">
+          <span>Patient Name:</span>
+          <input nz-input formControlName="editPatientName" type="text">
+        </div>
+        <div nz-col nzSpan="11">
+          <span>Gender:</span> <br/>
+          <nz-radio-group [(ngModel)]="radioGenderValue" formControlName="editGender">
+            <label nz-radio nzValue="0">Female</label>
+            <label nz-radio nzValue="1">Male</label>
+          </nz-radio-group>
+        </div>
+        <div nz-col nzSpan="2"></div>
+        <div nz-col nzSpan="11">
+          <span>Year of birth:</span> 
+          <input nz-input formControlName="editYob" type="number">
+        </div>
       </div>
     </form>
   </div>

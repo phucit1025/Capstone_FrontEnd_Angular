@@ -59,7 +59,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.date = new Date('2019-04-07');
+    this.date = new Date();
     this.getSchedule();
     this.createEmergencyForm();
     this.getServerTime();
