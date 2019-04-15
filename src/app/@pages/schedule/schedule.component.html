@@ -104,7 +104,7 @@
     <!-- Room Container -->
     <div nz-row id="room-container" class="room-container">
       <ng-container *ngFor="let room of rooms | roomPipe: state.searchText | statusPipe: state.selectedStatus">
-        <div *ngIf="room !== -1" class="date">
+        <div *ngIf="room !== -1 && (selected.specialtyGroupId === null || room.specialtyGroupId === selected.specialtyGroupId)" class="date">
           <!-- Room header -->
           <div class="room-name" [ngStyle]="{'background-color': room.name === 'Emergency' ? '#CC0000' : '#128475'}">
             <div class="rotate">

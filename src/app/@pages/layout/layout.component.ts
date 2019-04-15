@@ -8,6 +8,7 @@ import 'rxjs/add/operator/mergeMap';
 import {NzNotificationService} from 'ng-zorro-antd';
 
 import {HubConnection, HubConnectionBuilder} from '@aspnet/signalr';
+import {activateRoutes} from '@angular/router/src/operators/activate_routes';
 
 @Component({
   selector: 'app-layout',
@@ -78,19 +79,20 @@ export class LayoutComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.user.sb = this.userSV.getUser.subscribe(user => {
       this.user.data = user;
-      console.log(user);
-      let page = '';
-      switch (this.user.data.role) {
-        case 'MedicalSupplier':
-          page = 'confirm-medical';
-          break;
-        case 'HospitalStaff':
-          page = 'import-file';
-          break;
-        default:
-          page = 'schedule';
+      if (this.router.url === '/pages') {
+        let page = '';
+        switch (this.user.data.role) {
+          case 'MedicalSupplier':
+            page = 'confirm-medical';
+            break;
+          case 'HospitalStaff':
+            page = 'import-file';
+            break;
+          default:
+            page = 'schedule';
+        }
+        this.router.navigate([`/pages/${page}`]);
       }
-      this.router.navigate([`/pages/${page}`]);
       this.loadNotification(this.user.data.role);
 
       this._hubConnection = new HubConnectionBuilder()
@@ -149,13 +151,13 @@ export class LayoutComponent implements OnInit, OnDestroy {
     }
   }
 
-  LoadConfirmPage():void {
+  LoadConfirmPage(): void {
     this.router.navigateByUrl('blank').then(() => {
       this.router.navigateByUrl('/pages/confirm-medical');
     });
   }
 
-  LoadSchedulePage():void {
+  LoadSchedulePage(): void {
     this.router.navigateByUrl('blank').then(() => {
       this.router.navigateByUrl('/pages/schedule');
     });

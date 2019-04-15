@@ -59,7 +59,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.date = new Date();
+    this.date = new Date('2019-04-07');
     this.getSchedule();
     this.createEmergencyForm();
     this.getServerTime();
@@ -394,8 +394,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     const selectedDate = new Date(this.selectedTime);
     const actualStartDateTime = new Date(data.actualStartDateTime);
     const serverDate = new Date(this.serverTime);
-    console.log(selectedDate);
-    console.log(actualStartDateTime);
     this.actualEndTimeError = (selectedDate.getHours() * 60 + selectedDate.getMinutes())
       - (actualStartDateTime.getHours() * 60 + actualStartDateTime.getMinutes()) <= 0;
   }
