@@ -71,12 +71,14 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       clearInterval(this.state.interval);
     }
   }
-
+  //Emergency
   disabledStartDate = (startValue: Date): boolean => {
     if (!startValue || !this.emergencyForm.controls['endTime'].value) {
       return false;
     }
-    return startValue.getTime() >= this.emergencyForm.controls['endTime'].value.getTime() || startValue.getTime() <= (new Date()).getTime();
+    console.log(startValue.toUTCString());
+    return startValue.getTime() <= (new Date()).getTime();
+    
   };
 
   disabledEndDate = (endValue: Date): boolean => {
@@ -85,7 +87,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     }
     return endValue.getTime() <= this.emergencyForm.controls['startTime'].value.getTime();
   };
-
+  //----------------------------------------------
   createEmergencyForm() {
     this.emergencyForm = this.fb.group({
       startTime: new FormControl(new Date(), Validators.required),

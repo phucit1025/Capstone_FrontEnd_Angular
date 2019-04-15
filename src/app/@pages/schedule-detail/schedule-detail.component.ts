@@ -442,6 +442,8 @@ export class ScheduleDetailComponent implements OnInit {
 
   closeSurgeryProfileModal() {
     this.state.showSurgeryProfile = false;
+    this.messageCheckPatient = "";
+    this.createSurgeryProfileEditForm();
   }
 
   createSurgeryProfileEditForm() {
@@ -481,7 +483,7 @@ export class ScheduleDetailComponent implements OnInit {
       this.schedule_detail.updateSurgeryProfile(data).subscribe(res => {
         this.message.success('Create Successful!!!');
         // this.state.create = false;
-        this.closeSurgeryProfileModal()
+        this.closeSurgeryProfileModal();
         this.createSurgeryProfileEditForm();
         this.getDetail(this.id)
       }, er => {
@@ -513,6 +515,7 @@ export class ScheduleDetailComponent implements OnInit {
     console.log(this.surgeryProfileEditForm.controls);
     this.schedule_detail.checkExistedPatient(id).subscribe((res : any) => {
       if (res.name != null) {
+        this.messageCheckPatient = "";
         this.surgeryProfileEditForm.controls.editPatientName.setValue(res.name);
         this.surgeryProfileEditForm.controls.editGender.setValue(res.gender.toString());
         this.surgeryProfileEditForm.controls.editYob.setValue(res.yob);
