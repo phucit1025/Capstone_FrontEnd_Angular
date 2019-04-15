@@ -6,7 +6,7 @@ import { ScheduleService } from '../../page-services/schedule.service';
 import { ScheduleDetailService } from '../../page-services/schedule-detail.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
-import {TreatmentComponent} from './treatment/treatment.component';
+import { TreatmentComponent } from './treatment/treatment.component';
 
 @Component({
   selector: 'app-schedule-detail',
@@ -65,12 +65,11 @@ export class ScheduleDetailComponent implements OnInit {
   common = {
     supplies: [],
   };
-  messageInfo : any;
+  messageInfo: any;
   currentStatus: any;
 
   surgeryProfileEditForm: any;
-  radioGenderValue: any;
-  loadedEditSurgeryProfile: any
+  searchedCatalogs: any;
 
   constructor(private message: NzMessageService, private schedule: ScheduleService,
     private router: Router, private route: ActivatedRoute,
@@ -88,6 +87,7 @@ export class ScheduleDetailComponent implements OnInit {
     this.treatment.loadAllNurse();
     this.createNewForm();
     this.createSurgeryProfileEditForm();
+    // this.loadSurgeryProfile();
 
 
   }
@@ -228,7 +228,7 @@ export class ScheduleDetailComponent implements OnInit {
           this.messageInfo = "This patient is taking recovery";
           this.currentStatus = 3;
           break;
-  
+
         default:
           this.messageInfo = "This surgey shift is finished";
           this.currentStatus = 4;
@@ -433,6 +433,8 @@ export class ScheduleDetailComponent implements OnInit {
   //Emergency update
   openSurgeryProfileModal() {
     this.state.showSurgeryProfile = true;
+    this.createSurgeryProfileEditForm();
+    this.loadSurgeryProfile();
 
   }
 
@@ -441,27 +443,33 @@ export class ScheduleDetailComponent implements OnInit {
   }
 
   createSurgeryProfileEditForm() {
-    this.radioGenderValue = '0';
     this.surgeryProfileEditForm = this.fb.group({
       shiftId: new FormControl(this.id),
       editIdentityNumber: new FormControl(),
       editPatientName: new FormControl(),
-      editGender: new FormControl(),
+      editGender: new FormControl('0'),
       editYob: new FormControl(),
       editSurgeryId: new FormControl()
     });
   }
   loadSurgeryProfile() {
+    this.searchedCatalogs = [];
     this.schedule_detail.loadEditSurgeryProfile(this.id).subscribe((res: any) => {
-      this.radioGenderValue = '0';
-      this.surgeryProfileEditForm = this.fb.group({
-        shiftId: new FormControl(this.id),
-        editIdentityNumber: new FormControl(res.editIdentityNumber),
-        editPatientName: new FormControl(res.EditPatientName),
-        editGender: new FormControl(res.EditGender ? res.EditGender : 0),
-        editYob: new FormControl(res.editYob),
-        editSurgeryId: new FormControl(res.EditSurgeryId)
-      });
+      console.log(res);
+      if (res.editIdentityNumber != null) {
+        this.searchedCatalogs.push({
+          id: res.editSurgeryId,
+          showName: res.surgeryCode + ' - ' + res.surgeryName
+        });
+        this.surgeryProfileEditForm = this.fb.group({
+          shiftId: new FormControl(this.id),
+          editIdentityNumber: new FormControl(res.editIdentityNumber),
+          editPatientName: new FormControl(res.editPatientName),
+          editGender: new FormControl(res.editGender.toString()),
+          editYob: new FormControl(res.editYob),
+          editSurgeryId: new FormControl(res.editSurgeryId)
+        });
+      }
     });
   }
 
@@ -479,5 +487,36 @@ export class ScheduleDetailComponent implements OnInit {
         this.message.error('Create Fail!!!');
       });
     }
+  }
+
+  //search catalog
+  searchSurgeryCatalog(searchName: string): void {
+    searchName.trim();
+    if (searchName != '') {
+      this.schedule_detail.searchSurgeryCatalog(searchName)
+        .subscribe((data : any) => {
+          // console.log(data);
+          this.searchedCatalogs = data.map(item => ({
+            id: item.id,
+            showName: item.code + ' - ' + item.name
+          }));
+          // this.searchedCatalogs = [...this.searchedCatalogs];
+          console.log(this.searchedCatalogs);
+        }, er => console.log(er));
+    }
+  }
+
+  checkExistedPatient() {
+    const id = this.surgeryProfileEditForm.value.editIdentityNumber;
+    console.log(this.surgeryProfileEditForm.value.editIdentityNumber);
+    this.schedule_detail.checkExistedPatient(id).subscribe((res : any) => {
+      if (res != null) {
+        this.surgeryProfileEditForm = this.fb.group({
+          editPatientName: new FormControl(res.Name),
+          editGender: new FormControl(res.Gender),
+          editYob: new FormControl(res.editYob),
+        });
+      }
+    });
   }
 }

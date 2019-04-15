@@ -69,7 +69,6 @@ export class TreatmentComponent implements OnInit {
           this.drugs = [...this.drugs];
           console.log(this.drugs);
         }, er => console.log(er));
-
     }
   }
 

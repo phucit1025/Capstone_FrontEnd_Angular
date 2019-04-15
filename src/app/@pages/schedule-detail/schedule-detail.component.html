@@ -235,7 +235,7 @@
   </nz-dropdown>
 </div>
 <!-- Modal Add Supply -->
-<nz-modal nzWidth="800" [(nzVisible)]="state.showAddSupply" nzTitle="Add User Medical Supply"
+<nz-modal nzWidth="800" [(nzVisible)]="state.showAddSupply" nzTitle="Add Used Medical Supply"
   [nzContent]="createSupplyBody" [nzFooter]="createSupplyFooter" (nzOnCancel)="state.showAddSupply = false">
   <ng-template #createSupplyBody>
     <nz-spin [nzSpinning]="state.loadAddSupply">
@@ -346,14 +346,26 @@
   [nzOkLoading]="isOkLoading">
   <div nz-row class="body-surgery-profile-modal">
     <form nz-form [formGroup]="surgeryProfileEditForm">
-      <div nz-col nzSpan="11">
+      <div nz-col nzSpan="24" class="mb-2">
+        <span>Surgery Catalog:</span>
+        <nz-select formControlName="editSurgeryId" style="width: 100%" nzShowSearch [nzServerSearch]="true"
+          nzPlaceHolder="Select a surgery catalog" (nzOnSearch)="searchSurgeryCatalog($event)">
+          <nz-option *ngFor="let item of searchedCatalogs;" [nzLabel]="item.showName" [nzValue]="item.id"></nz-option>
+        </nz-select>
+      </div>
+      <div nz-col nzSpan="24">
         <span>Identity Number:</span>
+      </div>
+      <div nz-col nzSpan="16">
         <input nz-input formControlName="editIdentityNumber" type="number">
       </div>
-      <div nz-col nzSpan="2">
-        <!-- <button><i class="far fa-check"></i></button> -->
+      <div nz-col nzSpan="1"></div>
+      <div nz-col nzSpan="7">
+        <button (click)="checkExistedPatient()" class="mb-2" nz-button nzType="primary" style="width: 100%">
+            <i class="far fa-check-square"></i> Check
+        </button>
       </div>
-      <div nz-col nzSpan="11">
+      <div nz-col nzSpan="24" class="mb-2 mt-2">
         <span>Patient Name:</span>
         <input nz-input formControlName="editPatientName" type="text">
       </div>
@@ -368,15 +380,6 @@
       <div nz-col nzSpan="11">
         <span>Year of birth:</span> 
         <input nz-input formControlName="editYob" type="number">
-      </div>
-      <div nz-col nzSpan="11">
-        <span>Specialty:</span> 
-        <input nz-input type="text">
-      </div>
-      <div nz-col nzSpan="2"></div>
-      <div nz-col nzSpan="11">
-        <span>Surgery Name:</span>
-        <input nz-input formControlName="editSurgeryId" type="text">
       </div>
     </form>
   </div>
