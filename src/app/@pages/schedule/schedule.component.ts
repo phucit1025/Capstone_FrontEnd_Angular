@@ -392,10 +392,12 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   checkActualEndTime(data) {
     const selectedDate = new Date(this.selectedTime);
-    const actualStartDateTime = new Date(data.actualStartDateTime);
-    const serverDate = new Date(this.serverTime);
-    this.actualEndTimeError = (selectedDate.getHours() * 60 + selectedDate.getMinutes())
+    if (data.actualStartDateTime != null) {
+      const actualStartDateTime = new Date(data.actualStartDateTime);
+      this.actualEndTimeError = (selectedDate.getHours() * 60 + selectedDate.getMinutes())
       - (actualStartDateTime.getHours() * 60 + actualStartDateTime.getMinutes()) <= 0;
+    }
+    
   }
 
   countResult(rooms) {
