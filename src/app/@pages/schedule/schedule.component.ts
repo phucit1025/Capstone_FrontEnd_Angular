@@ -78,13 +78,13 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     }
     console.log(startValue.toUTCString());
     return startValue.getTime() <= (new Date()).getTime();
-    
   };
 
   disabledEndDate = (endValue: Date): boolean => {
     if (!endValue || !this.emergencyForm.controls['startTime'].value) {
       return false;
     }
+    console.log(endValue.getTime() <= this.emergencyForm.controls['startTime'].value.getTime());
     return endValue.getTime() <= this.emergencyForm.controls['startTime'].value.getTime();
   };
   //----------------------------------------------

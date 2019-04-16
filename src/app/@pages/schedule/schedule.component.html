@@ -74,7 +74,7 @@
             <button *ngIf="state.swapMode" (click)="disabled()" nz-button nzType="default">Disable Swap</button>
           </div>
           <div class="mt-2" *ngIf="state.swapMode">
-            <label style="color: #2F3242" class="mr-2"><b>Select a group ID</b></label>
+            <label style="color: #2F3242" class="mr-2"><b>Select a group ID</b></label> <br/>
             <nz-radio-group [(ngModel)]="selected.specialtyGroupId">
               <label *ngFor="let gr of groupsId" nz-radio [nzValue]="gr.id"><b>{{gr.name}}</b></label>
             </nz-radio-group>
@@ -123,6 +123,7 @@
                   <span class="badge badge-custom room-status" style="background: #9E9E9E">Completed</span>: {{room.totalPost}} shift(s) <br/>
                 </div>
                 <div nz-menu-divider></div>
+                <h5><b>{{room.specialtyGroupName}}</b></h5>
                 <div *ngFor="let specialty of room.specialties">- {{specialty}}</div>
               </div>
             </div>
