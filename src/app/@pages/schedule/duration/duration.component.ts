@@ -105,7 +105,7 @@ export class DurationComponent implements OnInit {
       this.state.load = true;
       const data = {
         id: this.id,
-        roomId: room.id,
+        slotRoomId: room.id,
         estimatedStartDateTime: this.date.startDate,
         estimatedEndDateTime: this.date.endDate,
         changeLogDescription: '',
