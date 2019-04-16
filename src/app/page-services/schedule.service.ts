@@ -33,7 +33,7 @@ export class ScheduleService {
   }
 
   getGetAvailableRoom(data: {
-    startDate, endDate
+    startDate, endDate, forcedChange, specialtyGroupId
   }) {
     return this.http.post(GLOBAL.API + this.name + '/GetAvailableRoom', data);
   }
