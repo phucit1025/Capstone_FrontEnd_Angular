@@ -23,6 +23,7 @@ export class TreatmentComponent implements OnInit {
     loadAllNurse: false,
     showAssignNurse: false,
     assignedForNurse: false,
+    treatmentIsUsed: false,
   };
   treatmentDetail = {
     treatmentReport: [],
@@ -41,6 +42,7 @@ export class TreatmentComponent implements OnInit {
     'margin-bottom': '24px',
     'border': '0px'
   };
+  errorTime = false;
 
   constructor(private message: NzMessageService, private schedule: ScheduleService,
               private router: Router, private route: ActivatedRoute, private fb: FormBuilder) {
@@ -54,6 +56,30 @@ export class TreatmentComponent implements OnInit {
   }
 
   nzFilterOption = () => true;
+
+  checkTime(data, index){
+    var last = data[data.length - 1];
+    let reg = /^([0-1][0-9]|2[0-3]):[0-5][0-9]\/[0-9]$/i;
+    console.log(data);
+    console.log(last);                                
+    var arr = this.treatmentDetail.treatmentForm.get('treatmentReportDrugs').controls[index].controls['timeString'].value;
+    arr.pop();
+    console.log(arr);
+    console.log(arr.some(v => v.includes(last.split('/')[0])));
+
+    if (!arr.some(v => v.includes(last.split('/')[0]))) {
+      arr.push(last)
+    }
+
+    if (!reg.test(last)){
+      data.pop();
+      this.errorTime = true;
+    } else {
+      this.errorTime = false;
+    }
+    this.treatmentDetail.treatmentForm.get('treatmentReportDrugs').controls[index].controls['timeString']
+    .patchValue(data, {onlySelf: true, emitEvent: false, emitViewToModelChange: false});
+  }
 
   searchDrug(value: string): void {
     value.trim();
@@ -83,10 +109,13 @@ export class TreatmentComponent implements OnInit {
   createNewFormTreatment() {
     this.treatmentDetail.treatmentForm = this.fb.group({
       progressiveDisease: new FormControl(''),
+      treatmentRequirement: new FormControl(''),
       shiftId: new FormControl(this.data.id),
       treatmentReportDrugs: this.fb.array([this.createFormDrugs()])
     });
     this.state.treatmentMode = 'Create';
+    this.state.treatmentIsUsed = false;
+    
   }
 
   getTreatment(id) {
@@ -119,8 +148,13 @@ export class TreatmentComponent implements OnInit {
   }
 
   deleteFormDrugs(index: number) {
-    const array = this.treatmentDetail.treatmentForm.get('treatmentReportDrugs') as FormArray;
-    array.removeAt(index);
+    if (this.state.treatmentMode === 'Create') {
+      const array = this.treatmentDetail.treatmentForm.get('treatmentReportDrugs') as FormArray;
+      array.removeAt(index);
+    } else {
+      const array = this.treatmentDetail.treatmentForm.get('treatmentReportDrugs').controls[index];
+      array.disable();
+    }
   }
 
   saveTreatment() {
@@ -184,11 +218,13 @@ export class TreatmentComponent implements OnInit {
     this.treatmentDetail.treatmentForm = this.fb.group({
       id: new FormControl(data.id),
       progressiveDisease: new FormControl(data.progressiveDisease),
+      treatmentRequirement: new FormControl(data.treatmentRequirement),
       shiftId: new FormControl(this.id),
       treatmentReportDrugs: this.fb.array([]),
       deleteTreatmentReportId: this.fb.array([]),
     });
-    this.patchFormDrugArray(data.treatmentReportDrugs);
+    this.patchFormDrugArray(data.treatmentReportDrugs, data.isUsed);
+    this.state.treatmentIsUsed = true;
     this.state.showTreatmentReport = true;
     this.state.treatmentMode = 'Edit';
   }
@@ -201,24 +237,22 @@ export class TreatmentComponent implements OnInit {
     }
   }
 
-  patchFormDrugArray(data) {
+  patchFormDrugArray(data, isUsed) {
     let drugs = data.map(d => ({
       id: d.drugId,
       name: d.name,
       unit: d.unit
     }));
     this.drugs = drugs;
-    let ctrl = this.treatmentDetail.treatmentForm.controls.treatmentReportDrugs;
+    const ctrl = this.treatmentDetail.treatmentForm.controls.treatmentReportDrugs;
     return data.map(x => {
-      ctrl.push(this.fb.group({
-        id: new FormControl(x.id, Validators.required),
-        drugId: new FormControl(x.drugId, Validators.required),
-        morningQuantity: new FormControl(x.morningQuantity, [Validators.required, Validators.min(0)]),
-        afternoonQuantity: new FormControl(x.afternoonQuantity, [Validators.required, Validators.min(0)]),
-        eveningQuantity: new FormControl(x.eveningQuantity, [Validators.required, Validators.min(0)]),
-        nightQuantity: new FormControl(x.nightQuantity, [Validators.required, Validators.min(0)]),
-        unit: new FormControl(x.unit, Validators.required),
-      }));
+        ctrl.push(this.fb.group({
+          id: new FormControl({value: x.id, disabled: (x.isDeleted)}, Validators.required),
+          drugId: new FormControl({value:x.drugId, disabled: (x.isDeleted )} ,Validators.required),
+          timeString: new FormControl({value:x.timeString, disabled: (x.isDeleted)}, Validators.required),
+          route: new FormControl({value:x.route, disabled:( x.isDeleted )}, Validators.required),
+          unit: new FormControl({value:x.unit, disabled: (x.isDeleted)}, Validators.required),
+        }));
     });
   }
 
@@ -226,10 +260,8 @@ export class TreatmentComponent implements OnInit {
     return this.fb.group({
       id: new FormControl(0, Validators.required),
       drugId: new FormControl(null, Validators.required),
-      morningQuantity: new FormControl(1, [Validators.required, Validators.min(0)]),
-      afternoonQuantity: new FormControl(1, [Validators.required, Validators.min(0)]),
-      eveningQuantity: new FormControl(1, [Validators.required, Validators.min(0)]),
-      nightQuantity: new FormControl(1, [Validators.required, Validators.min(0)]),
+      timeString: new FormControl(null, Validators.required),
+      route: new FormControl(null, Validators.required),
       unit: new FormControl(null, Validators.required),
     });
   }

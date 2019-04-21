@@ -18,6 +18,7 @@
           <th>No</th>
           <th>From</th>
           <th>Progessive Disease</th>
+          <!-- <th>Status</th> -->
           <th>Action</th>
         </tr>
       </thead>
@@ -28,43 +29,33 @@
             <td>{{i + 1}}</td>
             <td>{{data.dateCreated}}</td>
             <td>{{data.progressiveDisease}}</td>
+            <!-- <td> <ng-container *ngIf="data.isUsed === true; else elseBlock"><td><nz-tag [nzColor]="'green'">Is Used</nz-tag></td></ng-container>
+            <ng-template #elseBlock><td><nz-tag [nzColor]="'red'">Not Used</nz-tag> </td></ng-template></td> -->
             <td>
-              <ng-container *ngIf="!data.isUsed">
                 <button nz-button nzType="default" class="mr-2" (click)="createEditFormTreatment(data)">
                   <i nz-icon type="edit" theme="outline"></i>
                 </button>
-                <button nz-button nzType="danger" (click)="deleteTreatment(data.id)">
-                  <i nz-icon type="delete" theme="outline"></i>
-                </button>
-              </ng-container>
             </td>
           </tr>
           <tr [nzExpand]="mapOfExpandData[data.id]">
-            <td colspan="5">
+            <td colspan="6">
               <nz-table #drugsTable nzBordered [nzData]="data.treatmentReportDrugs" [nzFrontPagination]="false"
                 [nzShowPagination]="false">
                 <thead>
                   <tr>
-                    <th rowspan="2">Name</th>
-                    <th colspan="4">Time</th>
-                  </tr>
-                  <tr>
-                    <th>Morning</th>
-                    <th>Afternoon</th>
-                    <th>Evening</th>
-                    <th>Night</th>
+                    <th>Name</th>
+                    <th>Time/Quantity</th>
+                    <th>Route</th>
                   </tr>
                 </thead>
-      <tbody>
-        <tr *ngFor="let drug of drugsTable.data">
-          <td>{{drug.name}}</td>
-          <td>{{drug.morningQuantity}}</td>
-          <td>{{drug.afternoonQuantity}}</td>
-          <td>{{drug.eveningQuantity}}</td>
-          <td>{{drug.nightQuantity}}</td>
-        </tr>
-      </tbody>
-    </nz-table>
+                <tbody>
+                  <tr *ngFor="let drug of drugsTable.data">
+                    <td>{{drug.name}}</td>
+                    <td>{{drug.statusString}}</td>
+                    <td>{{drug.route}}</td>
+                  </tr>
+                </tbody>
+              </nz-table>
     </td>
     </tr>
     </ng-container>
@@ -92,7 +83,7 @@
         </div>
         <div class="col-12 row">
           <div class="col-12 row">
-            <div class="col-5">
+            <div class="col-3">
               <nz-form-item class="mb-0">
                 <nz-form-label>Drug Name</nz-form-label>
               </nz-form-item>
@@ -102,24 +93,14 @@
                 <nz-form-label>Unit</nz-form-label>
               </nz-form-item>
             </div>
-            <div class="col-1">
+            <div class="col-3">
               <nz-form-item class="mb-0">
-                <nz-form-label>Morning</nz-form-label>
+                <nz-form-label>Time/Quantity</nz-form-label>
               </nz-form-item>
             </div>
-            <div class="col-1">
+            <div class="col-3">
               <nz-form-item class="mb-0">
-                <nz-form-label>Noon</nz-form-label>
-              </nz-form-item>
-            </div>
-            <div class="col-1">
-              <nz-form-item class="mb-0">
-                <nz-form-label>Evening</nz-form-label>
-              </nz-form-item>
-            </div>
-            <div class="col-1">
-              <nz-form-item class="mb-0">
-                <nz-form-label>Night</nz-form-label>
+                <nz-form-label>Route</nz-form-label>
               </nz-form-item>
             </div>
             <div class="col-1">
@@ -132,29 +113,13 @@
         <div class="col-12 row" formArrayName="treatmentReportDrugs"
           *ngFor="let item of treatmentDetail.treatmentForm.get('treatmentReportDrugs').controls; let i = index;">
           <div [formGroupName]="i" class="col-12 row">
-            <div class="col-5">
+            <div class="col-3">
               <nz-form-item class="mb-1">
                 <nz-form-control>
-                  <!-- <nz-select formControlName="drugId" (ngModelChange)="setUnit($event, i)" style="width: 100%"
-                    nzShowSearch nzAllowClear nzPlaceHolder="Select a supply">
-                    <nz-option *ngFor="let item of common.drugs" [nzLabel]="item.name" [nzValue]="item.id">
-                    </nz-option>
-                  </nz-select> -->
-                  
-                  <!-- //search remote data -->
                   <nz-select formControlName="drugId" style="width: 100%" nzShowSearch [nzServerSearch]="true"
                     nzPlaceHolder="Select a drug" (ngModelChange)="setUnit($event, i)" (nzOnSearch)="searchDrug($event)">
                     <nz-option *ngFor="let item of drugs; trackBy: trackByFn" [nzLabel]="item.name" [nzValue]="item.id"> </nz-option>
                   </nz-select>
-
-                  <!-- load data on scroll -->
-                  <!-- <nz-select style="width: 100%;" [(ngModel)]="selectedUser" (nzScrollToBottom)="loadMore()" nzPlaceHolder="Select users"
-                    nzAllowClear>
-                    <nz-option *ngFor="let o of optionList" [nzValue]="o" [nzLabel]="o"></nz-option>
-                    <nz-option *ngIf="isLoading" nzDisabled nzCustomContent>
-                      <i nz-icon type="loading" class="loading-icon"></i> Loading Data...
-                    </nz-option>
-                  </nz-select> -->
                 </nz-form-control>
               </nz-form-item>
             </div>
@@ -167,35 +132,19 @@
                 </nz-form-control>
               </nz-form-item>
             </div>
-            <div class="col-1">
+            <div class="col-3">
               <nz-form-item class="mb-1">
                 <nz-form-control>
-                  <nz-input-number formControlName="morningQuantity" style="width: 100%" [nzMin]="0" [nzStep]="1">
-                  </nz-input-number>
+                  <nz-select formControlName="timeString" nzMode="tags" style="width: 100%;"
+                   (ngModelChange)="checkTime($event, i)" nzPlaceHolder="Input time. Example: 08:00/1">
+                  </nz-select>
                 </nz-form-control>
               </nz-form-item>
             </div>
-            <div class="col-1">
+            <div class="col-3">
               <nz-form-item class="mb-1">
                 <nz-form-control>
-                  <nz-input-number formControlName="afternoonQuantity" style="width: 100%" [nzMin]="0" [nzStep]="1">
-                  </nz-input-number>
-                </nz-form-control>
-              </nz-form-item>
-            </div>
-            <div class="col-1">
-              <nz-form-item class="mb-1">
-                <nz-form-control>
-                  <nz-input-number formControlName="eveningQuantity" style="width: 100%" [nzMin]="0" [nzStep]="1">
-                  </nz-input-number>
-                </nz-form-control>
-              </nz-form-item>
-            </div>
-            <div class="col-1">
-              <nz-form-item class="mb-1">
-                <nz-form-control>
-                  <nz-input-number formControlName="nightQuantity" style="width: 100%" [nzMin]="0" [nzStep]="1">
-                  </nz-input-number>
+                  <input nz-input placeholder="Route" formControlName="route"/>
                 </nz-form-control>
               </nz-form-item>
             </div>
@@ -211,7 +160,7 @@
         </div>
       </form>
       <div class="col-12 mb-2 text-right">
-        <button nz-button nzType="primary" class="mb-2" (click)="addFormDrugs()">
+        <button *ngIf="state.treatmentMode != 'Edit'" nz-button nzType="primary" class="mb-2" (click)="addFormDrugs()">
           <i nz-icon type="plus" theme="outline"></i>
         </button>
       </div>
