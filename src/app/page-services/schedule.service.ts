@@ -21,6 +21,27 @@ export class ScheduleService {
     return this.http.get(GLOBAL.API + this.name + '/GetSurgeryRooms');
   }
 
+  getSurgeonList(id) {
+    return this.http.get(GLOBAL.API + 'SurgeryShift/GetShiftSurgeons?surgeryShiftId=' + id);
+  }
+
+  getAvailableSurgeons(id) {
+    return this.http.get(GLOBAL.API + 'SurgeryShift/GetAvailableSurgeons?surgeryShiftId=' + id);
+  }
+
+  addSurgeons(data) {
+    return this.http.post(GLOBAL.API + 'SurgeryShift/AddSurgeon', data);
+  }
+
+  deleteSurgeon(data) {
+    return this.http
+      .delete(GLOBAL.API + `SurgeryShift/RemoveSurgeon?surgeryShiftId=${data.surgeryShiftId}&surgeonId=${data.surgeonId}`);
+  }
+
+  get getSlotRoomsForTechnical() {
+    return this.http.get(GLOBAL.API + this.name + '/GetSurgeryRooms');
+  }
+
   getReportByRoom(id, date) {
     return this.http.get(GLOBAL.API + this.name + '/GetReportByRoom?roomId=' + id + '&dayNumber=' + date);
   }
@@ -29,6 +50,13 @@ export class ScheduleService {
     return this.http.get(GLOBAL.API + this.name + '/GetSurgeryShiftsByRoomAndDate',
       {
         params: {slotRoomId: slotRoomId, dayNumber: dayNumber}
+      });
+  }
+
+  getSurgeryShiftsByRoomAndDateForTechnical(slotRoomId, dayNumber, userId) {
+    return this.http.get(GLOBAL.API + this.name + '/GetSurgeryShiftsByRoomAndDate',
+      {
+        params: {slotRoomId: slotRoomId, dayNumber: dayNumber, technicalStaffId: userId}
       });
   }
 
@@ -169,11 +197,11 @@ export class ScheduleService {
     return this.http.get(GLOBAL.API + 'PostOp/GetHealthCareReportBySurgeryShiftId?surgeryShiftId=' + id);
   }
 
-  exportSurgery(id, type){
+  exportSurgery(id, type) {
     let headers = new HttpHeaders();
     headers = headers.set('Accept', 'application/pdf');
-    return this.http.get(GLOBAL.API + `PostOp/CreateSurgeryPdf?id=${id}&type=${type}`,{ headers: headers, responseType: 'blob' })
-    .subscribe((response) => this.downloadFile(response));
+    return this.http.get(GLOBAL.API + `PostOp/CreateSurgeryPdf?id=${id}&type=${type}`, {headers: headers, responseType: 'blob'})
+      .subscribe((response) => this.downloadFile(response));
   }
 
 

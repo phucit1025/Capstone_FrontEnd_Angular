@@ -1,12 +1,12 @@
-import { GLOBAL } from './../../global';
-import { NzMessageService, NzModalService } from 'ng-zorro-antd';
-import { FormBuilder, FormControl, Validators, FormArray } from '@angular/forms';
-import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { ScheduleService } from '../../page-services/schedule.service';
-import { ScheduleDetailService } from '../../page-services/schedule-detail.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import {GLOBAL} from './../../global';
+import {NzMessageService, NzModalService} from 'ng-zorro-antd';
+import {FormBuilder, FormControl, Validators, FormArray} from '@angular/forms';
+import {Component, OnInit, ViewChild, ChangeDetectionStrategy} from '@angular/core';
+import {ScheduleService} from '../../page-services/schedule.service';
+import {ScheduleDetailService} from '../../page-services/schedule-detail.service';
+import {ActivatedRoute, Router} from '@angular/router';
 import * as moment from 'moment';
-import { TreatmentComponent } from './treatment/treatment.component';
+import {TreatmentComponent} from './treatment/treatment.component';
 
 @Component({
   selector: 'app-schedule-detail',
@@ -59,6 +59,13 @@ export class ScheduleDetailComponent implements OnInit {
     supplyUsed: []
   };
 
+  surgeons = {
+    data: [],
+    list: [],
+    load: false,
+    loadList: false,
+  };
+
   healthcareDetail = {
     healthcareReport: []
   };
@@ -74,9 +81,9 @@ export class ScheduleDetailComponent implements OnInit {
   patientInfo: any;
 
   constructor(private message: NzMessageService, private schedule: ScheduleService,
-    private router: Router, private route: ActivatedRoute,
-    private fb: FormBuilder, private modalService: NzModalService,
-    private schedule_detail: ScheduleDetailService) {
+              private router: Router, private route: ActivatedRoute,
+              private fb: FormBuilder, private modalService: NzModalService,
+              private schedule_detail: ScheduleDetailService) {
     route.params.subscribe(params => {
       this.id = params.id;
       this.getDetail(params.id);
@@ -89,9 +96,28 @@ export class ScheduleDetailComponent implements OnInit {
     this.treatment.loadAllNurse();
     this.createNewForm();
     this.createSurgeryProfileEditForm();
+    this.loadSurgeon();
+    this.loadListSurgeon();
     // this.loadSurgeryProfile();
 
 
+  }
+
+  loadListSurgeon() {
+    this.surgeons.loadList = true;
+    this.schedule.getSurgeonList(this.id).subscribe((list: any) => {
+      this.surgeons.list = list;
+      this.surgeons.loadList = false;
+    });
+  }
+
+
+  loadSurgeon() {
+    this.surgeons.load = true;
+    this.schedule.getAvailableSurgeons(this.id).subscribe((sugs: any) => {
+      this.surgeons.data = sugs;
+      this.surgeons.load = false;
+    });
   }
 
   nzFilterOption = () => true;
@@ -102,7 +128,7 @@ export class ScheduleDetailComponent implements OnInit {
 
   searchSupply(value: string): void {
     value.trim();
-    if (value != "") {
+    if (value !== '') {
       this.schedule.searchSupply(value)
         .subscribe(data => {
           console.log(data);
@@ -124,8 +150,8 @@ export class ScheduleDetailComponent implements OnInit {
 
   patchFormSupplyArray(supply) {
     this.common.supplies = supply;
-    let ctrl = this.surgeryDetail.supplyForm.controls.listSupply;
-    if (supply.length == 0) {
+    const ctrl = this.surgeryDetail.supplyForm.controls.listSupply;
+    if (supply.length === 0) {
       ctrl.push(this.fb.group({
         id: new FormControl(0, Validators.required),
         medicalSupplyId: new FormControl(null, Validators.required),
@@ -143,7 +169,7 @@ export class ScheduleDetailComponent implements OnInit {
 
   pushDeleteSupplyId(id) {
     console.log(id);
-    let ctrl = this.surgeryDetail.supplyForm.controls.deleteMedicalSupplyIds;
+    const ctrl = this.surgeryDetail.supplyForm.controls.deleteMedicalSupplyIds;
     ctrl.push(new FormControl(id));
   }
 
@@ -189,50 +215,50 @@ export class ScheduleDetailComponent implements OnInit {
       this.state.load = false;
       this.data = res;
       switch (this.data.statusName) {
-        case "Preoperative":
-          this.messageInfo = "This patient is preparing for surgery";
+        case 'Preoperative':
+          this.messageInfo = 'This patient is preparing for surgery';
           this.currentStatus = 0;
           break;
-        case "Intraoperative":
-          this.messageInfo = "This patient is undergoing surgery";
+        case 'Intraoperative':
+          this.messageInfo = 'This patient is undergoing surgery';
           this.currentStatus = 1;
           break;
-        case "Postoperative":
-          this.messageInfo = "This patient is taking recovery to consciousness";
+        case 'Postoperative':
+          this.messageInfo = 'This patient is taking recovery to consciousness';
           this.currentStatus = 2;
           break;
-        case "Recovery":
-          this.messageInfo = "This patient is taking recovery";
+        case 'Recovery':
+          this.messageInfo = 'This patient is taking recovery';
           this.currentStatus = 3;
           break;
 
         default:
-          this.messageInfo = "This surgey shift is finished";
+          this.messageInfo = 'This surgey shift is finished';
           this.currentStatus = 4;
           break;
       }
       console.log(this.messageInfo);
       console.log(res);
       switch (this.data.statusName) {
-        case "Preoperative":
-          this.messageInfo = "This patient is preparing for surgery";
+        case 'Preoperative':
+          this.messageInfo = 'This patient is preparing for surgery';
           this.currentStatus = 0;
           break;
-        case "Intraoperative":
-          this.messageInfo = "This patient is undergoing surgery";
+        case 'Intraoperative':
+          this.messageInfo = 'This patient is undergoing surgery';
           this.currentStatus = 1;
           break;
-        case "Postoperative":
-          this.messageInfo = "This patient is taking recovery to consciousness";
+        case 'Postoperative':
+          this.messageInfo = 'This patient is taking recovery to consciousness';
           this.currentStatus = 2;
           break;
-        case "Recovery":
-          this.messageInfo = "This patient is taking recovery";
+        case 'Recovery':
+          this.messageInfo = 'This patient is taking recovery';
           this.currentStatus = 3;
           break;
 
         default:
-          this.messageInfo = "This surgey shift is finished";
+          this.messageInfo = 'This surgey shift is finished';
           this.currentStatus = 4;
           break;
       }
@@ -275,10 +301,10 @@ export class ScheduleDetailComponent implements OnInit {
         return item;
       });
 
-      let data = {
+      const data = {
         shiftMedicals: finalData,
         deleteMedicalSupplyIds: this.surgeryDetail.supplyForm.value.deleteMedicalSupplyIds
-      }
+      };
 
       this.schedule.addUsedMedicalSupply(data).subscribe(res => {
         this.state.loadAddSupply = false;
@@ -432,7 +458,8 @@ export class ScheduleDetailComponent implements OnInit {
       }),
     });
   }
-  //Emergency update
+
+  // Emergency update
   openSurgeryProfileModal() {
     this.state.showSurgeryProfile = true;
     this.createSurgeryProfileEditForm();
@@ -442,7 +469,7 @@ export class ScheduleDetailComponent implements OnInit {
 
   closeSurgeryProfileModal() {
     this.state.showSurgeryProfile = false;
-    this.messageCheckPatient = "";
+    this.messageCheckPatient = '';
     this.createSurgeryProfileEditForm();
   }
 
@@ -456,6 +483,7 @@ export class ScheduleDetailComponent implements OnInit {
       editSurgeryId: new FormControl()
     });
   }
+
   loadSurgeryProfile() {
     this.searchedCatalogs = [];
     this.schedule_detail.loadEditSurgeryProfile(this.id).subscribe((res: any) => {
@@ -485,7 +513,7 @@ export class ScheduleDetailComponent implements OnInit {
         // this.state.create = false;
         this.closeSurgeryProfileModal();
         this.createSurgeryProfileEditForm();
-        this.getDetail(this.id)
+        this.getDetail(this.id);
       }, er => {
         // this.state.create = false;
         this.message.error('Create Fail!!!');
@@ -493,12 +521,12 @@ export class ScheduleDetailComponent implements OnInit {
     }
   }
 
-  //search catalog
+  // search catalog
   searchSurgeryCatalog(searchName: string): void {
     searchName.trim();
-    if (searchName != '') {
+    if (searchName !== '') {
       this.schedule_detail.searchSurgeryCatalog(searchName)
-        .subscribe((data : any) => {
+        .subscribe((data: any) => {
           // console.log(data);
           this.searchedCatalogs = data.map(item => ({
             id: item.id,
@@ -513,14 +541,14 @@ export class ScheduleDetailComponent implements OnInit {
   checkExistedPatient() {
     const id = this.surgeryProfileEditForm.value.editIdentityNumber;
     console.log(this.surgeryProfileEditForm.controls);
-    this.schedule_detail.checkExistedPatient(id).subscribe((res : any) => {
-      if (res.name != null) {
-        this.messageCheckPatient = "";
+    this.schedule_detail.checkExistedPatient(id).subscribe((res: any) => {
+      if (res.name !== null) {
+        this.messageCheckPatient = '';
         this.surgeryProfileEditForm.controls.editPatientName.setValue(res.name);
         this.surgeryProfileEditForm.controls.editGender.setValue(res.gender.toString());
         this.surgeryProfileEditForm.controls.editYob.setValue(res.yob);
       } else {
-        this.messageCheckPatient = "This patient isn't existed! Let create new patient";
+        this.messageCheckPatient = 'This patient isn\'t existed! Let create new patient';
         this.surgeryProfileEditForm.controls.editPatientName.setValue();
         this.surgeryProfileEditForm.controls.editGender.setValue('0');
         this.surgeryProfileEditForm.controls.editYob.setValue();

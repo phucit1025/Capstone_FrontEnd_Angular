@@ -1,0 +1,101 @@
+<nz-card nzTitle="Performed Ekip">
+  <div class="text-right">
+    <button [disabled]="!data" (click)="state.showListSurgeons = true" nz-button
+            nzType="primary"
+            class="mb-2 mr-2">
+      <i nz-icon nzType="plus" nzTheme="outline"></i>
+      Change Surgeons
+    </button>
+  </div>
+  <nz-table #surgeonsTable [nzData]="(data && data.ekipMember ? data.ekipMember : [])">
+    <thead>
+    <tr>
+      <th style="width: 300px">Work Job</th>
+      <th style="width: 300px">Name</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let data of surgeonsTable.data">
+      <td style="width: 300px">{{data.workJob}}</td>
+      <td style="width: 300px">{{data.name}}</td>
+      <td>
+        <button nz-button nzType="danger">
+          <i nz-icon nzType="trash" nzTheme="outline"></i>
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </nz-table>
+</nz-card>
+<nz-modal [(nzVisible)]="state.showListSurgeons" nzTitle="Change Surgeons"
+          [nzContent]="listSurgeonBody" [nzFooter]="listSurgeonFooter"
+          (nzOnCancel)="state.showListSurgeons = false">
+  <ng-template #listSurgeonBody>
+    <div class="text-right">
+      <button [disabled]="!data" (click)="state.showChangeSurgeons = true; createNewForm(data.id)" nz-button
+              nzType="primary"
+              class="mb-2 mr-2">
+        <i nz-icon type="plus"></i>
+        Add new
+      </button>
+    </div>
+    <nz-spin [nzSpinning]="surgeons.loadList">
+      <nz-table #surgeonsListTable [nzData]="surgeons.list">
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th style="width: 75px">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let data of surgeonsListTable.data">
+          <td>{{data.name}}</td>
+          <td style="width: 75px">
+            <button (click)="createConfirm(data.id)" nz-button nzType="danger">
+              <i nz-icon type="delete"></i>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </nz-table>
+    </nz-spin>
+  </ng-template>
+  <ng-template #listSurgeonFooter>
+    <div class="text-right">
+      <button (click)="state.showListSurgeons = false" nz-button nzType="default"
+              class="mb-2 mr-2">
+        Close
+      </button>
+    </div>
+  </ng-template>
+</nz-modal>
+<nz-modal nzZIndex="3000" [(nzVisible)]="state.showChangeSurgeons" nzTitle="Add Surgeons"
+          [nzContent]="changSurgeonBody" [nzFooter]="changSurgeonFooter"
+          (nzOnCancel)="state.showChangeSurgeons = false">
+  <ng-template #changSurgeonBody>
+    <nz-spin [nzSpinning]="state.loadSurgeons || surgeons.load">
+      <form *ngIf="form" nz-form [formGroup]="form">
+        <label>Surgeon</label>
+        <p>{{sue}}</p>
+        <nz-select style="width:100%;" formControlName="surgeonId" nzAllowClear nzPlaceHolder="Choose">
+          <nz-option *ngFor="let sug of surgeonsTemp" [nzValue]="sug.id" [nzLabel]="sug.name"></nz-option>
+        </nz-select>
+      </form>
+    </nz-spin>
+  </ng-template>
+  <ng-template #changSurgeonFooter>
+    <div class="text-right">
+      <button [disabled]="state.loadSurgeons" (click)="state.showChangeSurgeons = false" nz-button nzType="default"
+              class="mb-2 mr-2">
+        Cancel
+      </button>
+      <button
+        [disabled]="state.loadSurgeons ||  form?.invalid"
+        (click)="submit()" nz-button nzType="primary" class="mb-2">
+        Save
+      </button>
+    </div>
+  </ng-template>
+
+</nz-modal>

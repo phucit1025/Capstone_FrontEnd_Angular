@@ -40,7 +40,7 @@ const routes: Routes = [
         path: 'schedule',
         component: ScheduleComponent,
         data: {
-          roles: ['ChiefNurse'],
+          roles: ['ChiefNurse', 'Technical'],
           title: 'Schedule'
         }
       },
@@ -48,7 +48,7 @@ const routes: Routes = [
         path: 'schedule-detail/:id',
         component: ScheduleDetailComponent,
         data: {
-          roles: ['ChiefNurse'],
+          roles: ['ChiefNurse', 'Technical'],
           title: 'Schedule'
         },
       },

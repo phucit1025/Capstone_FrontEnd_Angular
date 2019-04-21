@@ -7,7 +7,7 @@
     <ul class="navbar-background" nz-menu [nzMode]="'inline'" style="height:100%">
       <ng-container *ngFor="let item of menu">
         <li *ngIf="user.data && item.roles.indexOf(user.data.role) !== -1" [routerLinkActive]="'ant-menu-item-selected'"
-          [routerLinkActiveOptions]="{exact: true}" nz-menu-item [routerLink]="item.link">
+            [routerLinkActiveOptions]="{exact: true}" nz-menu-item [routerLink]="item.link">
           <span title>
             <i nz-icon [type]="item.icon"></i>
             {{item.name}}
@@ -20,7 +20,7 @@
     <nz-header class="navbar-layout header-gradient">
       <div style="height: 100%" class="d-flex align-items-center">
         <i class="trigger" style="cursor: pointer" nz-icon [type]="isCollapsed?'menu-unfold':'menu-fold'"
-          (click)="isCollapsed=!isCollapsed"></i>
+           (click)="isCollapsed=!isCollapsed"></i>
         <div class="mr-auto"></div>
         <nz-dropdown *ngIf="user.data" [nzPlacement]="'bottomRight'" [nzTrigger]="'click'" style="margin-right: 30px">
           <a *ngIf="user.data.role == 'HospitalStaff'" nz-dropdown>
@@ -30,6 +30,9 @@
             <nz-badge [nzCount]="countNotiSup"><i class="far fa-bell fa-2x"></i></nz-badge>
           </a>
           <a *ngIf="user.data.role == CHIEFNURSE_ROLE" nz-dropdown>
+            <nz-badge [nzCount]="countNotiChief"><i class="far fa-bell fa-2x"></i></nz-badge>
+          </a>
+          <a *ngIf="user.data.role == 'Technical'" nz-dropdown>
             <nz-badge [nzCount]="countNotiChief"><i class="far fa-bell fa-2x"></i></nz-badge>
           </a>
           <ul class="notification-container" nz-menu>
@@ -43,9 +46,10 @@
             <div *ngIf="user.data.role == SUPPLIER_ROLE">
               <div class="notification-body" *ngIf="msgsSupplier.length > 0">
                 <div *ngFor="let msg of msgsSupplier">
-                  <li (click)="LoadConfirmPage()" (mouseenter)="SetIsReadNotification(msg.id, user.data.role)" nz-row nz-menu-item
-                    [ngStyle]="{'background-color': msg.isRead? 'inherit' : '#e0e0e0'}"
-                    style="border-bottom: 1px solid white; height: 100px;"  class="z-depth-1">
+                  <li (click)="LoadConfirmPage()" (mouseenter)="SetIsReadNotification(msg.id, user.data.role)" nz-row
+                      nz-menu-item
+                      [ngStyle]="{'background-color': msg.isRead? 'inherit' : '#e0e0e0'}"
+                      style="border-bottom: 1px solid white; height: 100px;" class="z-depth-1">
                     <div nz-col nzMd nzSpan="24" class="noti-content">
                       <span>{{msg.content}}</span>
                     </div>
@@ -60,8 +64,9 @@
             <div *ngIf="user.data.role == CHIEFNURSE_ROLE">
               <div class="notification-body" *ngIf="msgsChiefNurse.length > 0">
                 <div *ngFor="let msg of msgsChiefNurse">
-                  <li (click)="LoadSchedulePage()" (mouseenter)="SetIsReadNotification(msg.id, user.data.role)" nz-row nz-menu-item
-                    [ngStyle]="{'background-color': msg.isRead? 'inherit' : '#e0e0e0'}" class="z-depth-1">
+                  <li (click)="LoadSchedulePage()" (mouseenter)="SetIsReadNotification(msg.id, user.data.role)" nz-row
+                      nz-menu-item
+                      [ngStyle]="{'background-color': msg.isRead? 'inherit' : '#e0e0e0'}" class="z-depth-1">
                     <div nz-col nzMd nzSpan="24" class="noti-content">
                       <span>{{msg.content}}</span>
                     </div>

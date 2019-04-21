@@ -85,47 +85,38 @@
 
 <nz-collapse [nzBordered]="false">
   <nz-collapse-panel class="primary-table" [nzHeader]="'Surgery Information Detail'" [ngStyle]="customeStyle"
-    nzExpandedIcon="expandedIcon">
+                     nzExpandedIcon="expandedIcon">
     <div class="row">
       <div class="col-md-6">
         <div class="mb-2">
-          <nz-card nzTitle="Performed Ekip">
-            <ng-container *ngIf="data?.ekipMember?.length > 0; else noDoctor">
-              <div class="mb-2" *ngFor="let doctor of data.ekipMember">
-                <b class="mr-2" style="font-weight: bold">{{doctor.workJob}}: </b><span>{{doctor.name}}</span>
-              </div>
-            </ng-container>
-            <ng-template #noDoctor>
-              <p>There is no ekip member</p>
-            </ng-template>
-          </nz-card>
+          <app-surgeon [(data)]="data" [surgeons]="surgeons" (surgeonsChange)="loadListSurgeon()"></app-surgeon>
         </div>
         <div>
           <nz-card nzTitle="Used Medical Supplies">
             <div>
-              <nz-table #supplyUsedTable [nzData]="surgeryDetail.supplyUsed" 
-              [nzLoading]="state.loadGetSupply"
-                [nzFrontPagination]="false" [nzShowPagination]="false">
+              <nz-table #supplyUsedTable [nzData]="surgeryDetail.supplyUsed"
+                        [nzLoading]="state.loadGetSupply"
+                        [nzFrontPagination]="false" [nzShowPagination]="false">
                 <thead>
-                  <tr>
-                    <th>No.</th>
-                    <th>Name</th>
-                    <th class="text-center">Quantity</th>
-                  </tr>
+                <tr>
+                  <th>No.</th>
+                  <th>Name</th>
+                  <th class="text-center">Quantity</th>
+                </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let data of supplyUsedTable.data; let i = index">
-                    <td>{{i + 1}}</td>
-                    <td>{{data.medicalSupplyName}}</td>
-                    <td class="text-center">{{data.quantity}}</td>
-                  </tr>
+                <tr *ngFor="let data of supplyUsedTable.data; let i = index">
+                  <td>{{i + 1}}</td>
+                  <td>{{data.medicalSupplyName}}</td>
+                  <td class="text-center">{{data.quantity}}</td>
+                </tr>
                 </tbody>
               </nz-table>
             </div>
             <div class="text-right mt-2">
               <button (click)="state.showAddSupply = true; createNewForm()" nz-button nzType="primary" class="mb-2">
                 <i nz-icon type="edit"></i>
-                  Edit
+                Edit
               </button>
             </div>
           </nz-card>
@@ -136,7 +127,7 @@
           <nz-spin [nzSpinning]="state.loadSaveProcedure">
             <div>
               <textarea class="sug-area" [disabled]="!state.editMode" rows="" nz-input
-                [(ngModel)]="surgeryDetail.surgeryProcedure"></textarea>
+                        [(ngModel)]="surgeryDetail.surgeryProcedure"></textarea>
               <div class="text-right mt-2">
                 <button *ngIf="!state.editMode" (click)="state.editMode = true" nz-button nzType="primary" class="mb-2">
                   <i nz-icon type="edit"></i>
@@ -144,18 +135,18 @@
                 </button>
                 <ng-container *ngIf="state.editMode">
                   <button (click)="state.editMode = false; surgeryDetail.surgeryProcedure = surgeryDetail.containData"
-                    nz-button nzType="danger" class="mb-2 mr-2">
+                          nz-button nzType="danger" class="mb-2 mr-2">
                     <i nz-icon type="close"></i>
                     Cancel
                   </button>
                   <button [disabled]="surgeryDetail.surgeryProcedure === surgeryDetail.containData"
-                    (click)="saveSurgeryProcedure()" nz-button nzType="primary" class="mb-2">
+                          (click)="saveSurgeryProcedure()" nz-button nzType="primary" class="mb-2">
                     <i nz-icon type="check"></i>
                     Save
                   </button>
                 </ng-container>
               </div>
-            
+
             </div>
           </nz-spin>
         </nz-card>
@@ -170,11 +161,12 @@
 <app-treatment [id]="id" [data]="data"></app-treatment>
 
 <nz-collapse [nzBordered]="false">
-  <nz-collapse-panel class="primary-table" [nzHeader]="'Healthcare Reports'" [ngStyle]="customeStyle" nzExpandedIcon="expandedIcon">
+  <nz-collapse-panel class="primary-table" [nzHeader]="'Healthcare Reports'" [ngStyle]="customeStyle"
+                     nzExpandedIcon="expandedIcon">
     <div class="mb-2">
       <nz-table #healthcareTable [nzData]="healthcareDetail.healthcareReport" [nzLoading]="state.loadHealthcare"
-      [nzFrontPagination]="false" [nzShowPagination]="false">
-      <thead>
+                [nzFrontPagination]="false" [nzShowPagination]="false">
+        <thead>
         <tr>
           <th>No</th>
           <th>From</th>
@@ -183,22 +175,30 @@
           <th>Care Content</th>
           <th>Nurse</th>
         </tr>
-      </thead>
-      <tbody>
+        </thead>
+        <tbody>
         <ng-template ngFor let-data [ngForOf]="healthcareTable.data" let-i="index">
           <tr>
             <td>{{i + 1}}</td>
             <td>{{data.dateCreated}}</td>
-            <ng-container *ngIf="data.woundCondition === 1; else elseBlock"><td><nz-tag [nzColor]="'green'">Good</nz-tag> </td></ng-container>
-            <ng-template #elseBlock><td><nz-tag [nzColor]="'red'">Bad</nz-tag> </td></ng-template>
-            
+            <ng-container *ngIf="data.woundCondition === 1; else elseBlock">
+              <td>
+                <nz-tag [nzColor]="'green'">Good</nz-tag>
+              </td>
+            </ng-container>
+            <ng-template #elseBlock>
+              <td>
+                <nz-tag [nzColor]="'red'">Bad</nz-tag>
+              </td>
+            </ng-template>
+
             <td>{{data.eventContent}}</td>
             <td>{{data.careContent}}</td>
             <td>{{data.nurseName}}</td>
           </tr>
         </ng-template>
-      </tbody>
-    </nz-table>
+        </tbody>
+      </nz-table>
     </div>
     <ng-template #expandedIcon let-active>
       <i nz-icon type="down" theme="outline" class="ant-collapse-arrow" nzRotate="p.nzActive ? 90 : -90"></i>
@@ -224,7 +224,7 @@
     </ng-container>
   </ng-container>
 
- 
+
   <nz-dropdown [nzPlacement]="'topRight'">
     <button nz-button nzType="default" nz-dropdown><span>Export Surgery Report</span> <i nz-icon type="up"></i></button>
     <ul nz-menu>
@@ -242,20 +242,21 @@
 </div>
 <!-- Modal Add Supply -->
 <nz-modal nzWidth="800" [(nzVisible)]="state.showAddSupply" nzTitle="Add Used Medical Supply"
-  [nzContent]="createSupplyBody" [nzFooter]="createSupplyFooter" (nzOnCancel)="state.showAddSupply = false">
+          [nzContent]="createSupplyBody" [nzFooter]="createSupplyFooter" (nzOnCancel)="state.showAddSupply = false">
   <ng-template #createSupplyBody>
     <nz-spin [nzSpinning]="state.loadAddSupply">
       <form *ngIf="surgeryDetail.supplyForm" nz-form [nzLayout]="'inline'" [formGroup]="surgeryDetail.supplyForm">
-        <div formArrayName="listSupply" 
-          *ngFor="let item of surgeryDetail.supplyForm.get('listSupply').controls; let i = index;">
+        <div formArrayName="listSupply"
+             *ngFor="let item of surgeryDetail.supplyForm.get('listSupply').controls; let i = index;">
           <div [formGroupName]="i">
             <nz-form-item>
               <nz-form-label>Name</nz-form-label>
               <nz-form-control>
-                <nz-select style="width: 300px" formControlName="medicalSupplyId" nzShowSearch  [nzServerSearch]="true"
-                  nzPlaceHolder="Select a supply" (nzOnSearch)="searchSupply($event)">
-                    <nz-option *ngFor="let item of common.supplies; trackBy: trackByFnSupply" [nzLabel]="item.medicalSupplyName"
-                    [nzValue]="item.medicalSupplyId"></nz-option>
+                <nz-select style="width: 300px" formControlName="medicalSupplyId" nzShowSearch [nzServerSearch]="true"
+                           nzPlaceHolder="Select a supply" (nzOnSearch)="searchSupply($event)">
+                  <nz-option *ngFor="let item of common.supplies; trackBy: trackByFnSupply"
+                             [nzLabel]="item.medicalSupplyName"
+                             [nzValue]="item.medicalSupplyId"></nz-option>
                 </nz-select>
               </nz-form-control>
             </nz-form-item>
@@ -267,8 +268,9 @@
             </nz-form-item>
             <nz-form-item>
               <nz-form-control>
-                <button (click)="deleteFormSupply(i); pushDeleteSupplyId(item.controls['id'].value)" nz-button nzType="danger" nzShape="round"><i nz-icon
-                    type="close"></i></button>
+                <button (click)="deleteFormSupply(i); pushDeleteSupplyId(item.controls['id'].value)" nz-button
+                        nzType="danger" nzShape="round"><i nz-icon
+                                                           type="close"></i></button>
               </nz-form-control>
             </nz-form-item>
           </div>
@@ -284,7 +286,7 @@
   <ng-template #createSupplyFooter>
     <div class="text-right">
       <button [disabled]="state.loadAddSupply" (click)="state.showAddSupply = false" nz-button nzType="default"
-        class="mb-2 mr-2">
+              class="mb-2 mr-2">
         Cancel
       </button>
       <button
@@ -297,7 +299,7 @@
 </nz-modal>
 
 <nz-modal [(nzVisible)]="state.showStatusModal" [nzTitle]="startTitle" [nzContent]="startContent"
-  [nzFooter]="startFooter" (nzOnCancel)="state.showStatusModal = false">
+          [nzFooter]="startFooter" (nzOnCancel)="state.showStatusModal = false">
   <ng-template #startTitle>
     Change Status
   </ng-template>
@@ -336,11 +338,11 @@
   <ng-template #startFooter>
     <button nz-button nzType="default" (click)="state.showStatusModal = false">Cancel</button>
     <button *ngIf="data?.statusName != 'Postoperative'" [disabled]="state.loadChangeStatus || !selected.selectedTime"
-      nz-button nzType="primary" (click)="startShift()"
-      [nzLoading]="state.loadChangeStatus">{{data?.statusName === 'Preoperative' ? 'Save' : 'Complete'}}</button>
+            nz-button nzType="primary" (click)="startShift()"
+            [nzLoading]="state.loadChangeStatus">{{data?.statusName === 'Preoperative' ? 'Save' : 'Complete'}}</button>
     <button *ngIf="data?.statusName === 'Postoperative'" [disabled]="state.loadChangeStatus" nz-button nzType="primary"
-      (click)="startShift()"
-      [nzLoading]="state.loadChangeStatus">{{data?.statusName === 'Preoperative' ? 'Save' : 'Complete'}}</button>
+            (click)="startShift()"
+            [nzLoading]="state.loadChangeStatus">{{data?.statusName === 'Preoperative' ? 'Save' : 'Complete'}}</button>
   </ng-template>
 </nz-modal>
 <!-- Emergency update surgery profile -->
@@ -355,7 +357,7 @@
       <div nz-col nzSpan="24" class="mb-2">
         <span>Surgery Catalog:</span>
         <nz-select formControlName="editSurgeryId" style="width: 100%" nzShowSearch [nzServerSearch]="true"
-          nzPlaceHolder="Select a surgery catalog" (nzOnSearch)="searchSurgeryCatalog($event)">
+                   nzPlaceHolder="Select a surgery catalog" (nzOnSearch)="searchSurgeryCatalog($event)">
           <nz-option *ngFor="let item of searchedCatalogs;" [nzLabel]="item.showName" [nzValue]="item.id"></nz-option>
         </nz-select>
       </div>
@@ -368,7 +370,7 @@
       <div nz-col nzSpan="1"></div>
       <div nz-col nzSpan="7">
         <button (click)="checkExistedPatient()" class="mb-2" nz-button nzType="primary" style="width: 100%">
-            <i class="far fa-check-square"></i> Check
+          <i class="far fa-check-square"></i> Check
         </button>
       </div>
       <p style="color: red">{{messageCheckPatient}}</p>
@@ -386,10 +388,11 @@
         </div>
         <div nz-col nzSpan="2"></div>
         <div nz-col nzSpan="11">
-          <span>Year of birth:</span> 
+          <span>Year of birth:</span>
           <input nz-input formControlName="editYob" type="number">
         </div>
       </div>
     </form>
   </div>
 </nz-modal>
+

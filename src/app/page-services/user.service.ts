@@ -22,6 +22,7 @@ export class UserService {
 }
 
 export interface User {
+  id: number;
   username: string;
   name?: string;
   role: 'ChiefNurse' | 'HospitalStaff' | 'MedicalSupplier';

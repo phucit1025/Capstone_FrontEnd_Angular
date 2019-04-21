@@ -8,6 +8,7 @@ import {NzMessageService} from 'ng-zorro-antd';
 import {SwalComponent} from '@toverux/ngx-sweetalert2';
 import swal from 'sweetalert2';
 import * as moment from 'moment';
+import {UserService} from '../../page-services/user.service';
 
 @Component({
   selector: 'app-schedule',
@@ -54,16 +55,24 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   groupsId = [];
   actualEndTimeError = false;
 
-  constructor(private schedule: ScheduleService,
-    private messageService: NzMessageService, private fb: FormBuilder) {
+  constructor(
+    private schedule: ScheduleService,
+    private messageService: NzMessageService,
+    private userSV: UserService,
+    private fb: FormBuilder) {
   }
 
   ngOnInit() {
-    this.date = new Date();
-    this.getSchedule();
-    this.createEmergencyForm();
-    this.getServerTime();
-
+    this.userSV.getUser.subscribe((user: any) => {
+      this.date = new Date();
+      this.createEmergencyForm();
+      this.getServerTime();
+      if (user.role === 'Technical') {
+        this.getScheduleForTeachnical(user, this.date);
+      } else {
+        this.getSchedule();
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -71,7 +80,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       clearInterval(this.state.interval);
     }
   }
-  //Emergency
+
   disabledStartDate = (startValue: Date): boolean => {
     if (!startValue || !this.emergencyForm.controls['endTime'].value) {
       return false;
@@ -87,7 +96,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     console.log(endValue.getTime() <= this.emergencyForm.controls['startTime'].value.getTime());
     return endValue.getTime() <= this.emergencyForm.controls['startTime'].value.getTime();
   };
-  //----------------------------------------------
+
   createEmergencyForm() {
     this.emergencyForm = this.fb.group({
       startTime: new FormControl(new Date(), Validators.required),
@@ -155,6 +164,66 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     });
   }
 
+  getScheduleForTeachnical(user: any, date?: any) {
+    this.state.searchText = null;
+    this.state.selectedStatus = [];
+    this.state.load = true;
+    this.schedule.getSlotRooms().subscribe((rooms: any) => {
+      this.rooms = rooms;
+      if (rooms && rooms.length > 0) {
+        rooms.forEach(room => {
+          if (room.specialtyGroupId !== null && this.groupsId.map(el => el.id).indexOf(room.specialtyGroupId) === -1) {
+            this.groupsId.push({
+              id: room.specialtyGroupId,
+              name: room.specialtyGroupName
+            });
+          }
+          this.scheduleForEachRoomTechnical(user.id, room, GLOBAL.convertDate(date ? date : this.date));
+        });
+      }
+    });
+  }
+
+  scheduleForEachRoomTechnical(userId: number, room: any, date, load = false,) {
+    if (load) {
+      this.state.load = true;
+      this.state.reload = false;
+    }
+    const array = [];
+    this.schedule.getSpecialtyByRoomId(room.id).subscribe((specialties: any) => {
+      room['specialties'] = specialties;
+    });
+    this.schedule.getReportByRoom(room.id, date ? date : GLOBAL.convertDate(this.date))
+      .subscribe((reportRoom: any) => {
+        room['totalShift'] = reportRoom['totalShift'];
+        room['totalPre'] = reportRoom['totalPre'];
+        room['totalIntra'] = reportRoom['totalIntra'];
+        room['totalPost'] = reportRoom['totalPost'];
+      });
+    // Convert list roomId to list api function
+    room.slotRooms.map(slot => {
+      array.push(this.schedule.getSurgeryShiftsByRoomAndDateForTechnical(slot.id, date, userId));
+    });
+
+    const result = combineLatest(array);
+    result.subscribe(res => {
+      room.slotRooms.forEach((slot, index) => {
+        slot['surgeries'] = res[index];
+        let shiftId;
+        for (let i = 0; i < slot['surgeries'].length; i++) {
+          shiftId = slot['surgeries'][i].id;
+          this.schedule.checkStatusPreviousSurgeryShift(shiftId).subscribe((rs: any) => {
+            slot['surgeries'][i]['isStart'] = rs;
+          });
+        }
+      });
+      this.state.load = false;
+      this.state.finish = true;
+    }, er => {
+      this.state.load = false;
+    });
+  }
+
   scheduleForEachRoom(room: any, date, load = false) {
     if (load) {
       this.state.load = true;
@@ -165,12 +234,12 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       room['specialties'] = specialties;
     });
     this.schedule.getReportByRoom(room.id, date ? date : GLOBAL.convertDate(this.date))
-    .subscribe((reportRoom : any) => {
-      room['totalShift'] = reportRoom['totalShift'];
-      room['totalPre'] = reportRoom['totalPre'];
-      room['totalIntra'] = reportRoom['totalIntra'];
-      room['totalPost'] = reportRoom['totalPost'];
-    });
+      .subscribe((reportRoom: any) => {
+        room['totalShift'] = reportRoom['totalShift'];
+        room['totalPre'] = reportRoom['totalPre'];
+        room['totalIntra'] = reportRoom['totalIntra'];
+        room['totalPost'] = reportRoom['totalPost'];
+      });
     // Convert list roomId to list api function
     room.slotRooms.map(slot => {
       array.push(this.schedule.getSurgeryShiftsByRoomAndDate(slot.id, date));
@@ -397,9 +466,9 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     if (data.actualStartDateTime != null) {
       const actualStartDateTime = new Date(data.actualStartDateTime);
       this.actualEndTimeError = (selectedDate.getHours() * 60 + selectedDate.getMinutes())
-      - (actualStartDateTime.getHours() * 60 + actualStartDateTime.getMinutes()) <= 0;
+        - (actualStartDateTime.getHours() * 60 + actualStartDateTime.getMinutes()) <= 0;
     }
-    
+
   }
 
   countResult(rooms) {
