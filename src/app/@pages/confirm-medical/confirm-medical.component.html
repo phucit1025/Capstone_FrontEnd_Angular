@@ -68,30 +68,26 @@
       </tbody>
     </nz-table> -->
 
-    <div class="col-12 row">
-      <div class="col-12 row">
-          <div class="col-2">
-              <span class="font-weight-bold">No</span>
-            </div>
-        <div class="col-7">
-          <span class="font-weight-bold">Supply Name</span>
-        </div>
-        <div class="col-3">
-          <span class="font-weight-bold">Quantity</span>
-        </div>
+    <div nz-row>
+      <div nz-col nzSpan="3">
+        <span class="font-weight-bold">No</span>
+      </div>
+      <div nz-col nzSpan="17">
+        <span class="font-weight-bold">Supply Name</span>
+      </div>
+      <div nz-col nzSpan="4">
+        <span class="font-weight-bold">Quantity</span>
       </div>
     </div>
-    <div *ngFor="let data of supplyList; let i = index" class="col-12 row">
-      <div class="col-12 row">
-          <div class="col-2">
-              <span>{{i+1}}</span>
-            </div>
-        <div class="col-7">
-          <span>{{data.supplyName}}</span>
-        </div>
-        <div class="col-3">
-          <span>{{data.quantity}}</span>
-        </div>
+    <div *ngFor="let data of supplyList; let i = index" nz-row>
+      <div nz-col nzSpan="3">
+        <span>{{i+1}}</span>
+      </div>
+      <div nz-col nzSpan="17">
+        <span>{{data.supplyName}}</span>
+      </div>
+      <div nz-col nzSpan="4">
+        <span>{{data.quantity}}</span>
       </div>
     </div>
   </ng-template>

@@ -17,8 +17,8 @@ import {activateRoutes} from '@angular/router/src/operators/activate_routes';
 })
 export class LayoutComponent implements OnInit, OnDestroy {
 
-  // HOST = 'https://localhost:44372/';
-  HOST = 'http://172.20.10.7:5000/';
+  HOST = 'https://localhost:44372/';
+  // HOST = 'http://172.20.10.7:5000/';
   SUPPLIER_ROLE = 'MedicalSupplier';
   CHIEFNURSE_ROLE = 'ChiefNurse';
 

@@ -54,11 +54,11 @@ export class ImportFileComponent implements OnInit {
           patient.index = len + index;
           patient.gender = patient.gender === 'F' ? 0 : 1;
           patient.patientID = patient.patientId;
-          patient.priority = patient.priority;
+          patient.priorityNumber = patient.priorityNumber;
           patient.surgeryShiftID = patient.surgeryShiftId;
           patient.surgeryCatalogID = patient.surgeryCode;
           patient.yearOfBirth = patient.patientDob;
-          patient.expectedSurgeryDuration = patient.surgeryWeight;
+          patient.expectedDuration = patient.expectedDuration;
           patient.detailMedical = data[1].filter(item => patient.surgeryShiftCode === item.surgeryShiftCode);
           patient.proposedStartDateTime = '';
           patient.proposedEndDateTime = '';
@@ -156,6 +156,7 @@ export class ImportFileComponent implements OnInit {
         surgeryShifts: profiles
       }
       this.importSV.importShift(data).subscribe(el => {
+        
         this.message.success('Import Successful');
         this.notificationService.getTmpNotification('MedicalSupplier').subscribe(re => { }); //notify
         this.state.load = false;
@@ -168,7 +169,6 @@ export class ImportFileComponent implements OnInit {
         }
       }, er => {
         this.message.error('Import Fail!!! Please try again');
-        console.log(er.message);
         this.state.load = false;
       });
     } else {
