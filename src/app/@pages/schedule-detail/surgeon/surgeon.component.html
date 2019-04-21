@@ -52,7 +52,7 @@
         <tr *ngFor="let data of surgeonsListTable.data">
           <td>{{data.name}}</td>
           <td style="width: 75px">
-            <button (click)="createConfirm(data.id)" nz-button nzType="danger">
+            <button *ngIf="surgeonsListTable.data.length > 1" (click)="createConfirm(data.id)" nz-button nzType="danger">
               <i nz-icon type="delete"></i>
             </button>
           </td>
