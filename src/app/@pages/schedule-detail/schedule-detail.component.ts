@@ -109,6 +109,7 @@ export class ScheduleDetailComponent implements OnInit {
       this.surgeons.list = list;
       this.surgeons.loadList = false;
     });
+    this.getEkipMember(this.id);
   }
 
 
