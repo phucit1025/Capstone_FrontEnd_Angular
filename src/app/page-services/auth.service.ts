@@ -43,8 +43,10 @@ export class AuthService {
         const tokenData = this.decodeToken(token);
         if (tokenData) {
           console.log(tokenData);
+          var idNumber = parseInt(tokenData.UserInfoId);
+          console.log(idNumber + "akkdasbdsa");
           this.user.setUser = {
-            id: 0,
+            id: idNumber,
             username: tokenData.email,
             name: tokenData.email,
             role: tokenData['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']

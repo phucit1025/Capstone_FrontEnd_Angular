@@ -1,32 +1,24 @@
 <nz-card nzTitle="Performed Ekip">
-  <div class="text-right">
-    <button [disabled]="!data" (click)="state.showListSurgeons = true" nz-button
-            nzType="primary"
-            class="mb-2 mr-2">
-      <i nz-icon nzType="plus" nzTheme="outline"></i>
-      Change Surgeons
-    </button>
-  </div>
-  <nz-table #surgeonsTable [nzData]="(data && data.ekipMember ? data.ekipMember : [])">
+  <nz-table class="primary-table" [nzShowPagination]="false" #surgeonsTable [nzData]="(data && data.ekipMember ? data.ekipMember : [])">
     <thead>
     <tr>
       <th style="width: 300px">Work Job</th>
       <th style="width: 300px">Name</th>
-      <th>Action</th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let data of surgeonsTable.data">
       <td style="width: 300px">{{data.workJob}}</td>
       <td style="width: 300px">{{data.name}}</td>
-      <td>
-        <button nz-button nzType="danger">
-          <i nz-icon nzType="trash" nzTheme="outline"></i>
-        </button>
-      </td>
     </tr>
     </tbody>
   </nz-table>
+  <div style="float: right; margin-top: 10px">
+    <button [disabled]="!data" 
+      (click)="state.showListSurgeons = true" nz-button nzType="primary" class="mb-2 mr-2">
+      Change Surgeons
+    </button>
+  </div>
 </nz-card>
 <nz-modal [(nzVisible)]="state.showListSurgeons" nzTitle="Change Surgeons"
           [nzContent]="listSurgeonBody" [nzFooter]="listSurgeonFooter"
@@ -41,7 +33,7 @@
       </button>
     </div>
     <nz-spin [nzSpinning]="surgeons.loadList">
-      <nz-table #surgeonsListTable [nzData]="surgeons.list">
+      <nz-table [nzShowPagination]="false" #surgeonsListTable [nzData]="surgeons.list">
         <thead>
         <tr>
           <th>Name</th>

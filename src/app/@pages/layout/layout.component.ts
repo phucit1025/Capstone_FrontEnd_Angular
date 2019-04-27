@@ -39,7 +39,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
       icon: 'calendar',
       name: 'Schedule',
       link: '/pages/schedule',
-      roles: ['ChiefNurse']
+      roles: ['ChiefNurse', 'Technical']
     },
     {
       icon: 'experiment',

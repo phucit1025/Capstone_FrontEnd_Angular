@@ -54,7 +54,7 @@ export class ScheduleService {
   }
 
   getSurgeryShiftsByRoomAndDateForTechnical(slotRoomId, dayNumber, userId) {
-    return this.http.get(GLOBAL.API + this.name + '/GetSurgeryShiftsByRoomAndDate',
+    return this.http.get(GLOBAL.API + this.name + '/GetSurgeryShiftsByRoomAndDateOfTechnical',
       {
         params: {slotRoomId: slotRoomId, dayNumber: dayNumber, technicalStaffId: userId}
       });
