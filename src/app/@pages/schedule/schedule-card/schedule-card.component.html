@@ -32,7 +32,7 @@
             Detail
           </button>
         </div>
-        <div *ngIf="data.statusName === 'Preoperative'" class="col-4 pl-1 pr-1">
+        <div *ngIf="data.statusName === 'Preoperative' && notHistoryDate()" class="col-4 pl-1 pr-1">
           <button (click)="emitData(data)" style="width: 100%" nz-button nzType="default">
             Change
           </button>
@@ -93,7 +93,7 @@
             Detail
           </button>
         </div>
-        <div *ngIf="data.statusName === 'Preoperative'" class="col-4 pl-1 pr-1">
+        <div *ngIf="data.statusName === 'Preoperative' && notHistoryDate()" class="col-4 pl-1 pr-1">
           <button (click)="emitData(data)" style="width: 100%" nz-button nzType="default">
             Change
           </button>
