@@ -34,7 +34,6 @@ export class ScheduleCardComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    console.log(this.data);
   }
 
   notHistoryDate() {

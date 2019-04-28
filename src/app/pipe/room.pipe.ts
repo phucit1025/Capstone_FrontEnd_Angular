@@ -12,17 +12,16 @@ export class RoomPipe implements PipeTransform {
         el.slotRooms.forEach((slot, k) => {
           if (newData[i]) {
             newData[i].slotRooms[k].surgeries = slot.surgeries.filter(sg => {
-              const sgArr = [];
               if (sg) {
                 // tslint:disable-next-line:forin
-                if (sg.surgeonNames.filter(n => n.indexOf(search)).length > 0) {
-                  return sg;
+                if (sg.surgeonNames.filter(n => n.toLowerCase().includes(search.toLowerCase())).length > 0) {
+                  return true;
                 }
-                if (sg.patientName.indexOf(search) !== -1) {
-                  return sg;
+                if (sg.patientName.toLowerCase().includes(search.toLowerCase())) {
+                  return true;
                 }
-                if (sg.catalogName.indexOf(search) !== -1) {
-                  return sg;
+                if (sg.catalogName.toLowerCase().includes(search.toLowerCase())) {
+                  return true;
                 }
               }
             });
