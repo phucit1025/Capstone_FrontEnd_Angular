@@ -1,5 +1,7 @@
 <nz-spin [nzSpinning]="state.load" [nzSize]="'large'">
   <form nz-form [nzLayout]="'inline'">
+    <p>Curent duration:
+      {{(data?.estimatedStartDateTime | date: 'hh : mm') + ' - ' + (data?.estimatedEndDateTime | date: 'hh : mm')}}</p>
     <nz-form-item>
       <nz-form-label nzFor="startTime">Start Time</nz-form-label>
       <nz-form-control>
@@ -37,7 +39,9 @@
                 <div style="margin-right: auto; width: 50%">
                   <p>{{item.roomName}}</p>
                 </div>
-                <button nz-popconfirm nzTitle="Are You Sure You Want To Change ?" [nzCancelText]="'Cancel'" (nzOnConfirm)="changeSchedule(item)" nz-button nzType="primary">Change</button>
+                <button nz-popconfirm nzTitle="Are You Sure You Want To Change ?" [nzCancelText]="'Cancel'"
+                        (nzOnConfirm)="changeSchedule(item)" nz-button nzType="primary">Change
+                </button>
               </div>
             </ng-template>
           </ng-template>
@@ -47,6 +51,5 @@
         </ng-template>
       </div>
     </ng-container>
-
   </form>
 </nz-spin>

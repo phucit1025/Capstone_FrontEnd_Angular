@@ -171,9 +171,8 @@
     <ng-template #modalContent>
       <nz-tabset [nzTabPosition]="'left'">
         <nz-tab nzTitle="Duration">
-          <app-duration #duration [id]="selectedObject?.id"
+          <app-duration #duration [data]="selectedObject"
                         [groupId]="selectedObject?.groupId" (detectChanges)="this.state.reload = true">
-
           </app-duration>
         </nz-tab>
       </nz-tabset>

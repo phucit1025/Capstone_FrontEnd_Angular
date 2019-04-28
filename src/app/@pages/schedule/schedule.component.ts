@@ -298,7 +298,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   cancel() {
     if (this.state.reload) {
-      this.scheduleForEachRoom(this.rooms, GLOBAL.convertDate(this.date), true);
+      this.getSchedule();
+      this.state.reload = false;
     }
     this.isVisible = false;
     this.selectedObject = null;

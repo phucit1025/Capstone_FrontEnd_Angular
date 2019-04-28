@@ -15,11 +15,16 @@ export class RoomPipe implements PipeTransform {
               const sgArr = [];
               if (sg) {
                 // tslint:disable-next-line:forin
-                for (const kudo in sg) {
-                  sgArr.push(sg[kudo]);
+                if (sg.surgeonNames.filter(n => n.indexOf(search)).length > 0) {
+                  return sg;
+                }
+                if (sg.patientName.indexOf(search) !== -1) {
+                  return sg;
+                }
+                if (sg.catalogName.indexOf(search) !== -1) {
+                  return sg;
                 }
               }
-              return sgArr.join(',').toLowerCase().includes(search.trim().toLowerCase());
             });
           }
         });

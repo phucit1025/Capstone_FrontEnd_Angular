@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
+import {Component, Input, OnInit, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
 import {ScheduleService} from '../../../page-services/schedule.service';
 import {NzMessageService} from 'ng-zorro-antd';
 import {GLOBAL} from '../../../global';
@@ -9,8 +9,8 @@ import {combineLatest} from 'rxjs';
   templateUrl: './duration.component.html',
   styleUrls: ['./duration.component.css']
 })
-export class DurationComponent implements OnInit {
-  @Input() id = -1;
+export class DurationComponent implements OnInit, OnChanges {
+  @Input() data: any;
   @Input() groupId = -1;
   @Output() detectChanges = new EventEmitter();
   date = {
@@ -26,9 +26,18 @@ export class DurationComponent implements OnInit {
   constructor(private schedule: ScheduleService, private message: NzMessageService) {
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes) {
+      if (this.data) {
+        this.date = {
+          startDate: new Date(this.data.estimatedStartDateTime),
+          endDate: new Date(this.data.estimatedEndDateTime)
+        };
+      }
+    }
+  }
 
   ngOnInit() {
-    console.log(this.groupId);
   }
 
   getAvailableRoom(type: boolean) {
@@ -42,12 +51,11 @@ export class DurationComponent implements OnInit {
       if (data) {
         this.state.load = true;
         this.state.finish = false;
-        console.log(data);
-        this.schedule.getGetAvailableRoom(data).subscribe((listId: any) => {
+        this.schedule.getGetAvailableRoom(data).subscribe((list: any) => {
           const array = [];
           this.roomList = [];
-          listId.forEach(id => {
-            array.push(this.schedule.getRoomInfo(id));
+          list.forEach(any => {
+            array.push(this.schedule.getRoomInfo(any));
           });
           if (array.length === 0) {
             this.state.load = false;
@@ -66,7 +74,6 @@ export class DurationComponent implements OnInit {
               this.state.load = false;
             });
           }
-
         }, er => {
           this.state.load = false;
           this.message.create('error', `<p>${er.status === 400 ? er.error : 'Cannot load'}</p>`);
@@ -101,10 +108,10 @@ export class DurationComponent implements OnInit {
   }
 
   changeSchedule(room) {
-    if (this.id !== -1 && room) {
+    if (this.data.id !== -1 && room) {
       this.state.load = true;
       const data = {
-        id: this.id,
+        id: this.data.id,
         slotRoomId: room.id,
         estimatedStartDateTime: this.date.startDate,
         estimatedEndDateTime: this.date.endDate,
