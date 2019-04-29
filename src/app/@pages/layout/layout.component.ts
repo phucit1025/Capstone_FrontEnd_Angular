@@ -66,8 +66,12 @@ export class LayoutComponent implements OnInit, OnDestroy {
       name: 'Room Specialty Group',
       link: '/pages/room-specialty-group',
       roles: ['ChiefNurse']
+    }, {
+      icon: 'fund',
+      name: 'Postop Statistical',
+      link: '/pages/postop-statistical',
+      roles: ['ChiefNurse']
     },
-    
   ];
   isCollapsed = true;
   triggerTemplate = null;

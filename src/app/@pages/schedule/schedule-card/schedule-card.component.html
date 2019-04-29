@@ -11,7 +11,7 @@
           </span>
           <span *ngIf="data.isEmergency">
             <i style="color: red" class="mr-2 fas fa-exclamation-triangle"></i>
-          </span> 
+          </span>
           <b>{{data.id}}</b>
         </p>
       </div>
@@ -69,9 +69,9 @@
             <span *ngIf="!data.isEmergency">
               <i style="color: black" class="mr-2 fas fa-info-circle"></i>
             </span>
-            <span *ngIf="data.isEmergency">
+          <span *ngIf="data.isEmergency">
               <i style="color: red" class="mr-2 fas fa-exclamation-triangle"></i>
-            </span> 
+            </span>
           <b>{{data.id}}</b>
         </p>
       </div>
@@ -130,7 +130,12 @@
     </div> -->
     <div class="d-block">
       <span class="label"><b>Specialty:</b> <br/> {{data.specialtyName ? data.specialtyName : 'N/A'}} </span> <br/>
-      <span class="label"><b>Surgery Name :</b> <br/> {{data.catalogName ? data.catalogName : 'N/A'}}</span>
+      <span class="label"><b>Surgery Name :</b> <br/> {{data.catalogName ? data.catalogName : 'N/A'}}</span> <br/>
+      <span class="label"><b>Surgeons :</b> <br/>
+        <ng-container *ngFor="let surgeon of data.surgeonNames; let last = last">
+          {{surgeon + (!last ? ', ' : '')}}
+        </ng-container>
+      </span>
     </div>
   </div>
 </ng-template>

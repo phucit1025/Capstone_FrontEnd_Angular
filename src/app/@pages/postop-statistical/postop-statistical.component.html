@@ -1,0 +1,100 @@
+<div class="row pb-4">
+  <div class="col-12 pb-4">
+    Filter by :
+  </div>
+  <div class="col-6 pb-4">
+    <label>Date</label>
+    <nz-date-picker style="width: 100%" nzFormat="DD / MM / YYYY"  [ngModel]="tableConfig.actualEnd"
+                    (ngModelChange)="tableConfig.actualEnd = $event; loadTable()"></nz-date-picker>
+  </div>
+  <div class="col-6 pb-4">
+    <label>Doctor</label>
+    <nz-select
+      style="width: 100%"
+      nzShowSearch
+      nzAllowClear
+      nzPlaceHolder="Select a doctor"
+      [ngModel]="tableConfig.doctorId"
+      (nzOnSearch)="changeDoctorName($event)"
+      (nzScrollToBottom)="scrollDoctorToBotom()"
+      (ngModelChange)="tableConfig.doctorId = $event; loadTable()">
+      <nz-option *ngFor="let data of doctorConfig.data" [nzLabel]="data.name" [nzValue]="data.id">
+      </nz-option>
+    </nz-select>
+  </div>
+  <div class="col-6 pb-4">
+    <label>Specialty</label>
+    <nz-select
+      style="width: 100%"
+      nzShowSearch
+      nzAllowClear
+      nzPlaceHolder="Select a specialty"
+      [ngModel]="tableConfig.specialtyId"
+      (nzOnSearch)="changeSpecialtyName($event)"
+      (nzScrollToBottom)="scrollSpecialtyToBotom()"
+      (ngModelChange)="tableConfig.specialtyId = $event; loadTable()">
+      <nz-option *ngFor="let data of specialtyConfig.data" [nzLabel]="data.name" [nzValue]="data.id">
+      </nz-option>
+    </nz-select>
+  </div>
+  <div class="col-6 pb-4">
+    <label>Catalog</label>
+    <nz-select
+      style="width: 100%"
+      nzShowSearch
+      nzAllowClear
+      nzPlaceHolder="Select a Catalog"
+      [ngModel]="tableConfig.surgeryId"
+      (nzOnSearch)="changeSpecialtyName($event)"
+      (nzScrollToBottom)="scrollCatalogToBotom()"
+      (ngModelChange)="tableConfig.surgeryId = $event; loadTable()">
+      <nz-option *ngFor="let data of catalogConfig.data" [nzLabel]="data.name" [nzValue]="data.id">
+      </nz-option>
+    </nz-select>
+  </div>
+</div>
+
+<nz-table #postOP
+          [nzLoading]="tableConfig.load"
+          [nzData]="tableConfig.data"
+          [nzFooter]="footerTable"
+          [nzFrontPagination]="false"
+          [(nzPageSize)]="tableConfig.pageSize"
+          [(nzPageIndex)]="tableConfig.pageIndex"
+          (nzPageIndexChange)="changePage($event)"
+          [nzTotal]="tableConfig.totalConfig.total">
+  <thead>
+  <tr>
+    <th>Patient Name</th>
+    <th>Gender</th>
+    <th>Year of birth</th>
+    <th>Surgery Name</th>
+    <th>Surgeon Name</th>
+    <th>Status Name</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let data of postOP.data">
+    <td>{{data.patientName}}</td>
+    <td>{{data.gender ? 'Male' : 'Female'}}</td>
+    <td>{{data.yob}}</td>
+    <td>{{data.surgeryName}}</td>
+    <td>{{data.surgeonName}}</td>
+    <td>
+      <nz-tag [nzColor]="data.statusName === 'Recovery' ? 'blue' : 'red'">{{data.statusName}}</nz-tag>
+    </td>
+  </tr>
+  </tbody>
+</nz-table>
+
+<ng-template #footerTable>
+  <p class="text-right">
+    <b style="font-weight: bold; color: lightblue">Total Recovery </b>: {{tableConfig.totalConfig.totalRecovery}}
+  </p>
+  <p class="text-right">
+    <b style="font-weight: bold; color: lightcoral">Total Postoperative </b>: {{tableConfig.totalConfig.totalPostOp}}
+  </p>
+  <p class="text-right">
+    <b style="font-weight: bold; color: lightseagreen">Total Result </b>: {{tableConfig.totalConfig.total}}
+  </p>
+</ng-template>

@@ -11,6 +11,7 @@ import {SpecialtyComponent} from './specialty/specialty.component';
 import {RoomSpecialtyGroupComponent} from './room-specialty-group/room-specialty-group.component';
 import { StatisticComponent } from './statistic/statistic.component';
 import { HealthcareManagementComponent } from './healthcare-management/healthcare-management.component';
+import {PostopStatisticalComponent} from './postop-statistical/postop-statistical.component';
 const routes: Routes = [
   {
     path: '',
@@ -93,7 +94,14 @@ const routes: Routes = [
           title: 'Healthcare Management'
         },
       },
-      
+      {
+        path: 'postop-statistical',
+        component: PostopStatisticalComponent,
+        data: {
+          roles: ['ChiefNurse'],
+          title: 'Postop Statistical'
+        },
+      },
     ]
   },
   {
