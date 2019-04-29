@@ -3,6 +3,7 @@ import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@an
 import {Router} from '@angular/router';
 import {NzMessageService} from 'ng-zorro-antd';
 import {GLOBAL} from '../../../global';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-schedule-card',
@@ -15,6 +16,7 @@ export class ScheduleCardComponent implements OnInit, AfterViewInit {
   @Input() selected;
   @Input() parentId;
   @Input() groupId;
+  @Input() date;
 
   @Output() swapModeChange = new EventEmitter();
   @Output() selectedChange = new EventEmitter();
@@ -32,6 +34,16 @@ export class ScheduleCardComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    console.log(this.data);
+  }
+
+  notHistoryDate() {
+    if (!this.date) {
+      return false;
+    }
+    const date = this.date.setHours(0, 0, 0, 0);
+    const today = new Date().setHours(0, 0, 0, 0);
+    return date >= today;
   }
 
   chooseNode() {
