@@ -24,6 +24,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   emergencyForm: FormGroup;
   startItem: any;
   isVisible = false;
+  showAffectedShift = false;
+  affectData = [];
   isShowEmergency = false;
   isShowStartModal = false;
   rooms: any;
@@ -338,7 +340,11 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   swapShift() {
     if (this.selected.secondShiftId && this.selected.firstShiftId) {
       this.state.load = true;
-      this.schedule.swapShift(this.selected).subscribe(res => {
+      this.schedule.swapShift(this.selected).subscribe((res: any) => {
+        if (res && res.length > 0) {
+          this.affectData = res;
+          this.showAffectedShift = true;
+        }
         this.state.load = false;
         this.messageService.create('success', `<p style='padding: 10px 0; font-weight: bold'><b>Swap successful</b></p>`);
         this.getSchedule(this.date);
@@ -378,7 +384,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       forcedSwap: type
     };
     this.showLoader();
-    this.schedule.moveRoom(data).subscribe(res => {
+    this.schedule.moveRoom(data).subscribe((res: any) => {
       this.removeLoader();
       this.getSchedule(this.date);
       this.setNode(null);

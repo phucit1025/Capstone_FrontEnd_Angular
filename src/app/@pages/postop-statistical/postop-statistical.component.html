@@ -92,7 +92,7 @@
   <tbody>
   <tr *ngFor="let data of postOP.data; let i = index">
     <td>{{(tableConfig.pageSize * tableConfig.pageIndex) + (i + 1)}}</td>
-    <td>{{data.id}}</td>
+    <td><a target="_blank" [routerLink]="'/pages/schedule-detail/' + data.id">{{data.id}}</a></td>
     <td>{{data.patientName}}</td>
     <td>{{data.gender ? 'Male' : 'Female'}}</td>
     <td>{{data.yob}}</td>
