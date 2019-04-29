@@ -17,6 +17,7 @@ export class PostopStatisticalComponent implements OnInit {
     specialtyId: null,
     surgeryId: null,
     doctorId: null,
+    isPostOp: null,
     pageSize: 10,
     pageIndex: 0,
     totalConfig: {

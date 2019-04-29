@@ -51,6 +51,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     loadSlotRoom: false,
     selectedStatus: [],
   };
+  checkedGroups = [];
   slotRooms: any;
   groupsId = [];
   actualEndTimeError = false;
@@ -73,6 +74,20 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         this.getSchedule();
       }
     });
+  }
+
+  check(id) {
+    return this.checkedGroups.indexOf(id) !== -1;
+  }
+
+  checkChange(e) {
+    e.checked = !e.checked;
+    if (e.checked) {
+      this.checkedGroups.push(e.id);
+      this.checkedGroups = this.checkedGroups.filter(el => el !== -1);
+    } else {
+      this.checkedGroups = this.checkedGroups.filter(el => el !== e.id);
+    }
   }
 
   ngOnDestroy() {

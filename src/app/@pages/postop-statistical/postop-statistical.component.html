@@ -4,7 +4,7 @@
   </div>
   <div class="col-6 pb-4">
     <label>Date</label>
-    <nz-date-picker style="width: 100%" nzFormat="DD / MM / YYYY"  [ngModel]="tableConfig.actualEnd"
+    <nz-date-picker style="width: 100%" nzFormat="DD / MM / YYYY" [ngModel]="tableConfig.actualEnd"
                     (ngModelChange)="tableConfig.actualEnd = $event; loadTable()"></nz-date-picker>
   </div>
   <div class="col-6 pb-4">
@@ -22,7 +22,7 @@
       </nz-option>
     </nz-select>
   </div>
-  <div class="col-6 pb-4">
+  <div class="col-4 pb-4">
     <label>Specialty</label>
     <nz-select
       style="width: 100%"
@@ -37,7 +37,7 @@
       </nz-option>
     </nz-select>
   </div>
-  <div class="col-6 pb-4">
+  <div class="col-4 pb-4">
     <label>Catalog</label>
     <nz-select
       style="width: 100%"
@@ -49,6 +49,20 @@
       (nzScrollToBottom)="scrollCatalogToBotom()"
       (ngModelChange)="tableConfig.surgeryId = $event; loadTable()">
       <nz-option *ngFor="let data of catalogConfig.data" [nzLabel]="data.name" [nzValue]="data.id">
+      </nz-option>
+    </nz-select>
+  </div>
+  <div class="col-4 pb-4">
+    <label>Status</label>
+    <nz-select
+      style="width: 100%"
+      nzAllowClear
+      nzPlaceHolder="All"
+      [ngModel]="tableConfig.isPostOp"
+      (ngModelChange)="tableConfig.isPostOp = $event; loadTable()">
+      <nz-option [nzValue]="true" nzLabel="Preoperative">
+      </nz-option>
+      <nz-option [nzValue]="false" nzLabel="Recovery">
       </nz-option>
     </nz-select>
   </div>
@@ -65,6 +79,8 @@
           [nzTotal]="tableConfig.totalConfig.total">
   <thead>
   <tr>
+    <th>No.</th>
+    <th>Shift ID</th>
     <th>Patient Name</th>
     <th>Gender</th>
     <th>Year of birth</th>
@@ -74,7 +90,9 @@
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let data of postOP.data">
+  <tr *ngFor="let data of postOP.data; let i = index">
+    <td>{{(tableConfig.pageSize * tableConfig.pageIndex) + (i + 1)}}</td>
+    <td>{{data.id}}</td>
     <td>{{data.patientName}}</td>
     <td>{{data.gender ? 'Male' : 'Female'}}</td>
     <td>{{data.yob}}</td>

@@ -79,9 +79,13 @@
               <label *ngFor="let gr of groupsId" nz-radio [nzValue]="gr.id"><b>{{gr.name}}</b></label>
             </nz-radio-group>
           </div>
+          <div class="mt-2" *ngIf="!state.swapMode">
+            <label style="color: #2F3242" class="mr-2"><b>Select a group ID</b></label> <br/>
+            <label *ngFor="let gr of groupsId" nz-checkbox [ngModel]="gr.checked" (ngModelChange)="checkChange(gr)">{{gr.name}}</label>
+          </div>
           <div *ngIf="state.searchText || state.selectedStatus.length > 0" class="text-danger text-right mt-2"
                style="margin-right: 115px"><b>Found
-            : {{countResult(rooms | roomPipe: state.searchText | statusPipe: state.selectedStatus)}} result(s)</b></div>
+            : {{countResult(rooms | roomPipe: state.searchText | groupPipe: checkedGroups | statusPipe: state.selectedStatus)}} result(s)</b></div>
         </nz-form-item>
       </div>
     </div>
@@ -103,7 +107,7 @@
     <br>
     <!-- Room Container -->
     <div nz-row id="room-container" class="room-container">
-      <ng-container *ngFor="let room of rooms | roomPipe: state.searchText | statusPipe: state.selectedStatus">
+      <ng-container *ngFor="let room of rooms | roomPipe: state.searchText | groupPipe: checkedGroups | statusPipe: state.selectedStatus">
         <div
           *ngIf="room !== -1 && (selected.specialtyGroupId === null || room.specialtyGroupId === selected.specialtyGroupId)"
           class="date">
