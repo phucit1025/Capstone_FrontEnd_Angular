@@ -44,7 +44,6 @@ export class AuthService {
         if (tokenData) {
           console.log(tokenData);
           var idNumber = parseInt(tokenData.UserInfoId);
-          console.log(idNumber + "akkdasbdsa");
           this.user.setUser = {
             id: idNumber,
             username: tokenData.email,

@@ -10,12 +10,12 @@ export class NotificationService {
 
   constructor(private http: HttpClient) {
   }
-  getTmpNotification(roleName) {
-    return this.http.get(GLOBAL.API + this.name + '/GetAllNotification?roleName=' + roleName);
+  getTmpNotification(roleName, technicalId) {
+    return this.http.get(GLOBAL.API + this.name + `/GetAllNotification?roleName=${roleName}&technicalId=${technicalId}`);
   }
 
-  getNotification(roleName) {
-    return this.http.get(GLOBAL.API + this.name + '/GetNotifications?roleName=' + roleName);
+  getNotification(roleName, technicalId) {
+    return this.http.get(GLOBAL.API + this.name + `/GetNotifications?roleName=${roleName}&technicalId=${technicalId}`);
   }
 
   setIsReadNotification(notiId) {
