@@ -63,7 +63,7 @@
     <td class="text-center">
       <!-- <button nz-button nzType="primary" (click)="redirect(data.shiftId)"><i nz-icon type="info-circle"></i>
       </button> -->
-      <button nz-button nzType="primary" (click)="state.showHealthcareReports = true; getHealthcareReport(data)" ><i nz-icon type="info-circle"></i>
+      <button nz-button nzType="primary" (click)="state.showHealthcareReports = true; getHealthcareReport(data); getTreatment(data)" ><i nz-icon type="info-circle"></i>
       </button>
     </td>
   </tr>
@@ -84,6 +84,8 @@
 <nz-modal nzWidth="1100" [(nzVisible)]="state.showHealthcareReports" nzTitle="Healthcare Reports" [nzContent]="assignNurseBody"
   [nzFooter]="assignNurseFooter" (nzOnCancel)="state.showHealthcareReports = false">
   <ng-template #assignNurseBody>
+      <nz-tabset [nzTabPosition]="'top'">
+          <nz-tab nzTitle="Healthcare Reports">
     <nz-spin [nzSpinning]="state.loadGetHealthcareReport">
       <div style="margin-top: 10px; margin-bottom: 10px" class="row">
         <div class="col-6 pb-4">
@@ -160,6 +162,57 @@
         </p>
       </ng-template>  
     </nz-spin>
+    </nz-tab>
+        <nz-tab  nzTitle="Treatment Reports">
+            <nz-table class="primary-table"  #treatmentTable [nzData]="treatmentReportData" [nzLoading]="state.loadTreatment"
+            [nzFrontPagination]="false" [nzShowPagination]="false">
+            <thead>
+              <tr>
+                <th nzShowExpand></th>
+                <th>No</th>
+                <th>From</th>
+                <th>Progessive Disease</th>
+                <!-- <th>Status</th> -->
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let data of treatmentTable.data; let i = index">
+                <tr>
+                  <td nzShowExpand [(nzExpand)]="mapOfExpandData[data.id]"></td>
+                  <td>{{i + 1}}</td>
+                  <td>{{data.dateCreated}}</td>
+                  <td>{{data.progressiveDisease}}</td>
+                  <!-- <td> <ng-container *ngIf="data.isUsed === true; else elseBlock"><td><nz-tag [nzColor]="'green'">Is Used</nz-tag></td></ng-container>
+                  <ng-template #elseBlock><td><nz-tag [nzColor]="'red'">Not Used</nz-tag> </td></ng-template></td> -->
+                </tr>
+                <tr [nzExpand]="mapOfExpandData[data.id]">
+                  <td colspan="6">
+                    <nz-table #drugsTable nzBordered [nzData]="data.treatmentReportDrugs" [nzFrontPagination]="false"
+                      [nzShowPagination]="false">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Time/Quantity</th>
+                          <th>Route</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let drug of drugsTable.data">
+                          <td>{{drug.name}}</td>
+                          <td>{{drug.timeString}}</td>
+                          <td>{{drug.route}}</td>
+                          <td>{{drug.statusUsedBy}}</td>
+                        </tr>
+                      </tbody>
+                    </nz-table>
+          </td>
+          </tr>
+          </ng-container>
+          </tbody>
+          </nz-table>
+        </nz-tab>
+    </nz-tabset>
   </ng-template>
   <ng-template #assignNurseFooter>
     <div class="text-right">

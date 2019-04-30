@@ -10,3 +10,8 @@
 .primary-table td{
     background: white;
 }
+
+/deep/ .ant-tabs-nav .ant-tabs-tab-active {
+    background: #09425A;
+    color: #FFFFFF;
+  }
