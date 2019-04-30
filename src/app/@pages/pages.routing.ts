@@ -10,6 +10,7 @@ import {ConfirmMedicalComponent} from './confirm-medical/confirm-medical.compone
 import {SpecialtyComponent} from './specialty/specialty.component';
 import {RoomSpecialtyGroupComponent} from './room-specialty-group/room-specialty-group.component';
 import { StatisticComponent } from './statistic/statistic.component';
+import { HealthcareManagementComponent } from './healthcare-management/healthcare-management.component';
 const routes: Routes = [
   {
     path: '',
@@ -84,6 +85,15 @@ const routes: Routes = [
           title: 'Statistic'
         },
       },
+      {
+        path: 'healthcare-management',
+        component: HealthcareManagementComponent,
+        data: {
+          roles: ['ChiefNurse'],
+          title: 'Healthcare Management'
+        },
+      },
+      
     ]
   },
   {

@@ -44,6 +44,12 @@ export class LayoutComponent implements OnInit, OnDestroy {
       roles: ['ChiefNurse', 'Technical']
     },
     {
+      icon: 'heart',
+      name: 'Healthcare Management',
+      link: '/pages/healthcare-management',
+      roles: ['ChiefNurse']
+    },
+    {
       icon: 'project',
       name: 'Statistic',
       link: '/pages/statistic',
@@ -60,7 +66,8 @@ export class LayoutComponent implements OnInit, OnDestroy {
       name: 'Room Specialty Group',
       link: '/pages/room-specialty-group',
       roles: ['ChiefNurse']
-    }
+    },
+    
   ];
   isCollapsed = true;
   triggerTemplate = null;

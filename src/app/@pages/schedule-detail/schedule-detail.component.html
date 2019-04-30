@@ -171,6 +171,7 @@
           <th>No</th>
           <th>From</th>
           <th>Wound Condition</th>
+          <th>Drug Allergy</th>
           <th>Event Content</th>
           <th>Care Content</th>
           <th>Nurse</th>
@@ -183,15 +184,24 @@
             <td>{{data.dateCreated}}</td>
             <ng-container *ngIf="data.woundCondition === 1; else elseBlock">
               <td>
-                <nz-tag [nzColor]="'green'">Good</nz-tag>
+                <nz-tag nz-tooltip nzTitle="{{data.woundConditionDescription}}" [nzColor]="'green'">Good</nz-tag>
               </td>
             </ng-container>
             <ng-template #elseBlock>
               <td>
-                <nz-tag [nzColor]="'red'">Bad</nz-tag>
+                <nz-tag nz-tooltip nzTitle="{{data.woundConditionDescription}}" [nzColor]="'red'">Bad</nz-tag>
               </td>
             </ng-template>
-
+            <ng-container *ngIf="data.drugAllergy === 1; else elseBlock">
+              <td>
+                <nz-tag nz-tooltip nzTitle="{{data.drugAllergyDescription}}" [nzColor]="'green'">Good</nz-tag>
+              </td>
+            </ng-container>
+            <ng-template #elseBlock>
+              <td>
+                <nz-tag nz-tooltip nzTitle="{{data.drugAllergyDescription}}" [nzColor]="'red'">Bad</nz-tag>
+              </td>
+            </ng-template>  
             <td>{{data.eventContent}}</td>
             <td>{{data.careContent}}</td>
             <td>{{data.nurseName}}</td>

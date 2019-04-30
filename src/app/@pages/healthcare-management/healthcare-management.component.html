@@ -1,0 +1,73 @@
+<h2 style="text-align: center">Healthcare Management</h2>
+<div style="margin-top: 10px; margin-bottom: 10px" class="row">
+  <div class="col-6">
+    <b style="font-size: 16px">Shift Condition: </b>
+    <nz-select style="width: 120px;" [(ngModel)]="selectedCondition"  nzPlaceHolder="Choose">
+      <nz-option nzValue="0" nzLabel="All"></nz-option>
+      <nz-option nzValue="1" nzLabel="Good"></nz-option>
+      <nz-option nzValue="2" nzLabel="Bad"></nz-option>
+    </nz-select>
+  </div>
+  <div class="col-6">
+    <nz-row [nzGutter]="16">
+      <nz-col [nzSpan]="12">
+        <span  style="font-weight: bold; color: green">Good Condition Shift: </span>
+        {{goodShift}}
+        <span> shifts</span>
+      </nz-col>
+      <nz-col [nzSpan]="12">
+        <span  style="font-weight: bold; color: red">Bad Condition Shift:</span>
+        {{badShift}}
+        <span> shifts</span>
+      </nz-col>
+    </nz-row>
+  </div>
+</div>
+<nz-table class="primary-table" *ngIf="!state.load" #basicTable [nzData]="state.data | conditionPipe : selectedCondition">
+  <thead>
+  <tr>
+    <th>No</th>
+    <th>Shift ID</th>
+    <th>Patient Name</th>
+    <th>Surgery Name</th>
+    <th>Wound Condition</th>
+    <th>Drug Alley</th>
+    <th>View Detail</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let data of basicTable.data; let i = index">
+    <td>{{i + 1}}</td>
+    <td>{{data.shiftId}}</td>
+    <td>{{data.patientName}}</td>
+    <td>{{data.surgeryName}}</td>
+    <ng-container *ngIf="data.woundCondition === 1; else elseBlock">
+      <td>
+        <nz-tag nz-tooltip nzTitle="{{data.woundConditionDescription}}" [nzColor]="'green'">Good</nz-tag>
+      </td>
+    </ng-container>
+    <ng-template #elseBlock>
+      <td>
+        <nz-tag nz-tooltip nzTitle="{{data.woundConditionDescription}}" [nzColor]="'red'">Bad</nz-tag>
+      </td>
+    </ng-template>
+    <ng-container *ngIf="data.drugAllergy === 1; else elseBlock">
+      <td>
+        <nz-tag nz-tooltip nzTitle="{{data.drugAllergyDescription}}" [nzColor]="'green'">Good</nz-tag>
+      </td>
+    </ng-container>
+    <ng-template #elseBlock>
+      <td>
+        <nz-tag nz-tooltip nzTitle="{{data.drugAllergyDescription}}" [nzColor]="'red'">Bad</nz-tag>
+      </td>
+    </ng-template> 
+    <td class="text-center">
+      <button nz-button nzType="primary" (click)="redirect(data.shiftId)"><i nz-icon type="info-circle"></i>
+      </button>
+    </td>
+  </tr>
+  </tbody>
+</nz-table>
+<div *ngIf="state.load" class="d-flex justify-content-center">
+  <nz-spin nzSimple></nz-spin>
+</div>

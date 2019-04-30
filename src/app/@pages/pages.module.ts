@@ -21,6 +21,8 @@ import { SpecialtyComponent } from './specialty/specialty.component';
 import {RoomSpecialtyGroupComponent} from './room-specialty-group/room-specialty-group.component';
 import { SurgeonComponent } from './schedule-detail/surgeon/surgeon.component';
 import { StatisticComponent } from './statistic/statistic.component';
+import { HealthcareManagementComponent } from './healthcare-management/healthcare-management.component';
+import { ConditionPipe } from '../pipe/condition.pipe';
 
 registerLocaleData(en);
 
@@ -32,6 +34,7 @@ registerLocaleData(en);
     ScheduleCardComponent,
     RoomPipe,
     StatusPipe,
+    ConditionPipe,
     ImportFileComponent,
     ScheduleDetailComponent,
     ErrorsComponent,
@@ -40,7 +43,8 @@ registerLocaleData(en);
     SpecialtyComponent,
     RoomSpecialtyGroupComponent,
     SurgeonComponent,
-    StatisticComponent
+    StatisticComponent,
+    HealthcareManagementComponent
   ],
   imports: [
     CommonModule,
