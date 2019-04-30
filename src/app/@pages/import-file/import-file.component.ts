@@ -158,7 +158,7 @@ export class ImportFileComponent implements OnInit {
       this.importSV.importShift(data).subscribe(el => {
         
         this.message.success('Import Successful');
-        this.notificationService.getTmpNotification('MedicalSupplier').subscribe(re => { }); //notify
+        this.notificationService.getTmpNotification('MedicalSupplier', 0).subscribe(re => { }); //notify
         this.state.load = false;
         if (this.isAllCheck) {
           this.clearResult();

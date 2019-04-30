@@ -142,6 +142,7 @@
                   <!-- Room Surgery -->
                   <app-schedule-card *ngFor="let surgery of slot.surgeries" [data]="surgery" [parentId]="slot.id"
                                      [groupId]="room.specialtyGroupId"
+                                     [date]="date"
                                      [(swapMode)]="state.swapMode" (statusChange)="openStartShift($event)"
                                      (openModal)="openModal($event)" [(selected)]="selected">
                   </app-schedule-card>

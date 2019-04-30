@@ -19,8 +19,10 @@ export class LayoutComponent implements OnInit, OnDestroy {
 
   HOST = 'https://localhost:44372/';
   // HOST = 'http://172.20.10.7:5000/';
+  HOSPITAL_STAFF_ROLE = 'HospitalStaff';
   SUPPLIER_ROLE = 'MedicalSupplier';
   CHIEFNURSE_ROLE = 'ChiefNurse';
+  TECHNICAL_ROLE = 'Technical';
 
   menu = [
     {
@@ -39,7 +41,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
       icon: 'schedule',
       name: 'Schedule',
       link: '/pages/schedule',
-      roles: ['ChiefNurse']
+      roles: ['ChiefNurse', 'Technical']
     },
     {
       icon: 'project',
@@ -77,10 +79,14 @@ export class LayoutComponent implements OnInit, OnDestroy {
   }
 
   private _hubConnection: HubConnection;
+  msgsHospitalStaff = [];
   msgsSupplier = [];
   msgsChiefNurse = [];
+  msgsTechnical = [];
+  countNotiHospital = 0;
   countNotiSup = 0;
   countNotiChief = 0;
+  countNotiTech = 0;
 
   ngOnInit() {
     this.user.sb = this.userSV.getUser.subscribe(user => {
@@ -117,6 +123,10 @@ export class LayoutComponent implements OnInit, OnDestroy {
           this.msgsChiefNurse = messages;
           this.countNotiChief = this.msgsChiefNurse.filter(item => item.isRead === false).length;
         }
+        if (roleName === this.TECHNICAL_ROLE) {
+          this.msgsTechnical = messages;
+          this.countNotiTech = this.msgsTechnical.filter(item => item.isRead === false).length;
+        }
       });
     });
   }
@@ -137,7 +147,11 @@ export class LayoutComponent implements OnInit, OnDestroy {
   }
 
   loadNotification(roleName) {
-    this.notificationMessage.getNotification(roleName).subscribe((messages: any) => {
+    var technicalId = 0;
+    if (roleName == this.TECHNICAL_ROLE) {
+      technicalId = this.user.data.id;
+    }
+    this.notificationMessage.getNotification(roleName, technicalId).subscribe((messages: any) => {
       if (roleName == this.SUPPLIER_ROLE) {
         this.msgsSupplier = messages;
         this.countNotiSup = this.msgsSupplier.filter(item => item.isRead == false).length;
@@ -146,11 +160,15 @@ export class LayoutComponent implements OnInit, OnDestroy {
         this.msgsChiefNurse = messages;
         this.countNotiChief = this.msgsChiefNurse.filter(item => item.isRead == false).length;
       }
+      if (roleName == this.TECHNICAL_ROLE) {
+        this.msgsTechnical = messages;
+        this.countNotiTech = this.msgsTechnical.filter(item => item.isRead == false).length;
+      }
     });
   }
 
   SetIsReadNotification(notiId, roleName) {
-    if (this.countNotiSup > 0 || this.countNotiChief > 0) {
+    if (this.countNotiSup > 0 || this.countNotiChief > 0 || this.countNotiTech > 0) {
       this.notificationMessage.setIsReadNotification(notiId).subscribe(() => {
         this.loadNotification(roleName);
       });

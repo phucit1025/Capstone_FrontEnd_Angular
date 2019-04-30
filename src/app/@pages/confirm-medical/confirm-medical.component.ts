@@ -70,11 +70,13 @@ export class ConfirmMedicalComponent implements OnInit {
           this.state.load = false;
           this.message.success('Confirm Success');
           this.confirmMedical.makeScheduleList().subscribe(mRes => {
-            this.notificationService.getTmpNotification('ChiefNurse').subscribe(re => {
+            this.notificationService.getTmpNotification('ChiefNurse', 0).subscribe(re => {
             }); //notify
             this.confirmMedical.assignEkip().subscribe(re => {
             }); //assign ekip
             this.confirmMedical.assignTechnicalStaff().subscribe(re => {
+              this.notificationService.getTmpNotification('Technical', 0).subscribe(re => {
+              });
             }); //assign Technical staff
           });
         }, er => {
