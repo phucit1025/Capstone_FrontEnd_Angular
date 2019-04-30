@@ -9,7 +9,7 @@ import {AuthGuardService} from '../page-services/auth-guard.service';
 import {ConfirmMedicalComponent} from './confirm-medical/confirm-medical.component';
 import {SpecialtyComponent} from './specialty/specialty.component';
 import {RoomSpecialtyGroupComponent} from './room-specialty-group/room-specialty-group.component';
-
+import { StatisticComponent } from './statistic/statistic.component';
 const routes: Routes = [
   {
     path: '',
@@ -74,6 +74,14 @@ const routes: Routes = [
         data: {
           roles: ['ChiefNurse'],
           title: 'Room Specialty Group'
+        },
+      },
+      {
+        path: 'statistic',
+        component: StatisticComponent,
+        data: {
+          roles: ['ChiefNurse'],
+          title: 'Statistic'
         },
       },
     ]

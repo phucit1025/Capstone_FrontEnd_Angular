@@ -20,6 +20,7 @@ import {StatusPipe} from '../pipe/status.pipe';
 import { SpecialtyComponent } from './specialty/specialty.component';
 import {RoomSpecialtyGroupComponent} from './room-specialty-group/room-specialty-group.component';
 import { SurgeonComponent } from './schedule-detail/surgeon/surgeon.component';
+import { StatisticComponent } from './statistic/statistic.component';
 
 registerLocaleData(en);
 
@@ -38,7 +39,8 @@ registerLocaleData(en);
     TreatmentComponent,
     SpecialtyComponent,
     RoomSpecialtyGroupComponent,
-    SurgeonComponent
+    SurgeonComponent,
+    StatisticComponent
   ],
   imports: [
     CommonModule,

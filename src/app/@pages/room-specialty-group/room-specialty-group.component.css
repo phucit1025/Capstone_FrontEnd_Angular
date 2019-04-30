@@ -1,0 +1,12 @@
+.primary-table {
+    background: #e8f5e9 !important
+}
+
+.primary-table th{
+    background: #09425A;
+    color: white
+}
+
+.primary-table td{
+    background: white;
+}

@@ -222,4 +222,12 @@ export class ScheduleService {
   searchSupply(value) {
     return this.http.get<Array<{ medicalSupplyId: number; medicalSupplyName: string }>>(GLOBAL.API + `Utils/GetMedicalSupplyOnQuery?q=${value}`);
   }
+
+  getNumShiftBySpec(start, end) {
+    return this.http.get<Array<{ number: number; specialtyName: string}>>(GLOBAL.API + `SurgeryShift/NumShiftBySpec?start=${start}&end=${end}`);
+  }
+
+  getEfficientcyRoom(start, end) {
+    return this.http.get<Array<{ number: number; roomName: string}>>(GLOBAL.API + `SurgeryShift/GetEfficientcyRoom?start=${start}&end=${end}`);
+  }
 }

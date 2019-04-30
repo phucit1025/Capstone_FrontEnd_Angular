@@ -115,5 +115,9 @@ export const GLOBAL = Object.freeze({
         }
     }
     return str.replace(/([&?])$/g, '');
-}
+},
+  convertDateFormat(current_datetime){
+    let formatted_date = current_datetime.getFullYear() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getDate();
+    return formatted_date;
+  }
 });

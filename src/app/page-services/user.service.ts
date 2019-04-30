@@ -25,5 +25,5 @@ export interface User {
   id: number;
   username: string;
   name?: string;
-  role: 'ChiefNurse' | 'HospitalStaff' | 'MedicalSupplier';
+  role: 'ChiefNurse' | 'HospitalStaff' | 'MedicalSupplier' | 'Technical';
 }

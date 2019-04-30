@@ -36,9 +36,15 @@ export class LayoutComponent implements OnInit, OnDestroy {
       roles: ['MedicalSupplier']
     },
     {
-      icon: 'calendar',
+      icon: 'schedule',
       name: 'Schedule',
       link: '/pages/schedule',
+      roles: ['ChiefNurse']
+    },
+    {
+      icon: 'project',
+      name: 'Statistic',
+      link: '/pages/statistic',
       roles: ['ChiefNurse']
     },
     {
