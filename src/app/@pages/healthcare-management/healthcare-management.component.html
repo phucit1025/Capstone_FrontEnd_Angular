@@ -9,25 +9,14 @@
     </nz-select>
   </div>
   <div class="col-6">
-    <nz-row [nzGutter]="16">
-      <nz-col [nzSpan]="12">
-        <span  style="font-weight: bold; color: green">Good Condition Shift: </span>
-        {{goodShift}}
-        <span> shifts</span>
-      </nz-col>
-      <nz-col [nzSpan]="12">
-        <span  style="font-weight: bold; color: red">Bad Condition Shift:</span>
-        {{badShift}}
-        <span> shifts</span>
-      </nz-col>
-    </nz-row>
   </div>
 </div>
-<nz-table class="primary-table" *ngIf="!state.load" #basicTable [nzData]="state.data | conditionPipe : selectedCondition">
+<nz-table class="primary-table" *ngIf="!state.load" #basicTable [nzData]="state.data | conditionPipe : selectedCondition" [nzFooter]="footerTable">
   <thead>
   <tr>
     <th>No</th>
     <th>Shift ID</th>
+    <th>Closest Care Date </th>
     <th>Patient Name</th>
     <th>Surgery Name</th>
     <th>Wound Condition</th>
@@ -39,6 +28,7 @@
   <tr *ngFor="let data of basicTable.data; let i = index">
     <td>{{i + 1}}</td>
     <td>{{data.shiftId}}</td>
+    <td>{{data.closestDate}}</td>
     <td>{{data.patientName}}</td>
     <td>{{data.surgeryName}}</td>
     <ng-container *ngIf="data.woundCondition === 1; else elseBlock">
@@ -71,3 +61,11 @@
 <div *ngIf="state.load" class="d-flex justify-content-center">
   <nz-spin nzSimple></nz-spin>
 </div>
+<ng-template #footerTable>
+  <p class="text-right">
+    <b style="font-weight: bold; color: lightgreen">Total Good Condition Shift </b>: <b style="font-weight: bold">{{goodShift}}</b> shift(s)
+  </p>
+  <p class="text-right">
+    <b style="font-weight: bold; color: lightcoral">Total Bad Condition Shift </b>: <b style="font-weight: bold">{{badShift}}</b> shift(s)
+  </p>
+</ng-template>
