@@ -3,7 +3,7 @@
   <div class="col-6 pb-4">
     <div class="row">
         <div class="col-6 pb-4">
-            <b style="font-size: 16px">Shift Condition: </b>
+            <b style="font-size: 16px">Current Shift Condition: </b>
             <nz-select style="width: 100%;" [(ngModel)]="selectedCondition"  nzPlaceHolder="Choose" (ngModelChange)="tableConfig.condition = $event; changeTotal()">
               <nz-option nzValue="0" nzLabel="All"></nz-option>
               <nz-option nzValue="1" nzLabel="Good"></nz-option>
@@ -11,7 +11,7 @@
             </nz-select>    
         </div>
         <div class="col-6 pb-4">
-            <b style="font-size: 16px">Date: </b>
+            <b style="font-size: 16px">Closest Care Date: </b>
             <nz-date-picker style="width: 100%" nzFormat="DD / MM / YYYY" [(ngModel)]="careDate" (ngModelChange)="tableConfig.date = $event; changeTotal()"></nz-date-picker>
         </div>
     </div>
@@ -25,7 +25,7 @@
   <tr>
     <th>No</th>
     <th>Shift ID</th>
-    <th>Care Date </th>
+    <th>Closest Care Date </th>
     <th>Patient Name</th>
     <th>Surgery Name</th>
     <th>Wound Condition</th>
@@ -61,7 +61,9 @@
       </td>
     </ng-template> 
     <td class="text-center">
-      <button nz-button nzType="primary" (click)="redirect(data.shiftId)"><i nz-icon type="info-circle"></i>
+      <!-- <button nz-button nzType="primary" (click)="redirect(data.shiftId)"><i nz-icon type="info-circle"></i>
+      </button> -->
+      <button nz-button nzType="primary" (click)="state.showHealthcareReports = true; getHealthcareReport(data)" ><i nz-icon type="info-circle"></i>
       </button>
     </td>
   </tr>
@@ -78,3 +80,93 @@
     <b style="font-weight: bold; color: lightcoral">Total Bad Condition Shift </b>: <b style="font-weight: bold">{{badShift}}</b> shift(s)
   </p>
 </ng-template>
+
+<nz-modal nzWidth="1100" [(nzVisible)]="state.showHealthcareReports" nzTitle="Healthcare Reports" [nzContent]="assignNurseBody"
+  [nzFooter]="assignNurseFooter" (nzOnCancel)="state.showHealthcareReports = false">
+  <ng-template #assignNurseBody>
+    <nz-spin [nzSpinning]="state.loadGetHealthcareReport">
+      <div style="margin-top: 10px; margin-bottom: 10px" class="row">
+        <div class="col-6 pb-4">
+          <div class="row">
+              <div class="col-6 pb-4">
+                  <b style="font-size: 16px">Condition: </b>
+                  <nz-select style="width: 100%;" [(ngModel)]="selectedConditionHealthcare"  nzPlaceHolder="Choose" (ngModelChange)="tableConfig.condition = $event; changeTotalHealthcare()">
+                    <nz-option nzValue="0" nzLabel="All"></nz-option>
+                    <nz-option nzValue="1" nzLabel="Good"></nz-option>
+                    <nz-option nzValue="2" nzLabel="Bad"></nz-option>
+                  </nz-select>    
+              </div>
+              <div class="col-6 pb-4">
+                  <b style="font-size: 16px">Date: </b>
+                  <nz-date-picker style="width: 100%" nzFormat="DD / MM / YYYY" [(ngModel)]="careDateHealthcare" (ngModelChange)="tableConfig.date = $event; changeTotalHealthcare()"></nz-date-picker>
+              </div>
+          </div>
+        </div>
+        <div class="col-6">
+        </div>
+      </div>
+      <nz-table class="primary-table" *ngIf="!state.load" #basicTable 
+        [nzData]="healthcareReportData | conditionPipe : selectedConditionHealthcare| dateCarePipe : careDateHealthcare" [nzFooter]="footerTable">
+        <thead>
+        <tr>
+          <th>No</th>
+          <th>From</th>
+          <th>Wound Condition</th>
+          <th>Drug Allergy</th>
+          <th>Event Content</th>
+          <th>Care Content</th>
+          <th>Nurse</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let data of basicTable.data; let i = index">
+          <td>{{i + 1}}</td>
+          <td>{{data.closestDate | date: 'dd/MM/yyyy HH:mm'}}</td>
+            <ng-container *ngIf="data.woundCondition === 1; else elseBlock">
+              <td>
+                <nz-tag nz-tooltip nzTitle="{{data.woundConditionDescription}}" [nzColor]="'green'">Good</nz-tag>
+              </td>
+            </ng-container>
+            <ng-template #elseBlock>
+              <td>
+                <nz-tag nz-tooltip nzTitle="{{data.woundConditionDescription}}" [nzColor]="'red'">Bad</nz-tag>
+              </td>
+            </ng-template>
+            <ng-container *ngIf="data.drugAllergy === 1; else elseBlock">
+              <td>
+                <nz-tag nz-tooltip nzTitle="{{data.drugAllergyDescription}}" [nzColor]="'green'">Good</nz-tag>
+              </td>
+            </ng-container>
+            <ng-template #elseBlock>
+              <td>
+                <nz-tag nz-tooltip nzTitle="{{data.drugAllergyDescription}}" [nzColor]="'red'">Bad</nz-tag>
+              </td>
+            </ng-template>  
+            <td>{{data.eventContent}}</td>
+            <td>{{data.careContent}}</td>
+            <td>{{data.nurseName}}</td>
+        </tr>
+        </tbody>
+      </nz-table>
+      <div *ngIf="state.load" class="d-flex justify-content-center">
+        <nz-spin nzSimple></nz-spin>
+      </div>
+      <ng-template #footerTable>
+        <p class="text-right">
+          <b style="font-weight: bold; color: lightgreen">Total Good Condition Healthcare </b>: <b style="font-weight: bold">{{goodHealthcare}}</b> report(s)
+        </p>
+        <p class="text-right">
+          <b style="font-weight: bold; color: lightcoral">Total Bad Condition Healthcare </b>: <b style="font-weight: bold">{{badHealthcare}}</b> report(s)
+        </p>
+      </ng-template>  
+    </nz-spin>
+  </ng-template>
+  <ng-template #assignNurseFooter>
+    <div class="text-right">
+      <button [disabled]="state.loadGetHealthcareReport"
+        (click)="state.showHealthcareReports = false" nz-button nzType="default" class="mb-2 mr-2">
+        Cancel
+      </button>
+    </div>
+  </ng-template>
+</nz-modal>
