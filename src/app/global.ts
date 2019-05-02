@@ -3,8 +3,9 @@ import * as XLSX from 'xlsx';
 
 export const GLOBAL = Object.freeze({
   // API: 'https://localhost:44372/api/',
-  API: 'http://45.119.212.145:5520/api/',
-  // API: 'http://192.168.100.88:5000/api/',
+  // API: 'http://45.119.212.145:5520/api/',
+  // API: 'http://192.168.0.101:5000/api/',
+  API: 'http://192.168.0.107:5000/api/',
   convertDate: (date: Date) => {
     let dateString = '';
     dateString += date.getFullYear();
