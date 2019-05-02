@@ -79,9 +79,15 @@
               <label *ngFor="let gr of groupsId" nz-radio [nzValue]="gr.id"><b>{{gr.name}}</b></label>
             </nz-radio-group>
           </div>
+          <div class="mt-2" *ngIf="!state.swapMode">
+            <label style="color: #2F3242" class="mr-2"><b>Select a group ID</b></label> <br/>
+            <label *ngFor="let gr of groupsId" nz-checkbox [ngModel]="gr.checked"
+                   (ngModelChange)="checkChange(gr)">{{gr.name}}</label>
+          </div>
           <div *ngIf="state.searchText || state.selectedStatus.length > 0" class="text-danger text-right mt-2"
                style="margin-right: 115px"><b>Found
-            : {{countResult(rooms | roomPipe: state.searchText | statusPipe: state.selectedStatus)}} result(s)</b></div>
+            : {{countResult(rooms | roomPipe: state.searchText | groupPipe: checkedGroups | statusPipe: state.selectedStatus)}}
+            result(s)</b></div>
         </nz-form-item>
       </div>
     </div>
@@ -103,7 +109,8 @@
     <br>
     <!-- Room Container -->
     <div nz-row id="room-container" class="room-container">
-      <ng-container *ngFor="let room of rooms | roomPipe: state.searchText | statusPipe: state.selectedStatus">
+      <ng-container
+        *ngFor="let room of rooms | roomPipe: state.searchText | groupPipe: checkedGroups | statusPipe: state.selectedStatus">
         <div
           *ngIf="room !== -1 && (selected.specialtyGroupId === null || room.specialtyGroupId === selected.specialtyGroupId)"
           class="date">
@@ -309,5 +316,52 @@
     <button nz-button nzType="default" (click)="startItem = null; isShowStartModal = false">Cancel</button>
     <button [disabled]="state.loadStart || !selectedTime" nz-button nzType="primary" (click)="startShift()"
             [nzLoading]="state.loadStart">{{selectedObject?.statusName === 'Preoperative' ? 'Save' : 'Complete'}}</button>
+  </ng-template>
+</nz-modal>
+
+<nz-modal [nzWidth]="'700px'"
+          (nzOnCancel)="this.affectData = []; this.showAffectedShift = false"
+          [(nzVisible)]="showAffectedShift"
+          [nzTitle]="afTitle" [nzContent]="afModalContent" [nzFooter]="afFooter">
+  <ng-template #afTitle>
+    Affected Shifts
+  </ng-template>
+  <ng-template #afModalContent>
+    <div style=" max-height: 500px;overflow-y: auto; overflow-x: hidden;">
+      <nz-list *ngIf="affectData.length > 0 ;else noAfData" [nzDataSource]="affectData" nzBordered [nzHeader]="''"
+               [nzFooter]="''" [nzRenderItem]="item">
+        <ng-template #item let-item>
+          <nz-list-item [nzContent]="content"></nz-list-item>
+          <ng-template #content>
+            <div style="display: flex; width: 100%; align-items: center">
+              <div>
+                <p><b style="font-weight: bold">Shift ID :</b> {{item.shiftId}}</p>
+                <p><b style="font-weight: bold">Room Name : </b>
+                  {{item.oldRoomName}}
+                  <i
+                    style="margin: 0 10px; vertical-align: 0" nz-icon type="arrow-right"
+                    nzTheme="outline"></i>
+                  {{item.newRoomName}}
+                </p>
+                <p><b style="font-weight: bold">Start Time :</b> {{item.oldStart | date: 'dd / MM / yyyy - hh : mm'}} <i
+                  style="margin: 0 10px; vertical-align: 0" nz-icon type="arrow-right"
+                  nzTheme="outline"></i>
+                  {{item.newStart ? (item.newStart | date: 'dd / MM / yyyy - hh : mm') : 'No change'}}</p>
+                <p><b style="font-weight: bold">End Time :</b> {{item.oldEnd | date: 'dd / MM / yyyy - hh : mm'}} <i
+                  style="margin: 0 10px; vertical-align: 0" nz-icon type="arrow-right"
+                  nzTheme="outline"></i> {{item.newEnd ? (item.newEnd | date: 'dd / MM / yyyy - hh : mm') : 'No change'}}
+                </p>
+              </div>
+            </div>
+          </ng-template>
+        </ng-template>
+      </nz-list>
+      <ng-template #noAfData>
+        <h4 style="padding-left: 2px">There is no Affected Shift</h4>
+      </ng-template>
+    </div>
+  </ng-template>
+  <ng-template #afFooter>
+    <button nz-button nzType="default" (click)="this.affectData = []; this.showAffectedShift = false">Close</button>
   </ng-template>
 </nz-modal>

@@ -1,33 +1,31 @@
 <h2 style="text-align: center">Healthcare Management</h2>
 <div style="margin-top: 10px; margin-bottom: 10px" class="row">
-  <div class="col-6">
-    <b style="font-size: 16px">Shift Condition: </b>
-    <nz-select style="width: 120px;" [(ngModel)]="selectedCondition"  nzPlaceHolder="Choose">
-      <nz-option nzValue="0" nzLabel="All"></nz-option>
-      <nz-option nzValue="1" nzLabel="Good"></nz-option>
-      <nz-option nzValue="2" nzLabel="Bad"></nz-option>
-    </nz-select>
+  <div class="col-6 pb-4">
+    <div class="row">
+        <div class="col-6 pb-4">
+            <b style="font-size: 16px">Shift Condition: </b>
+            <nz-select style="width: 100%;" [(ngModel)]="selectedCondition"  nzPlaceHolder="Choose" (ngModelChange)="tableConfig.condition = $event; changeTotal()">
+              <nz-option nzValue="0" nzLabel="All"></nz-option>
+              <nz-option nzValue="1" nzLabel="Good"></nz-option>
+              <nz-option nzValue="2" nzLabel="Bad"></nz-option>
+            </nz-select>    
+        </div>
+        <div class="col-6 pb-4">
+            <b style="font-size: 16px">Date: </b>
+            <nz-date-picker style="width: 100%" nzFormat="DD / MM / YYYY" [(ngModel)]="careDate" (ngModelChange)="tableConfig.date = $event; changeTotal()"></nz-date-picker>
+        </div>
+    </div>
   </div>
   <div class="col-6">
-    <nz-row [nzGutter]="16">
-      <nz-col [nzSpan]="12">
-        <span  style="font-weight: bold; color: green">Good Condition Shift: </span>
-        {{goodShift}}
-        <span> shifts</span>
-      </nz-col>
-      <nz-col [nzSpan]="12">
-        <span  style="font-weight: bold; color: red">Bad Condition Shift:</span>
-        {{badShift}}
-        <span> shifts</span>
-      </nz-col>
-    </nz-row>
   </div>
 </div>
-<nz-table class="primary-table" *ngIf="!state.load" #basicTable [nzData]="state.data | conditionPipe : selectedCondition">
+<nz-table class="primary-table" *ngIf="!state.load" #basicTable 
+  [nzData]="state.data | conditionPipe : selectedCondition| dateCarePipe : careDate" [nzFooter]="footerTable">
   <thead>
   <tr>
     <th>No</th>
     <th>Shift ID</th>
+    <th>Closest Care Date </th>
     <th>Patient Name</th>
     <th>Surgery Name</th>
     <th>Wound Condition</th>
@@ -39,6 +37,7 @@
   <tr *ngFor="let data of basicTable.data; let i = index">
     <td>{{i + 1}}</td>
     <td>{{data.shiftId}}</td>
+    <td>{{data.closestDate | date: 'dd/MM/yyyy HH:mm'}}</td>
     <td>{{data.patientName}}</td>
     <td>{{data.surgeryName}}</td>
     <ng-container *ngIf="data.woundCondition === 1; else elseBlock">
@@ -71,3 +70,11 @@
 <div *ngIf="state.load" class="d-flex justify-content-center">
   <nz-spin nzSimple></nz-spin>
 </div>
+<ng-template #footerTable>
+  <p class="text-right">
+    <b style="font-weight: bold; color: lightgreen">Total Good Condition Shift </b>: <b style="font-weight: bold">{{goodShift}}</b> shift(s)
+  </p>
+  <p class="text-right">
+    <b style="font-weight: bold; color: lightcoral">Total Bad Condition Shift </b>: <b style="font-weight: bold">{{badShift}}</b> shift(s)
+  </p>
+</ng-template>

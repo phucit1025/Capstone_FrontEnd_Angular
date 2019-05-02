@@ -23,6 +23,9 @@ import { SurgeonComponent } from './schedule-detail/surgeon/surgeon.component';
 import { StatisticComponent } from './statistic/statistic.component';
 import { HealthcareManagementComponent } from './healthcare-management/healthcare-management.component';
 import { ConditionPipe } from '../pipe/condition.pipe';
+import {PostopStatisticalComponent} from './postop-statistical/postop-statistical.component';
+import {GroupPipe} from '../pipe/group.pipe';
+import { DateCarePipe } from '../pipe/date-care.pipe';
 
 registerLocaleData(en);
 
@@ -35,6 +38,8 @@ registerLocaleData(en);
     RoomPipe,
     StatusPipe,
     ConditionPipe,
+    GroupPipe,
+    DateCarePipe,
     ImportFileComponent,
     ScheduleDetailComponent,
     ErrorsComponent,
@@ -44,7 +49,8 @@ registerLocaleData(en);
     RoomSpecialtyGroupComponent,
     SurgeonComponent,
     StatisticComponent,
-    HealthcareManagementComponent
+    HealthcareManagementComponent,
+    PostopStatisticalComponent
   ],
   imports: [
     CommonModule,

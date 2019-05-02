@@ -1,7 +1,7 @@
 <nz-spin [nzSpinning]="state.load" [nzSize]="'large'">
   <form nz-form [nzLayout]="'inline'">
     <p>Curent duration:
-      {{(data?.estimatedStartDateTime | date: 'hh : mm') + ' - ' + (data?.estimatedEndDateTime | date: 'hh : mm')}}</p>
+      {{(data?.estimatedStartDateTime | date: 'HH : mm') + ' - ' + (data?.estimatedEndDateTime | date: 'HH : mm')}}</p>
     <nz-form-item>
       <nz-form-label nzFor="startTime">Start Time</nz-form-label>
       <nz-form-control>
