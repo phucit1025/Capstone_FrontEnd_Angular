@@ -1,17 +1,26 @@
 <h2 style="text-align: center">Healthcare Management</h2>
 <div style="margin-top: 10px; margin-bottom: 10px" class="row">
-  <div class="col-6">
-    <b style="font-size: 16px">Shift Condition: </b>
-    <nz-select style="width: 120px;" [(ngModel)]="selectedCondition"  nzPlaceHolder="Choose">
-      <nz-option nzValue="0" nzLabel="All"></nz-option>
-      <nz-option nzValue="1" nzLabel="Good"></nz-option>
-      <nz-option nzValue="2" nzLabel="Bad"></nz-option>
-    </nz-select>
+  <div class="col-6 pb-4">
+    <div class="row">
+        <div class="col-6 pb-4">
+            <b style="font-size: 16px">Shift Condition: </b>
+            <nz-select style="width: 100%;" [(ngModel)]="selectedCondition"  nzPlaceHolder="Choose" (ngModelChange)="tableConfig.condition = $event; changeTotal()">
+              <nz-option nzValue="0" nzLabel="All"></nz-option>
+              <nz-option nzValue="1" nzLabel="Good"></nz-option>
+              <nz-option nzValue="2" nzLabel="Bad"></nz-option>
+            </nz-select>    
+        </div>
+        <div class="col-6 pb-4">
+            <b style="font-size: 16px">Date: </b>
+            <nz-date-picker style="width: 100%" nzFormat="DD / MM / YYYY" [(ngModel)]="careDate" (ngModelChange)="tableConfig.date = $event; changeTotal()"></nz-date-picker>
+        </div>
+    </div>
   </div>
   <div class="col-6">
   </div>
 </div>
-<nz-table class="primary-table" *ngIf="!state.load" #basicTable [nzData]="state.data | conditionPipe : selectedCondition" [nzFooter]="footerTable">
+<nz-table class="primary-table" *ngIf="!state.load" #basicTable 
+  [nzData]="state.data | conditionPipe : selectedCondition| dateCarePipe : careDate" [nzFooter]="footerTable">
   <thead>
   <tr>
     <th>No</th>
@@ -28,7 +37,7 @@
   <tr *ngFor="let data of basicTable.data; let i = index">
     <td>{{i + 1}}</td>
     <td>{{data.shiftId}}</td>
-    <td>{{data.closestDate}}</td>
+    <td>{{data.closestDate | date: 'dd/MM/yyyy HH:mm'}}</td>
     <td>{{data.patientName}}</td>
     <td>{{data.surgeryName}}</td>
     <ng-container *ngIf="data.woundCondition === 1; else elseBlock">

@@ -25,6 +25,7 @@ import { HealthcareManagementComponent } from './healthcare-management/healthcar
 import { ConditionPipe } from '../pipe/condition.pipe';
 import {PostopStatisticalComponent} from './postop-statistical/postop-statistical.component';
 import {GroupPipe} from '../pipe/group.pipe';
+import { DateCarePipe } from '../pipe/date-care.pipe';
 
 registerLocaleData(en);
 
@@ -38,6 +39,7 @@ registerLocaleData(en);
     StatusPipe,
     ConditionPipe,
     GroupPipe,
+    DateCarePipe,
     ImportFileComponent,
     ScheduleDetailComponent,
     ErrorsComponent,
