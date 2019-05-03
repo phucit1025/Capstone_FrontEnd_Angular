@@ -15,4 +15,8 @@ export class PostopService {
   getHealthcareSurgeryShift() {
     return this.http.get(GLOBAL.API + this.name + '/GetHealthcareSurgeryShift');
   }
+
+  getHealthcareRerpotByShiftId(id) {
+    return this.http.get(GLOBAL.API + this.name + '/GetHealthCareReportBySurgeryShiftId?surgeryShiftId='+ id);
+  }
 }

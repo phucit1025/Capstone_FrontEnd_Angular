@@ -13,9 +13,12 @@ import { GLOBAL } from 'src/app/global';
 export class HealthcareManagementComponent implements OnInit {
   goodShift : number;
   badShift : number;
+  goodHealthcare : number;
+  badHealthcare : number;
   state = {
     data: [],
     load: false,
+    loadGetHealthcareReport: false,
     visible: false,
     stateId: null, 
   };
@@ -25,6 +28,9 @@ export class HealthcareManagementComponent implements OnInit {
   }
   selectedCondition = '0';
   careDate : Date;
+  selectedConditionHealthcare = '0';
+  careDateHealthcare : Date;
+  healthcareReportData : any[];
 
   constructor(private router: Router, private postopSV: PostopService, private fb: FormBuilder, private messageSV: NzMessageService) {
   }
@@ -55,6 +61,28 @@ export class HealthcareManagementComponent implements OnInit {
     this.goodShift =newData.length - this.badShift;
   }
 
+  changeTotalHealthcare(){
+    var newData = this.healthcareReportData;
+    if (this.tableConfig.condition == 1) {
+      newData = newData.filter(s => s.woundCondition == 1 && s.drugAllergy == 1);
+    }
+    if (this.tableConfig.condition == 2) {
+      newData = newData.filter(s => s.woundCondition == 2 || s.drugAllergy == 2);
+    }
+    if (this.tableConfig.date) {
+      var dateString = GLOBAL.convertDate(this.tableConfig.date);
+      newData = newData.filter(s => {
+        console.log(GLOBAL.convertDate(new Date(s.closestDate)));
+        console.log(dateString);
+        console.log(GLOBAL.convertDate(new Date(s.closestDate)).includes(dateString));
+        return GLOBAL.convertDate(new Date(s.closestDate)).includes(dateString);
+      });
+    }
+    const badShiftQuantity = newData.filter(s => s.woundCondition == 2 || s.drugAllergy == 2);
+    this.badHealthcare = badShiftQuantity.length;
+    this.goodHealthcare =newData.length - this.badHealthcare;
+  }
+
   getHealthcareSurgeryShifts() {
     this.state.load = true;
     this.postopSV.getHealthcareSurgeryShift()
@@ -64,6 +92,20 @@ export class HealthcareManagementComponent implements OnInit {
           const badShiftQuantity = this.state.data.filter(s => s.woundCondition == 2 || s.drugAllergy == 2);
           this.badShift = badShiftQuantity.length;
           this.goodShift = this.state.data.length - this.badShift;
+        }
+      );
+    
+  }
+  
+  getHealthcareReport(data) {
+    this.state.loadGetHealthcareReport = true;
+    this.postopSV.getHealthcareRerpotByShiftId(data.shiftId)
+      .subscribe((res: any) => {
+          this.state.loadGetHealthcareReport = false;
+          this.healthcareReportData = res;
+          const badShiftQuantity =  this.healthcareReportData.filter(s => s.woundCondition == 2 || s.drugAllergy == 2);
+          this.badHealthcare = badShiftQuantity.length;
+          this.goodHealthcare =  this.healthcareReportData.length - this.badHealthcare;
         }
       );
     
