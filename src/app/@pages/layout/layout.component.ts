@@ -6,7 +6,7 @@ import {ActivatedRoute, ActivatedRouteSnapshot, Resolve, Router, RouterStateSnap
 import {Location} from '@angular/common';
 import 'rxjs/add/operator/mergeMap';
 import {NzNotificationService} from 'ng-zorro-antd';
-
+import { environment } from '../../../environments/environment';
 import {HubConnection, HubConnectionBuilder} from '@aspnet/signalr';
 import {activateRoutes} from '@angular/router/src/operators/activate_routes';
 
@@ -17,8 +17,7 @@ import {activateRoutes} from '@angular/router/src/operators/activate_routes';
 })
 export class LayoutComponent implements OnInit, OnDestroy {
 
-  HOST = 'https://localhost:44372/';
-  // HOST = 'http://172.20.10.7:5000/';
+  HOST = environment.URL;
   HOSPITAL_STAFF_ROLE = 'HospitalStaff';
   SUPPLIER_ROLE = 'MedicalSupplier';
   CHIEFNURSE_ROLE = 'ChiefNurse';

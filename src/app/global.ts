@@ -1,10 +1,9 @@
 import * as moment from 'moment';
 import * as XLSX from 'xlsx';
+import { environment } from '../environments/environment';
 
 export const GLOBAL = Object.freeze({
-  API: 'https://localhost:44372/api/',
-  // API: 'http://45.119.212.145:5520/api/',
-  // API: 'http://192.168.100.88:5000/api/',
+  API: environment.URL + 'api/',
   convertDate: (date: Date) => {
     let dateString = '';
     dateString += date.getFullYear();
