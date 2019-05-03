@@ -92,8 +92,8 @@ export class HealthcareManagementComponent implements OnInit {
           const badShiftQuantity = this.state.data.filter(s => s.woundCondition == 2 || s.drugAllergy == 2);
           this.badShift = badShiftQuantity.length;
           this.goodShift = this.state.data.length - this.badShift;
-        }
-      );
+        }, er => this.state.load = false
+      ); 
     
   }
   
@@ -106,7 +106,7 @@ export class HealthcareManagementComponent implements OnInit {
           const badShiftQuantity =  this.healthcareReportData.filter(s => s.woundCondition == 2 || s.drugAllergy == 2);
           this.badHealthcare = badShiftQuantity.length;
           this.goodHealthcare =  this.healthcareReportData.length - this.badHealthcare;
-        }
+        }, er => this.state.loadGetHealthcareReport = false
       );
     
   }
