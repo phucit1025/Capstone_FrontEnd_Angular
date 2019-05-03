@@ -83,10 +83,10 @@
     <th>Shift ID</th>
     <th>Patient Name</th>
     <th>Gender</th>
-    <th>Year of birth</th>
     <th>Surgery Name</th>
     <th>Surgeon Name</th>
     <th>Status Name</th>
+    <th>Duration ( hours )</th>
   </tr>
   </thead>
   <tbody>
@@ -101,6 +101,7 @@
     <td>
       <nz-tag [nzColor]="data.statusName === 'Recovery' ? 'blue' : 'red'">{{data.statusName}}</nz-tag>
     </td>
+    <td>{{data.duration}}</td>
   </tr>
   </tbody>
 </nz-table>
