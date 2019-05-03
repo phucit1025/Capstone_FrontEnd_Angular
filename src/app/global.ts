@@ -3,14 +3,7 @@ import * as XLSX from 'xlsx';
 import { environment } from '../environments/environment';
 
 export const GLOBAL = Object.freeze({
-<<<<<<< HEAD
   API: environment.URL + 'api/',
-=======
-  // API: 'https://localhost:44372/api/',
-  // API: 'http://45.119.212.145:5520/api/',
-  // API: 'http://192.168.0.101:5000/api/',
-  API: 'http://192.168.0.107:5000/api/',
->>>>>>> 8d5d73437c9ba85bc1d24ddd118dbbecc38d97c3
   convertDate: (date: Date) => {
     let dateString = '';
     dateString += date.getFullYear();
