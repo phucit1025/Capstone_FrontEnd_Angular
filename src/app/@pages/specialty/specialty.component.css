@@ -130,3 +130,6 @@
   margin: 0 15px;
   background-color: #ffffff;
 }
+* {
+  font-weight: 400;
+}

@@ -34,3 +34,6 @@
     color: #00C994 !important;
     font-size: 18px;
 }
+* {
+    font-weight: 400;
+  }

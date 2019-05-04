@@ -50,3 +50,6 @@
 .body-surgery-profile-modal span{
     /* font-weight: bold */
 }
+* {
+    font-weight: 400;
+  }

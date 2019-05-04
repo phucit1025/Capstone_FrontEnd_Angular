@@ -9,3 +9,6 @@
 .primary-table td{
     background: white;
 }
+* {
+  font-weight: 400;
+}

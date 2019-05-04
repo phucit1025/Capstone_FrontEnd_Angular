@@ -74,13 +74,13 @@
             <button *ngIf="state.swapMode" (click)="disabled()" nz-button nzType="default">Disable Swap</button>
           </div>
           <div class="mt-2" *ngIf="state.swapMode">
-            <label style="color: #2F3242" class="mr-2"><b>Select a group ID</b></label> <br/>
+            <label style="color: #2F3242" class="mr-2"><b>Select a Specialty Group</b></label> <br/>
             <nz-radio-group [(ngModel)]="selected.specialtyGroupId">
               <label *ngFor="let gr of groupsId" nz-radio [nzValue]="gr.id"><b>{{gr.name}}</b></label>
             </nz-radio-group>
           </div>
           <div class="mt-2" *ngIf="!state.swapMode">
-            <label style="color: #2F3242" class="mr-2"><b>Select a group ID</b></label> <br/>
+            <label style="color: #2F3242" class="mr-2"><b>Select a Specialty Group</b></label> <br/>
             <label *ngFor="let gr of groupsId" nz-checkbox [ngModel]="gr.checked"
                    (ngModelChange)="checkChange(gr)">{{gr.name}}</label>
           </div>

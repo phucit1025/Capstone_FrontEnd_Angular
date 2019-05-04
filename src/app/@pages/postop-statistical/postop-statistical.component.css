@@ -1,3 +1,7 @@
 :host /deep/ .ant-calendar-picker {
   width: 100% !important;
 }
+
+* {
+  font-weight: 400;
+}
