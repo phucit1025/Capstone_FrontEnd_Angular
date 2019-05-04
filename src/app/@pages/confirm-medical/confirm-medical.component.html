@@ -1,4 +1,9 @@
-<h2 class="mb-3">Pending Requests for Medical Supply</h2>
+<div nz-row class="mb-3">
+  <div nz-col [nzSpan]="12"><span style="font-size: 20px">Pending Requests for Medical Supply</span></div>
+  <div nz-col [nzSpan]="12" class="text-right">
+    <button *ngIf="listData?.length > 0" nz-button nzType="primary" [disabled]="!isActive()" (click)="confirm()">Confirm</button>
+  </div>
+</div>
 <nz-table #rowSelectionTable
           nzBordered
           [nzShowPagination]="true"
@@ -29,17 +34,13 @@
     <td>{{data.createdDate | date: 'dd/MM/yyyy'}}</td>
     <!-- <td>N/A</td> -->
     <td class="text-center">
-      <button nz-button nzType="primary" (click)="state.isShow = true; createSupplyList(data)"><i nz-icon
-                                                                                                  type="info-circle"></i>
+      <button nz-button nzType="primary" (click)="state.isShow = true; createSupplyList(data)">
+        <i nz-icon type="info-circle"></i>
       </button>
     </td>
   </tr>
   </tbody>
 </nz-table>
-<div class="text-right mt-4" *ngIf="listData?.length > 0">
-  <button nz-button nzType="primary" [disabled]="!isActive()" (click)="confirm()">Confirm</button>
-</div>
-
 <ng-template #noData>
   <div style="text-align: center;">
     <i nz-icon type="file-text" theme="outline" style="font-size: 30px; margin-bottom: 10px"></i>
