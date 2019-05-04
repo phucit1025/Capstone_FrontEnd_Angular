@@ -58,12 +58,19 @@
       style="width: 100%"
       nzAllowClear
       nzPlaceHolder="All"
-      [ngModel]="tableConfig.isPostOp"
-      (ngModelChange)="tableConfig.isPostOp = $event; loadTable()">
-      <nz-option [nzValue]="true" nzLabel="Postoperative">
+      [ngModel]="tableConfig.status"
+      (ngModelChange)="tableConfig.status = $event; loadTable()">
+      <nz-option [nzValue]="1" nzLabel="Preoperative">
       </nz-option>
-      <nz-option [nzValue]="false" nzLabel="Recovery">
+      <nz-option [nzValue]="2" nzLabel="Intraoperative">
       </nz-option>
+      <nz-option [nzValue]="3" nzLabel="Postoperative">
+      </nz-option>
+      <nz-option [nzValue]="4" nzLabel="Recovery">
+      </nz-option>
+      <nz-option [nzValue]="5" nzLabel="Finish">
+      </nz-option>
+
     </nz-select>
   </div>
 </div>
@@ -93,10 +100,20 @@
     <td>{{(tableConfig.pageSize * tableConfig.pageIndex) + (i + 1)}}</td>
     <td><a target="_blank" [routerLink]="'/pages/schedule-detail/' + data.id">{{data.id}}</a></td>
     <td>{{data.patientName}}</td>
+<<<<<<< HEAD
+=======
+    <td>{{data.gender ? 'Male' : 'Female'}}</td>
+>>>>>>> 2bdfc4eb7b8391a6971a10f11b997903f26aa854
     <td>{{data.surgeryName}}</td>
     <td>{{data.surgeonName}}</td>
     <td>
-      <nz-tag [nzColor]="data.statusName === 'Recovery' ? 'blue' : 'red'">{{data.statusName}}</nz-tag>
+      <ng-container [ngSwitch]="data.statusName">
+        <nz-tag *ngSwitchCase="'Preoperative'" [nzColor]="'purple'">Preoperative</nz-tag>
+        <nz-tag *ngSwitchCase="'Intraoperative'" [nzColor]="'red'">Intraoperative</nz-tag>
+        <nz-tag *ngSwitchCase="'Postoperative'" [nzColor]="'blue'">Postoperative</nz-tag>
+        <nz-tag *ngSwitchCase="'Recovery'" [nzColor]="'orange'">Recovery</nz-tag>
+        <nz-tag *ngSwitchCase="'Finish'" [nzColor]="'green'">Finish</nz-tag>
+      </ng-container>
     </td>
     <td>{{data.duration}}</td>
   </tr>
@@ -105,12 +122,23 @@
 
 <ng-template #footerTable>
   <p class="text-right">
-    <b style="font-weight: bold; color: lightblue">Total Recovery </b>: {{tableConfig.totalConfig.totalRecovery}}
+    <b style="font-weight: bold; color: #004d40">Total Result </b>: {{tableConfig.totalConfig.total}}
   </p>
-  <p class="text-right">
-    <b style="font-weight: bold; color: lightcoral">Total Postoperative </b>: {{tableConfig.totalConfig.totalPostOp}}
-  </p>
-  <p class="text-right">
-    <b style="font-weight: bold; color: lightseagreen">Total Result </b>: {{tableConfig.totalConfig.total}}
-  </p>
+  <ng-container *ngIf="!tableConfig.load && tableConfig.status === null">
+    <p class="text-right">
+      <nz-tag [nzColor]="'purple'">Total Preoperative</nz-tag>: {{tableConfig.totalConfig.totalPreop}}
+    </p>
+    <p class="text-right">
+      <nz-tag [nzColor]="'red'">Total Intraoperative</nz-tag>: {{tableConfig.totalConfig.totalIntra}}
+    </p>
+    <p class="text-right">
+      <nz-tag [nzColor]="'blue'">Total Postoperative</nz-tag>: {{tableConfig.totalConfig.totalPostop}}
+    </p>
+    <p class="text-right">
+      <nz-tag [nzColor]="'orange'">Total Recovery</nz-tag>: {{tableConfig.totalConfig.totalRecovery}}
+    </p>
+    <p class="text-right">
+      <nz-tag [nzColor]="'green'">Total Finish</nz-tag>: {{tableConfig.totalConfig.totalFinished}}
+    </p>
+  </ng-container>
 </ng-template>
