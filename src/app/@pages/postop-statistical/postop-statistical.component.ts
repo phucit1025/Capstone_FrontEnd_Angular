@@ -17,13 +17,16 @@ export class PostopStatisticalComponent implements OnInit {
     specialtyId: null,
     surgeryId: null,
     doctorId: null,
-    isPostOp: null,
+    status: null,
     pageSize: 10,
     pageIndex: 0,
     totalConfig: {
       total: 0,
-      totalPostOp: 0,
-      totalRecovery: 0
+      totalFinished: 0,
+      totalPostop: 0,
+      totalPreop: 0,
+      totalRecovery: 0,
+      totalIntra: 0
     }
   };
 
@@ -65,7 +68,6 @@ export class PostopStatisticalComponent implements OnInit {
     array = this.loadCatalog(array);
     if (array.length > 0) {
       const result = combineLatest(array);
-      this.tableConfig.load = true;
       result.subscribe((response: any[]) => {
         this.handleTableResponse(response[0]);
         this.handleDoctorResponse(response[1]);
@@ -76,6 +78,7 @@ export class PostopStatisticalComponent implements OnInit {
   }
 
   loadTable(array?: any) {
+    this.tableConfig.load = true;
     const config = Object.assign({}, this.tableConfig);
     if (config.actualEnd) {
       config.actualEnd = moment(config.actualEnd).format('YYYY-MM-DD');
@@ -143,8 +146,11 @@ export class PostopStatisticalComponent implements OnInit {
     this.tableConfig.data = response.results;
     this.tableConfig.totalConfig = {
       total: response.total,
-      totalPostOp: response.totalPostop,
+      totalIntra: response.totalIntra,
+      totalPostop: response.totalPostop,
+      totalPreop: response.totalPreop,
       totalRecovery: response.totalRecovery,
+      totalFinished: response.totalFinished,
     };
   }
 
