@@ -92,13 +92,13 @@
     <th>Surgery Name</th>
     <th>Surgeon Name</th>
     <th>Status Name</th>
-    <th>Duration ( hours )</th>
+    <th>Duration</th>
   </tr>
   </thead>
   <tbody>
   <tr *ngFor="let data of postOP.data; let i = index">
     <td>{{(tableConfig.pageSize * tableConfig.pageIndex) + (i + 1)}}</td>
-    <td><a target="_blank" [routerLink]="'/pages/schedule-detail/' + data.id">{{data.id}}</a></td>
+    <td><a (click)="redirect(data.id)">{{data.id}}</a></td>
     <td>{{data.patientName}}</td>
     <td>{{data.surgeryName}}</td>
     <td>{{data.surgeonName}}</td>
@@ -108,7 +108,7 @@
         <nz-tag *ngSwitchCase="'Intraoperative'" [nzColor]="'red'">Intraoperative</nz-tag>
         <nz-tag *ngSwitchCase="'Postoperative'" [nzColor]="'blue'">Postoperative</nz-tag>
         <nz-tag *ngSwitchCase="'Recovery'" [nzColor]="'orange'">Recovery</nz-tag>
-        <nz-tag *ngSwitchCase="'Finish'" [nzColor]="'green'">Finish</nz-tag>
+        <nz-tag *ngSwitchCase="'Finished'" [nzColor]="'green'">Finished</nz-tag>
       </ng-container>
     </td>
     <td>{{data.duration}}</td>
