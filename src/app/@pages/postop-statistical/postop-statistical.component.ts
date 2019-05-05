@@ -3,6 +3,7 @@ import {PostopStatisticalService} from '../../page-services/postop-statistical.s
 import {GLOBAL} from '../../global';
 import {combineLatest} from 'rxjs';
 import * as moment from 'moment';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-postop-statistical',
@@ -57,7 +58,7 @@ export class PostopStatisticalComponent implements OnInit {
     totalPage: 0,
   };
 
-  constructor(private postOP: PostopStatisticalService) {
+  constructor(private router: Router, private postOP: PostopStatisticalService) {
   }
 
   ngOnInit() {
@@ -226,7 +227,11 @@ export class PostopStatisticalComponent implements OnInit {
   }
 
   changePage(e) {
-    this.tableConfig.pageIndex = e - 1;
+    this.tableConfig.pageIndex = e;
     this.loadTable();
+  }
+
+  redirect(id) {
+    this.router.navigate(['pages/schedule-detail', id]);
   }
 }
