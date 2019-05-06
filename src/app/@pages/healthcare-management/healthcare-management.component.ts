@@ -4,6 +4,7 @@ import { FormBuilder } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd';
 import { Router } from '@angular/router';
 import { GLOBAL } from 'src/app/global';
+import { ScheduleService } from 'src/app/page-services/schedule.service';
 
 @Component({
   selector: 'app-healthcare-management',
@@ -11,6 +12,7 @@ import { GLOBAL } from 'src/app/global';
   styleUrls: ['./healthcare-management.component.css']
 })
 export class HealthcareManagementComponent implements OnInit {
+  mapOfExpandData: { [key: string]: boolean } = {};
   goodShift : number;
   badShift : number;
   goodHealthcare : number;
@@ -21,6 +23,7 @@ export class HealthcareManagementComponent implements OnInit {
     loadGetHealthcareReport: false,
     visible: false,
     stateId: null, 
+    loadTreatment: false,
   };
   tableConfig = {
     condition : 0,
@@ -31,8 +34,10 @@ export class HealthcareManagementComponent implements OnInit {
   selectedConditionHealthcare = '0';
   careDateHealthcare : Date;
   healthcareReportData : any[];
+  treatmentReportData: any[];
 
-  constructor(private router: Router, private postopSV: PostopService, private fb: FormBuilder, private messageSV: NzMessageService) {
+  constructor(private router: Router, private postopSV: PostopService, private schedule: ScheduleService,
+    private fb: FormBuilder, private messageSV: NzMessageService) {
   }
 
   ngOnInit(){
@@ -109,6 +114,14 @@ export class HealthcareManagementComponent implements OnInit {
         }, er => this.state.loadGetHealthcareReport = false
       );
     
+  }
+
+  getTreatment(data) {
+    this.state.loadTreatment = true;
+    this.schedule.getTreatmentReport(data.shiftId).subscribe((tm: any) => {
+      this.treatmentReportData = tm;
+      this.state.loadTreatment = false;
+    }, er => this.state.loadTreatment = false);
   }
 
   redirect(id) {
