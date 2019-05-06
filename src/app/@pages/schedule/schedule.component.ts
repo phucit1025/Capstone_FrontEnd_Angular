@@ -129,11 +129,15 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       this.state.create = true;
       const value = GLOBAL.parseObject(this.emergencyForm.value);
       this.schedule.addEmergencyShift(value).subscribe(res => {
-        this.messageService.success('Create Successful!!!');
-        this.state.create = false;
-        this.isShowEmergency = false;
-        this.createEmergencyForm();
-        this.getSchedule(this.date);
+        if (res == false) {
+          this.messageService.error('Create Fail!!!');
+        } else {
+          this.messageService.success('Create Successful!!!');
+          this.state.create = false;
+          this.isShowEmergency = false;
+          this.createEmergencyForm();
+          this.getSchedule(this.date);
+        }
       }, er => {
         this.state.create = false;
         this.messageService.error('Create Fail!!!');

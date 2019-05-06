@@ -126,7 +126,7 @@
         <nz-card nzTitle="Surgery Procedure" style="height: 100%;">
           <nz-spin [nzSpinning]="state.loadSaveProcedure">
             <div>
-              <textarea class="sug-area" [disabled]="!state.editMode" rows="" nz-input
+              <textarea class="sug-area" [disabled]="!state.editMode" rows="20" nz-input
                         [(ngModel)]="surgeryDetail.surgeryProcedure"></textarea>
               <div class="text-right mt-2">
                 <button *ngIf="!state.editMode" (click)="state.editMode = true" nz-button nzType="primary" class="mb-2">
